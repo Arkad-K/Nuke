@@ -1,0 +1,282 @@
+set cut_paste_input [stack 0]
+version 14.0 v3
+BackdropNode {
+ inputs 0
+ name BackdropNode73
+ tile_color 0x777777ff
+ label "Area Psuh Edge Extend"
+ note_font "DejaVu Sans"
+ note_font_size 70
+ note_font_color 0xffffffff
+ selected true
+ xpos -12382
+ ypos -7029
+ bdwidth 1185
+ bdheight 1707
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp10
+ label Alpha
+ selected true
+ xpos -12374
+ ypos -6920
+ hide_input true
+ postage_stamp true
+}
+Dot {
+ name Dot152
+ selected true
+ xpos -12340
+ ypos -6611
+}
+set Ne7c1190 [stack 0]
+Dot {
+ name Dot179
+ selected true
+ xpos -12340
+ ypos -5703
+}
+Dot {
+ name Dot180
+ selected true
+ xpos -12340
+ ypos -5636
+}
+push $Ne7c1190
+Dot {
+ name Dot181
+ selected true
+ xpos -12046
+ ypos -6611
+}
+set Ne7d05a0 [stack 0]
+Grade {
+ channels rgba
+ blackpoint -1
+ whitepoint 0.66
+ multiply 1.1
+ gamma 0.04
+ white_clamp true
+ name Grade44
+ selected true
+ xpos -12080
+ ypos -6593
+}
+Blur {
+ size 17
+ name Blur47
+ selected true
+ xpos -12080
+ ypos -6557
+}
+ColorLookup {
+ lut {master {curve C k x0.04028077051 0 l x0.4869321287 1.00074625 x0.7007558942 0.8732082248 k x0.9597191215 0}
+   red {}
+   green {}
+   blue {}
+   alpha {}}
+ name ColorLookup4
+ selected true
+ xpos -12080
+ ypos -6519
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3 rgba.alpha 0 3 rgba.red 0 0"
+ name Shuffle15
+ selected true
+ xpos -12080
+ ypos -6493
+}
+FilterErode {
+ channels rgba
+ size -13
+ name FilterErode19
+ selected true
+ xpos -12080
+ ypos -6467
+}
+Blur {
+ size 13.2
+ name Blur48
+ selected true
+ xpos -12080
+ ypos -6441
+}
+Clamp {
+ name Clamp5
+ selected true
+ xpos -12080
+ ypos -5828
+}
+push $Ne7d05a0
+push $cut_paste_input
+Dot {
+ name Dot183
+ selected true
+ xpos -11482
+ ypos -6885
+}
+Dot {
+ name Dot185
+ selected true
+ xpos -11482
+ ypos -6686
+}
+set Ne83e6c0 [stack 0]
+Dot {
+ name Dot194
+ selected true
+ xpos -11679
+ ypos -6686
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy12
+ selected true
+ xpos -11713
+ ypos -6621
+}
+Dot {
+ name Dot196
+ selected true
+ xpos -11679
+ ypos -6544
+}
+set Ne8572e0 [stack 0]
+Dot {
+ name Dot198
+ selected true
+ xpos -11679
+ ypos -6458
+}
+set Ne85c320 [stack 0]
+push $Ne85c320
+LensDistortion1_0 {
+ serializeKnob ""
+ serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+ outputType Displacement
+ distortion2 0.001
+ cardScale {1.001003981 1.001003981 1}
+ a -0.002501845593
+ b 0.001595480484
+ c 0.0001254474191
+ name LensDistortion3
+ selected true
+ xpos -11819
+ ypos -6462
+}
+Shuffle {
+ in motion
+ alpha white
+ name Shuffle16
+ selected true
+ xpos -11819
+ ypos -6371
+}
+set Ne8824e0 [stack 0]
+push $Ne8572e0
+push $Ne8572e0
+Merge2 {
+ inputs 2
+ operation in
+ bbox B
+ name In5
+ selected true
+ xpos -11974
+ ypos -6548
+}
+Merge2 {
+ inputs 2
+ operation in
+ bbox B
+ name In6
+ selected true
+ xpos -11974
+ ypos -6371
+}
+FilterErode {
+ channels rgba
+ size -1.8
+ filter quadratic
+ name FilterErode20
+ selected true
+ xpos -11974
+ ypos -6345
+}
+Blur {
+ name Blur49
+ selected true
+ xpos -11974
+ ypos -5959
+}
+push $Ne8824e0
+Merge2 {
+ inputs 2
+ bbox B
+ name Merge63
+ selected true
+ xpos -11819
+ ypos -5953
+}
+push $Ne85c320
+Dot {
+ name Dot200
+ selected true
+ xpos -11569
+ ypos -6458
+}
+STMap {
+ inputs 2
+ channels rgb
+ uv rgb
+ maskChannel rgba.alpha
+ invert_mask true
+ name STMap2
+ selected true
+ xpos -11603
+ ypos -5953
+}
+Dot {
+ name Dot211
+ selected true
+ xpos -11569
+ ypos -5888
+}
+Merge2 {
+ inputs 2
+ operation max
+ name Merge64
+ selected true
+ xpos -11713
+ ypos -5892
+}
+Remove {
+ operation keep
+ channels rgba
+ name Remove5
+ selected true
+ xpos -11713
+ ypos -5846
+}
+push $Ne83e6c0
+Keymix {
+ inputs 3
+ name Keymix_EDGE3
+ selected true
+ xpos -11516
+ ypos -5828
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy14
+ selected true
+ xpos -11516
+ ypos -5646
+}
