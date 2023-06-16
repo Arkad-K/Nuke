@@ -1,0 +1,377 @@
+set cut_paste_input [stack 0]
+version 14.0 v3
+BackdropNode {
+ inputs 0
+ name BackdropNode29
+ tile_color 0x686868ff
+ label Additives
+ note_font_size 112
+ note_font_color 0xffffffff
+ selected true
+ xpos -8244
+ ypos -7032
+ bdwidth 2468
+ bdheight 2481
+ z_order 2
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode30
+ tile_color 0x7c7c7cff
+ label Despill
+ note_font_size 42
+ selected true
+ xpos -8068
+ ypos -5281
+ bdwidth 214
+ bdheight 486
+ z_order 3
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode32
+ tile_color 0x828282ff
+ label BG
+ note_font_size 42
+ selected true
+ xpos -7670
+ ypos -6626
+ bdwidth 271
+ bdheight 165
+ z_order 3
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode68
+ tile_color 0x777777ff
+ label "DARK\n"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 70
+ selected true
+ xpos -6828
+ ypos -5781
+ bdwidth 680
+ bdheight 947
+ z_order 3
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode69
+ tile_color 0x777777ff
+ label "CLEAN PLATE"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 70
+ selected true
+ xpos -7090
+ ypos -6842
+ bdwidth 929
+ bdheight 790
+ z_order 3
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode70
+ tile_color 0x777777ff
+ label "LIGHTS\n"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 70
+ selected true
+ xpos -6118
+ ypos -6621
+ bdwidth 277
+ bdheight 1605
+ z_order 3
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode72
+ tile_color 0x7c7c7cff
+ label Stencil
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 42
+ selected true
+ xpos -6461
+ ypos -6038
+ bdwidth 269
+ bdheight 205
+ z_order 3
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode31
+ tile_color 0x8e8e8eff
+ label Alpha
+ note_font_size 42
+ selected true
+ xpos -7056
+ ypos -6478
+ bdwidth 393
+ bdheight 294
+ z_order 4
+}
+push $cut_paste_input
+PostageStamp {
+ name PostageStamp1
+ label DN_plate
+ selected true
+ xpos -6646
+ ypos -6653
+ postage_stamp true
+}
+Dot {
+ name Dot124
+ selected true
+ xpos -6612
+ ypos -6551
+}
+Dot {
+ name Dot129
+ selected true
+ xpos -6612
+ ypos -6398
+}
+set Nd6fb200 [stack 0]
+Dot {
+ name Dot131
+ selected true
+ xpos -6965
+ ypos -6398
+}
+HueCorrect {
+ hue {sat {}
+   lum {}
+   red {}
+   green {}
+   blue {curve 2.373631716 2.110945225 1 1.837313414 1.454228878 1.74427855 2.373631716 s-2.052238464 t0}
+   r_sup {}
+   g_sup {}
+   b_sup {}
+   sat_thrsh {}}
+ name HueCorrect5
+ selected true
+ xpos -6999
+ ypos -6375
+}
+Keyer {
+ operation bluescreen
+ range {0.9899750006 1 1 1}
+ name Keyer18
+ selected true
+ xpos -6999
+ ypos -6333
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp2
+ label Stencil
+ selected true
+ xpos -6285
+ ypos -5949
+ postage_stamp true
+}
+set N10a77b60 [stack 0]
+PostageStamp {
+ inputs 0
+ name PostageStamp3
+ label Alpha
+ selected true
+ xpos -6812
+ ypos -6281
+ postage_stamp true
+}
+push $Nd6fb200
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy6
+ selected true
+ xpos -6646
+ ypos -6258
+}
+EdgeExtend {
+ channels rgba
+ matte "Source Inverted Alpha"
+ premultiply false
+ name EdgeExtend2
+ selected true
+ xpos -6646
+ ypos -6127
+}
+set N10a96b40 [stack 0]
+push $Nd6fb200
+Dot {
+ name Dot135
+ selected true
+ xpos -6479
+ ypos -6398
+}
+set N10aa2740 [stack 0]
+Dot {
+ name Dot132
+ selected true
+ xpos -6479
+ ypos -5629
+}
+Merge2 {
+ inputs 2
+ operation minus
+ name Merge65
+ selected true
+ xpos -6646
+ ypos -5633
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.blue 0 2 rgba.green 0 1 rgba.blue 0 2 rgba.alpha 0 3 rgba.blue 0 2 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2"
+ name Shuffle23
+ selected true
+ xpos -6646
+ ypos -5590
+}
+Grade {
+ channels rgba
+ name Grade38
+ selected true
+ xpos -6646
+ ypos -5379
+}
+Merge2 {
+ inputs 2
+ operation stencil
+ name Merge51
+ selected true
+ xpos -6285
+ ypos -5379
+}
+Dot {
+ name Dot130
+ selected true
+ xpos -6251
+ ypos -4860
+}
+Dot {
+ name Dot139
+ selected true
+ xpos -7396
+ ypos -4860
+}
+set N10aedee0 [stack 0]
+PostageStamp {
+ inputs 0
+ name PostageStamp5
+ label Despill
+ selected true
+ xpos -7998
+ ypos -5058
+ postage_stamp true
+}
+set N10af3020 [stack 0]
+Dot {
+ name Dot134
+ selected true
+ xpos -7964
+ ypos -4854
+}
+push $N10a77b60
+push $N10aa2740
+Dot {
+ name Dot128
+ selected true
+ xpos -6010
+ ypos -6398
+}
+push $N10a96b40
+Merge2 {
+ inputs 2
+ operation minus
+ name Merge67
+ selected true
+ xpos -6044
+ ypos -6127
+}
+Expression {
+ channel0 rgba
+ expr0 clamp(max(r,g))
+ name Expression3
+ selected true
+ xpos -6044
+ ypos -6037
+}
+Grade {
+ channels rgba
+ name Grade45
+ selected true
+ xpos -6044
+ ypos -6004
+}
+Merge2 {
+ inputs 2
+ operation stencil
+ name Merge48
+ selected true
+ xpos -6044
+ ypos -5926
+}
+Dot {
+ name Dot133
+ selected true
+ xpos -6010
+ ypos -5031
+}
+Dot {
+ name Dot138
+ selected true
+ xpos -7398
+ ypos -5031
+}
+set N10b4bd60 [stack 0]
+push $N10af3020
+push $N10aedee0
+push $N10b4bd60
+Dot {
+ inputs 0
+ name Dot127
+ selected true
+ xpos -7535
+ ypos -6593
+}
+PostageStamp {
+ name PostageStamp4
+ label BG
+ selected true
+ xpos -7569
+ ypos -6558
+ postage_stamp true
+}
+Grade {
+ inputs 1+1
+ name Grade39
+ selected true
+ xpos -7569
+ ypos -5242
+}
+Grade {
+ inputs 1+1
+ name Grade42
+ selected true
+ xpos -7569
+ ypos -5128
+}
+Merge2 {
+ inputs 2+1
+ operation max
+ name Merge61
+ selected true
+ xpos -7569
+ ypos -5035
+}
+Merge2 {
+ inputs 2+1
+ operation min
+ name Merge62
+ selected true
+ xpos -7569
+ ypos -4864
+}
