@@ -1,0 +1,1016 @@
+set cut_paste_input [stack 0]
+version 15.0 v4
+push $cut_paste_input
+Group {
+name Merge_Extender
+tile_color 0xffff
+gl_color 0xffffffff
+selected true
+xpos 199
+ypos -1372
+addUserKnob {20 User}
+addUserKnob {26 Addmatte l "" +STARTLINE T "<font size=\"4\"><strong>Input an un-premulted image with a Matte"}
+addUserKnob {26 "" l " "}
+addUserKnob {26 ""}
+addUserKnob {20 group l "RGB Extend" n 1}
+group 0
+addUserKnob {41 useGPUIfAvailable l "Use GPU if available" -STARTLINE T Merge_Extend_GPU.useGPUIfAvailable}
+addUserKnob {41 Erode T CNTR.Erode}
+addUserKnob {41 filter T CNTR.filter}
+addUserKnob {41 size l "Edge blur" T CNTR.size}
+addUserKnob {26 ""}
+addUserKnob {20 STMapExtend l "STMap Extend" n 1}
+STMapExtend 0
+addUserKnob {41 erode T MasterCTRL.erode}
+addUserKnob {41 edgeextend l "edge extend" T MasterCTRL.edgeextend}
+addUserKnob {41 transition T MasterCTRL.transition}
+addUserKnob {26 ""}
+addUserKnob {41 size_4 l size T FilterErode5.size}
+addUserKnob {41 size_5 l size T Blur4.size}
+addUserKnob {41 size_6 l size T Blur3.size}
+addUserKnob {20 endGroup_3 l endGroup n -1}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Edge l EdgeFix n 1}
+Edge 0
+addUserKnob {41 ColorMix l "Color Mix" T Grade1.multiply}
+addUserKnob {41 ErodeColor l "Color Erode " T FilterErode2.size}
+addUserKnob {41 size_2 l "Color Blur" T Blur1.size}
+addUserKnob {26 ""}
+addUserKnob {41 DarkDetail l "Restore Light detail" T CNTR.DarkDetail}
+addUserKnob {41 BrightDetail l "Restore Dark Detail" T CNTR.BrightDetail}
+addUserKnob {20 endGroup_1 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Alpha n 1}
+Alpha 0
+addUserKnob {41 size_1 l size T FilterErode1.size}
+addUserKnob {41 Feather T CNTR.Feather}
+addUserKnob {41 Falloff_1 l Falloff T CNTR.Falloff_1}
+addUserKnob {41 rotate T CNTR.rotate}
+addUserKnob {41 EndBlur l "End Blur" -STARTLINE T Blur2.size}
+addUserKnob {41 boolean_2 l "Apply RGB blur" T CNTR.boolean_2}
+addUserKnob {41 RGBBlur l "" -STARTLINE T CNTR.RGBBlur}
+addUserKnob {20 endGroup_2 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {41 mix T CNTR.mix}
+addUserKnob {26 ""}
+addUserKnob {6 boolean_1 l "Pass Comp Alpha" +STARTLINE}
+boolean_1 true
+addUserKnob {41 boolean l "Pass Patch Alpha" T CNTR.boolean}
+addUserKnob {41 StrencilAlpha l "Stencil Alpha From Comp" T CNTR.StrencilAlpha}
+addUserKnob {41 size_3 l size -STARTLINE T FilterErode3.size}
+addUserKnob {20 Tracker}
+addUserKnob {41 translate T CNTR.translate}
+addUserKnob {41 rotate_1 l rotate T CNTR.rotate_1}
+addUserKnob {41 scale T CNTR.scale}
+addUserKnob {41 skewX l "skew X" T CNTR.skewX}
+addUserKnob {41 skewY l "skew Y" T CNTR.skewY}
+addUserKnob {41 skew_order l "skew order" T CNTR.skew_order}
+addUserKnob {41 center T CNTR.center}
+addUserKnob {41 invert_matrix l invert T CNTR.invert_matrix}
+addUserKnob {41 filter_1 l filter T CNTR.filter_1}
+addUserKnob {41 clamp T CNTR.clamp}
+addUserKnob {41 black_outside l "black outside" T CNTR.black_outside}
+addUserKnob {41 motionblur T CNTR.motionblur}
+addUserKnob {41 shutter l Shutter T CNTR.shutter}
+addUserKnob {41 shutteroffset l "Shutter Offset" T CNTR.shutteroffset}
+addUserKnob {41 shuttercustomoffset l "" -STARTLINE T CNTR.shuttercustomoffset}
+}
+Input {
+inputs 0
+name Patch
+xpos 509
+ypos 349
+number 1
+}
+Dot {
+name A
+label A
+note_font_size 35
+xpos 543
+ypos 429
+}
+set Nf8e3b4d0 [stack 0]
+Dot {
+name Dot26
+xpos 256
+ypos 701
+}
+set Ncbdf6320 [stack 0]
+Dot {
+name Dot5
+xpos 265
+ypos 1367
+}
+set Nb1f11150 [stack 0]
+Dot {
+name Dot122
+xpos 265
+ypos 4445
+}
+set Nc34fa440 [stack 0]
+Dot {
+name Dot123
+xpos 265
+ypos 4487
+}
+set Na1e32e50 [stack 0]
+Dot {
+name Dot27
+xpos 265
+ypos 4581
+}
+push $Na1e32e50
+push $Nc34fa440
+push $Ncbdf6320
+Clamp {
+minimum 1
+MinClampTo_enable true
+MaxClampTo_enable true
+name Clamp4
+xpos 399
+ypos 691
+}
+push $Nf8e3b4d0
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy5
+xpos 509
+ypos 691
+}
+Dot {
+name Dot118
+xpos 543
+ypos 916
+}
+Dot {
+name Dot103
+xpos 683
+ypos 916
+}
+FilterErode {
+size {{parent.CNTR.Erode}}
+name FilterErode12
+xpos 649
+ypos 1025
+}
+set Cc2cf7a30 [stack 0]
+set Nc2cf7a30 [stack 0]
+push $Nb1f11150
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos 649
+ypos 1357
+}
+set N90b8ab30 [stack 0]
+Dot {
+name Dot4
+xpos 683
+ypos 3913
+}
+set Nf61f95d0 [stack 0]
+Dot {
+name Dot116
+xpos 683
+ypos 4112
+}
+set Ncf2c8190 [stack 0]
+push $Nf61f95d0
+push $Nc2cf7a30
+push $N90b8ab30
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy2
+xpos 768
+ypos 1357
+}
+set N11efb0e0 [stack 0]
+AddChannels {
+channels rgba
+name AddChannels1
+xpos 768
+ypos 1444
+}
+Remove {
+operation keep
+channels rgba
+name Remove1
+xpos 768
+ypos 1508
+}
+Dot {
+name Dot15
+xpos 802
+ypos 1553
+}
+set Nd07ef2c0 [stack 0]
+Dot {
+name Dot16
+xpos 802
+ypos 1676
+}
+set N980b100 [stack 0]
+Dot {
+name Dot18
+xpos 802
+ypos 2495
+}
+Dot {
+name Dot19
+xpos 802
+ypos 2581
+}
+set Nf7c77660 [stack 0]
+Dot {
+name Dot20
+xpos 802
+ypos 2655
+}
+push $N980b100
+push $Nd07ef2c0
+Remove {
+name Remove2
+xpos 1084
+ypos 1544
+}
+Expression {
+expr0 (x+0.5)/width
+expr1 (y+0.5)/height
+expr3 1
+name Expression1
+xpos 1084
+ypos 1612
+}
+set N368f0c90 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy6
+xpos 1084
+ypos 1666
+}
+FilterErode {
+size {{parent.MasterCTRL.erode}}
+name FilterErode4
+xpos 1084
+ypos 1802
+}
+Dot {
+name Dot17
+xpos 1118
+ypos 1874
+}
+set Nddf49210 [stack 0]
+Dot {
+name Dot21
+xpos 955
+ypos 1874
+}
+Blur {
+channels alpha
+size {{MasterCTRL.transition}}
+name Blur11
+xpos 921
+ypos 2278
+}
+Dot {
+name Dot22
+xpos 955
+ypos 2422
+}
+push $N368f0c90
+Dot {
+name Dot23
+xpos 1515
+ypos 1616
+}
+Dot {
+name Dot24
+xpos 1515
+ypos 2347
+}
+set Ndee273f0 [stack 0]
+Dot {
+name Dot25
+xpos 1515
+ypos 2423
+}
+push $Ndee273f0
+push $Nddf49210
+Premult {
+name Premult6
+xpos 1084
+ypos 1931
+}
+Blur {
+size {{parent.MasterCTRL.edgeextend}}
+name Blur12
+xpos 1084
+ypos 1989
+}
+Unpremult {
+name Unpremult1
+xpos 1084
+ypos 2065
+}
+Expression {
+expr3 ceil(a)
+name Expression2
+xpos 1084
+ypos 2126
+}
+Clamp {
+name Clamp1
+xpos 1084
+ypos 2189
+}
+Merge2 {
+inputs 2
+operation under
+name Merge10
+xpos 1084
+ypos 2343
+}
+Keymix {
+inputs 3
+name Keymix2
+xpos 1084
+ypos 2413
+}
+push $Nf7c77660
+Unpremult {
+name Unpremult2
+xpos 912
+ypos 2578
+disable true
+}
+STMap {
+inputs 2
+uv rgb
+name STMap1
+xpos 1084
+ypos 2572
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy7
+xpos 1084
+ypos 2645
+}
+Dot {
+name Dot3
+xpos 1118
+ypos 3974
+}
+Switch {
+inputs 2
+which 1
+name Switch1
+xpos 518
+ypos 3970
+disable {{parent.MasterCTRL.edgeextend}}
+}
+EdgeExtend {
+detailAmount 0
+premultiply false
+name Merge_Extend_GPU
+xpos 518
+ypos 4012
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy8
+xpos 518
+ypos 4102
+}
+set Na5128c70 [stack 0]
+Dot {
+name Dot6
+xpos 399
+ypos 4323
+}
+push $Na5128c70
+EdgeBlur {
+channels rgb
+size 0
+filter box
+name RGB_EdgeBlur
+xpos 518
+ypos 4219
+}
+EdgeBlur {
+channels rgb
+size {{parent.RGB_EdgeBlur.size/2}}
+name RGB_EdgeBlur1
+xpos 518
+ypos 4279
+}
+Switch {
+inputs 2
+which 1
+name Switch2
+xpos 518
+ypos 4319
+disable {{parent.RGB_EdgeBlur.size}}
+}
+set N428ab2f0 [stack 0]
+Dot {
+name Dot7
+xpos 415
+ypos 4399
+}
+push $Ncf2c8190
+FilterErode {
+size 0
+name FilterErode2
+xpos 649
+ypos 4234
+}
+Blur {
+name Blur1
+xpos 649
+ypos 4280
+}
+Dot {
+name Dot1
+xpos 683
+ypos 4357
+}
+push $N428ab2f0
+Grade {
+inputs 1+1
+invert_mask true
+name Grade1
+xpos 518
+ypos 4353
+}
+Switch {
+inputs 2
+which 1
+name Switch4
+xpos 518
+ypos 4395
+disable {{parent.Grade1.multiply-1}}
+}
+set N1abfa880 [stack 0]
+Merge2 {
+inputs 2
+operation max
+output {rgba.red rgba.green rgba.blue -rgba.alpha}
+mix 0
+name Merge28
+xpos 518
+ypos 4441
+}
+set N90fef0b0 [stack 0]
+Merge2 {
+inputs 2
+operation min
+output {rgba.red rgba.green rgba.blue -rgba.alpha}
+mix 0
+name Merge31
+xpos 518
+ypos 4483
+}
+set N351a660 [stack 0]
+Blur {
+channels rgb
+size {{"(abs (parent.FilterErode10.size)+Merge_Extender.Blur2.size)*CNTR.RGBBlur"}}
+name BlurRGB
+xpos 518
+ypos 4524
+disable {{parent.CNTR.boolean_2-1 x1001 0 x1076 1}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy9
+xpos 518
+ypos 4571
+}
+Dot {
+name Dot2
+xpos 553
+ypos 4638
+}
+Transform {
+center {{input.width/2} {input.height/2}}
+name Transform3
+xpos 519
+ypos 4656
+}
+Invert {
+channels alpha
+name Invert1
+xpos 519
+ypos 4718
+}
+set C43a9210 [stack 0]
+FilterErode {
+size 0
+name FilterErode1
+xpos 519
+ypos 4756
+}
+FilterErode {
+size 0
+filter gaussian
+name FilterErode10
+xpos 519
+ypos 4821
+}
+clone $C43a9210 {
+xpos 519
+ypos 4859
+selected false
+}
+Grade {
+channels alpha
+gamma {{parent.CNTR.Falloff_1}}
+white_clamp true
+name Grade17
+xpos 519
+ypos 4980
+}
+Transform {
+rotate {{parent.Transform3.rotate*-1}}
+center {{input.width/2} {input.height/2}}
+name Transform6
+xpos 519
+ypos 5031
+}
+Blur {
+channels alpha
+size 1
+name Blur2
+xpos 519
+ypos 5125
+}
+Premult {
+name Premult3
+xpos 519
+ypos 5302
+}
+Transform {
+scale {1 1}
+center {2060 1415}
+name Transform_MatchMove0
+xpos 519
+ypos 5371
+}
+set N6eb1c130 [stack 0]
+Dot {
+name Dot84
+xpos 720
+ypos 5375
+}
+FilterErode {
+size 0
+name FilterErode3
+xpos 686
+ypos 5405
+}
+Dot {
+name Dot93
+xpos 720
+ypos 5704
+}
+Input {
+inputs 0
+name Comp
+xpos 2084
+ypos 291
+}
+Dot {
+name B
+label B
+note_font_size 31
+xpos 2118
+ypos 383
+}
+set Nde18f790 [stack 0]
+Dot {
+name Dot12
+xpos 1936
+ypos 383
+}
+Dot {
+name Dot33
+selected true
+xpos 1936
+ypos 2778
+}
+push $N11efb0e0
+Invert {
+name Invert2
+xpos 1818
+ypos 1374
+}
+push $Nde18f790
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy3
+xpos 2094
+ypos 1374
+}
+AddChannels {
+channels rgba
+name AddChannels2
+xpos 2094
+ypos 1461
+}
+Remove {
+operation keep
+channels rgba
+name Remove3
+xpos 2094
+ypos 1525
+}
+Dot {
+name Dot8
+xpos 2128
+ypos 1570
+}
+set Ncd68b140 [stack 0]
+Dot {
+name Dot9
+xpos 2128
+ypos 1693
+}
+set Nd36f57a0 [stack 0]
+push $Ncd68b140
+Remove {
+name Remove4
+xpos 2410
+ypos 1561
+}
+Expression {
+expr0 (x+0.5)/width
+expr1 (y+0.5)/height
+expr3 1
+name Expression3
+xpos 2410
+ypos 1629
+}
+set Naf50f760 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy4
+xpos 2410
+ypos 1683
+}
+FilterErode {
+size 0
+name FilterErode5
+xpos 2410
+ypos 1819
+}
+Dot {
+name Dot13
+xpos 2444
+ypos 1891
+}
+set Nc4dfe0f0 [stack 0]
+Dot {
+name Dot14
+xpos 2281
+ypos 1891
+}
+Blur {
+channels alpha
+name Blur3
+xpos 2247
+ypos 2295
+}
+Dot {
+name Dot28
+xpos 2281
+ypos 2439
+}
+push $Naf50f760
+Dot {
+name Dot29
+xpos 2841
+ypos 1633
+}
+Dot {
+name Dot30
+xpos 2841
+ypos 2364
+}
+set Nc7df5080 [stack 0]
+Dot {
+name Dot31
+xpos 2841
+ypos 2440
+}
+push $Nc7df5080
+push $Nc4dfe0f0
+Premult {
+name Premult1
+xpos 2410
+ypos 1948
+}
+Blur {
+name Blur4
+xpos 2410
+ypos 2006
+}
+Unpremult {
+name Unpremult3
+xpos 2410
+ypos 2082
+}
+Expression {
+expr3 ceil(a)
+name Expression4
+xpos 2410
+ypos 2143
+}
+Clamp {
+name Clamp2
+xpos 2410
+ypos 2206
+}
+Merge2 {
+inputs 2
+operation under
+name Merge1
+xpos 2410
+ypos 2360
+}
+Keymix {
+inputs 3
+name Keymix1
+xpos 2410
+ypos 2430
+}
+push $Nd36f57a0
+Dot {
+name Dot10
+xpos 2128
+ypos 2512
+}
+Dot {
+name Dot11
+xpos 2128
+ypos 2598
+}
+Unpremult {
+name Unpremult4
+xpos 2238
+ypos 2595
+disable true
+}
+STMap {
+inputs 2
+uv rgb
+name STMap2
+xpos 2410
+ypos 2589
+}
+set Nc4954fa0 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy10
+xpos 2410
+ypos 2768
+}
+Dot {
+name Dot32
+xpos 2444
+ypos 4029
+}
+Dot {
+name Dot106
+xpos 2444
+ypos 5449
+}
+set Na592af00 [stack 0]
+Dot {
+name Dot115
+xpos 2444
+ypos 5568
+}
+set N95c66660 [stack 0]
+Dot {
+name Dot119
+xpos 2444
+ypos 5597
+}
+Input {
+inputs 0
+name Cut_out
+xpos -118
+ypos 408
+number 2
+}
+Dot {
+name Cutout
+label Cutout
+note_font_size 21
+xpos -84
+ypos 448
+}
+Dot {
+name Dot101
+xpos -84
+ypos 5441
+}
+push $N6eb1c130
+push $Na592af00
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle1
+xpos 891
+ypos 5441
+disable {{parent.boolean_1}}
+}
+Merge2 {
+inputs 2+1
+bbox B
+invert_mask true
+name Merge24
+xpos 519
+ypos 5437
+}
+set N105b0280 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy15
+xpos 617
+ypos 5587
+}
+ChannelMerge {
+inputs 2
+operation stencil
+name ChannelMerge10
+xpos 617
+ypos 5688
+disable {{parent.CNTR.StrencilAlpha-1}}
+}
+push $N95c66660
+push $N105b0280
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy14
+xpos 519
+ypos 5558
+disable {{parent.CNTR.boolean}}
+}
+Switch {
+inputs 2
+which 1
+name Switch3
+xpos 519
+ypos 5700
+disable {{parent.ChannelMerge10.disable}}
+}
+Dot {
+name End
+label End
+note_font "DejaVu Sans"
+note_font_size 41
+xpos 553
+ypos 6021
+}
+Output {
+name Output1
+xpos 553
+ypos 6121
+}
+clone $Cc2cf7a30 {
+inputs 0
+xpos -18
+ypos 915
+selected false
+}
+Group {
+inputs 0
+name CNTR
+xpos -18
+ypos 819
+addUserKnob {20 User}
+addUserKnob {26 Addmatte l "" +STARTLINE T "<font size=\"4\"><strong>Input an un-premutiplied image with a Matte"}
+addUserKnob {26 ""}
+addUserKnob {20 group l "RGB Extend" n 1}
+addUserKnob {7 Erode R 0 100}
+addUserKnob {41 filter T FilterErode12.filter}
+addUserKnob {41 size l "Edge blur" T RGB_EdgeBlur.size}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Edge l EdgeFix n 1}
+addUserKnob {41 tint T RGB_EdgeBlur.tint}
+addUserKnob {41 brightness T RGB_EdgeBlur.brightness}
+addUserKnob {41 DarkDetail l "Restore Light detail" T Merge28.mix}
+addUserKnob {41 BrightDetail l "Restore Dark Detail" T Merge31.mix}
+addUserKnob {20 endGroup_1 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Alpha n 1}
+addUserKnob {41 Feather T FilterErode10.size}
+addUserKnob {7 Falloff_1 l Falloff R 0 5}
+Falloff_1 1
+addUserKnob {41 rotate T Transform3.rotate}
+addUserKnob {6 boolean_2 l "Apply RGB blur" +STARTLINE}
+addUserKnob {7 RGBBlur l "" -STARTLINE}
+RGBBlur 1
+addUserKnob {20 endGroup_2 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {41 mix T Merge24.mix}
+addUserKnob {26 ""}
+addUserKnob {6 boolean l "Pass Patch Alpha" +STARTLINE}
+addUserKnob {6 StrencilAlpha l "Stencil Alpha From Matte" +STARTLINE}
+addUserKnob {20 Tracker}
+addUserKnob {41 translate T Transform_MatchMove0.translate}
+addUserKnob {41 rotate_1 l rotate T Transform_MatchMove0.rotate}
+addUserKnob {41 scale T Transform_MatchMove0.scale}
+addUserKnob {41 skewX l "skew X" T Transform_MatchMove0.skewX}
+addUserKnob {41 skewY l "skew Y" T Transform_MatchMove0.skewY}
+addUserKnob {41 skew_order l "skew order" T Transform_MatchMove0.skew_order}
+addUserKnob {41 center T Transform_MatchMove0.center}
+addUserKnob {41 invert_matrix l invert T Transform_MatchMove0.invert_matrix}
+addUserKnob {41 filter_1 l filter T Transform_MatchMove0.filter}
+addUserKnob {41 clamp -STARTLINE T Transform_MatchMove0.clamp}
+addUserKnob {41 black_outside l "black outside" -STARTLINE T Transform_MatchMove0.black_outside}
+addUserKnob {41 motionblur T Transform_MatchMove0.motionblur}
+addUserKnob {41 shutter l Shutter T Transform_MatchMove0.shutter}
+addUserKnob {41 shutteroffset l "Shutter Offset" T Transform_MatchMove0.shutteroffset}
+addUserKnob {41 shuttercustomoffset l "" -STARTLINE T Transform_MatchMove0.shuttercustomoffset}
+}
+Input {
+inputs 0
+name Input1
+xpos 0
+}
+Output {
+name Output1
+xpos 0
+ypos 300
+}
+end_group
+NoOp {
+inputs 0
+name MasterCTRL
+xpos -317
+ypos 2106
+addUserKnob {20 MasterCTRL}
+addUserKnob {7 erode R 0 10}
+addUserKnob {7 edgeextend l "edge extend" R 0 100}
+addUserKnob {7 transition R 0 100}
+}
+push $N1abfa880
+push $N90fef0b0
+Switch {
+inputs 2
+which 1
+name Switch5
+xpos 637
+ypos 4441
+disable {{parent.Merge28.mix*100}}
+}
+push $N90fef0b0
+push $N351a660
+Switch {
+inputs 2
+which 1
+name Switch6
+xpos 640
+ypos 4483
+disable {{parent.Merge31.mix*1000}}
+}
+push $Nc4954fa0
+Viewer {
+frame_range 1001-1778
+fps 25
+viewerProcess "Raw (sRGB - Display)"
+monitorOutNDISenderName "Nuke - tfs_105_064_0030_Main_comp_v025 - Viewer1"
+name Viewer1
+xpos 2544
+ypos 2745
+}
+end_group
