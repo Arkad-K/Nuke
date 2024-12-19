@@ -1,0 +1,707 @@
+set cut_paste_input [stack 0]
+version 14.1 v4
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name CB_Help
+selected true
+xpos 627
+ypos 8918
+addUserKnob {20 User}
+addUserKnob {41 translate T CNTR_Trans.translate}
+addUserKnob {41 scale T CNTR_Trans.scale}
+addUserKnob {26 "" +STARTLINE}
+addUserKnob {41 saturation T CNTR_Sat.saturation}
+addUserKnob {41 disablesq1 l "Disable Saturation (sqr1)" T CNTR_Sat.disable}
+addUserKnob {26 "" +STARTLINE}
+addUserKnob {41 white l "Gain Shift" t Color T Grade_Help.white}
+addUserKnob {26 "" +STARTLINE}
+addUserKnob {41 disableDiff l "Disable Diffirence" T Difference.disable}
+}
+Input {
+inputs 0
+name Comp
+xpos 509
+ypos 384
+}
+Grade {
+white {1 1 1 1}
+white_panelDropped true
+name Grade_Help
+xpos 509
+ypos 424
+}
+set Nb25f8280 [stack 0]
+Transform {
+translate {1224 791.5}
+center {512 512}
+name CNTR_Trans
+xpos -99
+ypos 492
+}
+push $Nb25f8280
+Dot {
+name Dot111
+xpos 543
+ypos 617
+}
+set Ne23fd040 [stack 0]
+Dot {
+name Dot109
+xpos 1482
+ypos 1219
+hide_input true
+}
+Constant {
+inputs 0
+channels rgb
+format "1024 1024 0 0 1024 1024 1 square_1K"
+name Constant3
+xpos -1211
+ypos 552
+}
+set N125bb790 [stack 0]
+Dot {
+name Dot114
+xpos -1387
+ypos 579
+}
+Grid {
+number 2
+size 1.2
+name GridLine
+xpos -1421
+ypos 902
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+out2 depth
+mappings "5 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 white -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.alpha 0 3 depth.Z 1 0"
+name Shuffle13
+xpos -1320
+ypos 902
+}
+push $N125bb790
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 white -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle10
+xpos -1258
+ypos 695
+}
+push $N125bb790
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+name Shuffle9
+xpos -1334
+ypos 696
+}
+push $N125bb790
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.red 0 0 white -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle11
+xpos -1159
+ypos 694
+}
+push $N125bb790
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 white -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle12
+xpos -1060
+ypos 693
+}
+ContactSheet {
+inputs 4
+width 1024
+height 1024
+rows 2
+columns 2
+name ContactSheet1
+xpos -1227
+ypos 742
+}
+Copy {
+inputs 2
+from0 depth.Z
+to0 depth.Z
+name Copy9
+xpos -1227
+ypos 896
+}
+Invert {
+name Invert6
+xpos -1227
+ypos 1022
+disable true
+}
+Dot {
+name Dot92
+xpos -1193
+ypos 1080
+}
+Transform {
+translate {{parent.CNTR_Trans.translate} {parent.CNTR_Trans.translate}}
+scale {{parent.CNTR_Trans.scale}}
+center {{parent.CNTR_Trans.center} {parent.CNTR_Trans.center}}
+name Transform5
+xpos -72
+ypos 1095
+}
+set N122b2c90 [stack 0]
+Dot {
+name Dot115
+xpos 341
+ypos 1099
+}
+set N127bb9f0 [stack 0]
+Shuffle2 {
+fromInput1 {{0} B}
+in1 depth
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 depth.Z 0 0 rgba.alpha 0 3"
+name Shuffle14
+xpos 398
+ypos 1095
+}
+Constant {
+inputs 0
+channels rgb
+format "1024 1024 0 0 1024 1024 1 square_1K"
+name Constant6
+xpos -707
+ypos 773
+}
+Ramp {
+p0 {0 0}
+p1 {0 1024}
+name Ramp1
+xpos -707
+ypos 845
+}
+set N1785caa0 [stack 0]
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.red 0 0 rgba.red 0 0"
+name Shuffle18
+tile_color 0xff0000ff
+xpos -754
+ypos 916
+}
+push $N1785caa0
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.alpha 0 3 rgba.alpha 0 3 rgba.blue 0 2 rgba.blue 0 2 rgba.green 0 1 rgba.green 0 1 rgba.red 0 0 rgba.red 0 0"
+name Shuffle19
+xpos -856
+ypos 918
+}
+push $N1785caa0
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1"
+name Shuffle20
+tile_color 0xff00ff
+xpos -657
+ypos 914
+}
+push $N1785caa0
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2"
+name Shuffle21
+tile_color 0xffff
+xpos -561
+ypos 917
+}
+ContactSheet {
+inputs 4
+width 1024
+height 1024
+rows 2
+columns 2
+name ContactSheet2
+xpos -694
+ypos 986
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+name Shuffle17
+xpos -694
+ypos 1012
+}
+Roto {
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097152}
+    {t x44000000 x44000000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Rectangle1 512 bezier
+     {{cc
+       {f 8192}
+       {px x44902000
+        {0 xc3bbaaac}
+        {x416adb48 x448b0000}
+        {x43a5f0c5 0}
+        {xc3a5f0c4 0}
+        {x447c9493 x448b0000}
+        {0 xc3bbaaac}
+        {0 x43bbaaab}
+        {x447c9493 xc1600000}
+        {xc3a5f0c4 0}
+        {x43a5f0c5 0}
+        {x416adb48 xc1600000}
+        {0 x43bbaaab}}}
+      {cc
+       {f 8192}
+       {px x44902000
+        {0 xc3bbaaac}
+        {0 0}
+        {x43a5f0c5 0}
+        {xc3a5f0c4 0}
+        {0 0}
+        {0 xc3bbaaac}
+        {0 x43bbaaab}
+        {0 0}
+        {xc3a5f0c4 0}
+        {x43a5f0c5 0}
+        {0 0}
+        {0 x43bbaaab}}}}
+     {tx x44902000 x44002000 x44094000}
+     {a r 0 g 0 b 0 a 0 osw x41200000 osf 0 str 1 spx x44000000 spy x44000000 sb 1 ltn x44902000 ltm x44902000 tt x41000000}}}}}}
+toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 tt 8 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+toolbar_brush_hardness 0.200000003
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {512 512}
+color 0
+colorOverlay {0 0 0 0}
+lifetime_type "all frames"
+lifetime_start 1153
+lifetime_end 1153
+motionblur_shutter_offset_type centred
+source_black_outside true
+name Roto10
+xpos -694
+ypos 1047
+}
+Transform {
+translate {{parent.CNTR_Trans.translate} {parent.CNTR_Trans.translate}}
+scale {{parent.CNTR_Trans.scale}}
+center {{parent.CNTR_Trans.center} {parent.CNTR_Trans.center}}
+name Transform3
+xpos -131
+ypos 1047
+}
+set N69bd98f0 [stack 0]
+push $N69bd98f0
+push $N127bb9f0
+Expression {
+expr3 r+b+g+a
+name Expression3
+xpos 307
+ypos 1011
+hide_input true
+}
+push $N122b2c90
+Dot {
+name Dot121
+xpos 1197
+ypos 885
+hide_input true
+}
+set N9ecf3220 [stack 0]
+Input {
+inputs 0
+name OG_for_Difference
+xpos 850
+ypos 560
+number 1
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle16
+xpos 850
+ypos 600
+}
+set Nb07f65e0 [stack 0]
+Dot {
+name Dot116
+xpos 884
+ypos 698
+}
+set N2816f170 [stack 0]
+Dot {
+name Dot117
+xpos 884
+ypos 755
+}
+set N10cbd2c0 [stack 0]
+Dot {
+name Dot118
+xpos 884
+ypos 805
+}
+set N1719f8d0 [stack 0]
+Dot {
+name Dot119
+xpos 884
+ypos 854
+}
+Saturation {
+channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Saturation7
+xpos 929
+ypos 844
+}
+Copy {
+inputs 2
+from0 rgba.red
+to0 rgba.alpha
+name Copy14
+xpos 1288
+ypos 848
+}
+Premult {
+name Premult8
+xpos 1474
+ypos 854
+}
+push $N9ecf3220
+push $N1719f8d0
+Saturation {
+channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Saturation8
+xpos 928
+ypos 795
+}
+Copy {
+inputs 2
+from0 rgba.blue
+to0 rgba.alpha
+name Copy15
+xpos 1285
+ypos 795
+}
+Premult {
+name Premult9
+xpos 1477
+ypos 796
+}
+push $N9ecf3220
+push $N10cbd2c0
+Saturation {
+channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Saturation9
+xpos 932
+ypos 745
+}
+Copy {
+inputs 2
+from0 rgba.green
+to0 rgba.alpha
+name Copy16
+xpos 1278
+ypos 745
+}
+Premult {
+name Premult10
+xpos 1475
+ypos 755
+}
+push $N9ecf3220
+push $N2816f170
+Saturation {
+channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Sat_OG2
+xpos 934
+ypos 694
+disable {{parent.Sat_OG.disable}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy17
+xpos 1275
+ypos 688
+}
+Premult {
+name Premult11
+xpos 1475
+ypos 699
+}
+push $Nb07f65e0
+Dot {
+name Dot110
+xpos 1763
+ypos 577
+}
+Merge2 {
+inputs 2
+name Merge35
+xpos 1729
+ypos 699
+}
+Merge2 {
+inputs 2
+name Merge36
+xpos 1729
+ypos 755
+}
+Merge2 {
+inputs 2
+name Merge37
+xpos 1728
+ypos 801
+}
+Merge2 {
+inputs 2
+name Merge38
+xpos 1728
+ypos 854
+}
+Dot {
+name Dot112
+xpos 1762
+ypos 1015
+}
+push $N122b2c90
+Dot {
+name Dot120
+xpos 10
+ypos 978
+}
+set Ncb62500 [stack 0]
+push $Ne23fd040
+Dot {
+name Dot27
+xpos -336
+ypos 613
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle7
+xpos -370
+ypos 704
+}
+Dot {
+name Dot106
+xpos -336
+ypos 802
+}
+set Nba3fcae0 [stack 0]
+Dot {
+name Dot104
+xpos -336
+ypos 859
+}
+set N10ebd380 [stack 0]
+Dot {
+name Dot102
+xpos -336
+ypos 909
+}
+set Nb2af0280 [stack 0]
+Dot {
+name Dot93
+xpos -336
+ypos 958
+}
+Saturation {
+channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Saturation6
+xpos -291
+ypos 948
+}
+Copy {
+inputs 2
+from0 rgba.red
+to0 rgba.alpha
+name Copy13
+xpos 68
+ypos 952
+}
+Premult {
+name Premult7
+xpos 254
+ypos 958
+}
+push $Ncb62500
+push $Nb2af0280
+Saturation {
+channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Saturation2
+xpos -292
+ypos 899
+}
+Copy {
+inputs 2
+from0 rgba.blue
+to0 rgba.alpha
+name Copy12
+xpos 65
+ypos 899
+}
+Premult {
+name Premult6
+xpos 257
+ypos 900
+}
+push $Ncb62500
+push $N10ebd380
+Saturation {
+channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Saturation5
+xpos -288
+ypos 849
+}
+Copy {
+inputs 2
+from0 rgba.green
+to0 rgba.alpha
+name Copy10
+xpos 58
+ypos 849
+}
+Premult {
+name Premult5
+xpos 255
+ypos 859
+}
+push $Ncb62500
+push $Nba3fcae0
+Saturation {
+channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Sat.saturation}}
+name Sat_OG
+selected true
+xpos -286
+ypos 798
+disable {{parent.CNTR_Sat.disable}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy11
+xpos 55
+ypos 792
+}
+Premult {
+name Premult4
+xpos 255
+ypos 803
+}
+push $Ne23fd040
+Merge2 {
+inputs 2
+name Merge2
+xpos 509
+ypos 803
+}
+Merge2 {
+inputs 2
+name Merge23
+xpos 509
+ypos 859
+}
+Merge2 {
+inputs 2
+name Merge30
+xpos 508
+ypos 905
+}
+Merge2 {
+inputs 2
+name Merge31
+xpos 508
+ypos 958
+}
+Merge2 {
+inputs 2+1
+operation difference
+name Difference
+xpos 508
+ypos 1011
+disable true
+}
+Merge2 {
+inputs 2+1
+operation copy
+name Merge33
+xpos 508
+ypos 1047
+}
+Grade {
+inputs 1+1
+white 0
+name Grade19
+xpos 508
+ypos 1095
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy6
+xpos 508
+ypos 1209
+}
+Output {
+name Output1
+xpos 508
+ypos 1309
+}
+push $Ne23fd040
+Saturation {
+saturation 4
+name CNTR_Sat
+xpos -287
+ypos 745
+disable true
+}
+end_group
