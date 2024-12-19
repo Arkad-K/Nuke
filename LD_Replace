@@ -1,0 +1,397 @@
+set cut_paste_input [stack 0]
+version 14.1 v4
+push $cut_paste_input
+Group {
+name LD_Replace
+selected true
+xpos -7362
+ypos -1936
+addUserKnob {20 User l "Lens Distortion"}
+addUserKnob {6 boolean_1 l "Show FG (keep unchecked)" +STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {6 boolean l "Crop output" +STARTLINE}
+boolean true
+addUserKnob {26 ""}
+addUserKnob {20 BG n 1}
+addUserKnob {41 outputFormat l "Scale to Format" T BG_LensDistort.outputFormat}
+addUserKnob {41 analysisStart l "Analysis Start" T BG_LensDistort.analysisStart}
+addUserKnob {41 analysisStop l "Analysis Stop" T BG_LensDistort.analysisStop}
+addUserKnob {41 analyzeImage l "Analyze Sequence" T BG_LensDistort.analyzeImage}
+addUserKnob {41 lensType l "Lens Type" T BG_LensDistort.lensType}
+addUserKnob {41 distortion1 l "Radial Distortion 1" T BG_LensDistort.distortion1}
+addUserKnob {41 distortion2 l "Radial Distortion 2" T BG_LensDistort.distortion2}
+addUserKnob {41 distortionCenter l "Distortion Center" T BG_LensDistort.distortionCenter}
+addUserKnob {26 ""}
+addUserKnob {6 boolean_2 l "Bg Lense Override" +STARTLINE}
+addUserKnob {41 distortion1_2 l "Radial Distortion 1" T BG_LensOveride_control.distortion1}
+addUserKnob {41 distortion2_2 l "Radial Distortion 2" T BG_LensOveride_control.distortion2}
+addUserKnob {20 endGroup_2 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 FG n 1}
+addUserKnob {41 outputFormat_1 l "Scale to Format" T FG_LenseDistort.outputFormat}
+addUserKnob {41 analysisStart_1 l "Analysis Start" T FG_LenseDistort.analysisStart}
+addUserKnob {41 analysisStop_1 l "Analysis Stop" T FG_LenseDistort.analysisStop}
+addUserKnob {41 analyzeImage_1 l "Analyze Sequence" T FG_LenseDistort.analyzeImage}
+addUserKnob {41 lensType_1 l "Lens Type" T FG_LenseDistort.lensType}
+addUserKnob {41 distortion1_1 l "Radial Distortion 1" T FG_LenseDistort.distortion1}
+addUserKnob {41 distortion2_1 l "Radial Distortion 2" T FG_LenseDistort.distortion2}
+addUserKnob {41 distortionCenter_1 l "Distortion Center" T FG_LenseDistort.distortionCenter}
+addUserKnob {26 ""}
+addUserKnob {6 boolean_3 l "FG Lense Override" +STARTLINE}
+addUserKnob {41 distortion1_3 l "Radial Distortion 1" T FG_Lenseoveride_control.distortion1}
+addUserKnob {41 distortion2_3 l "Radial Distortion 2" T FG_Lenseoveride_control.distortion2}
+addUserKnob {20 endGroup_3 l endGroup n -1}
+addUserKnob {20 Position}
+addUserKnob {41 matrix T Transform.matrix}
+addUserKnob {41 translate T Transform.translate}
+addUserKnob {41 scale T Transform.scale}
+addUserKnob {41 rotate T Transform.rotate}
+addUserKnob {41 skewX l "skew X" T Transform.skewX}
+addUserKnob {41 skewY l "skew Y" T Transform.skewY}
+addUserKnob {41 center T Transform.center}
+addUserKnob {26 ""}
+addUserKnob {20 group l Cornerpin n 1}
+addUserKnob {41 disable_1 l Disable T CornerPin2D.disable}
+addUserKnob {20 endGroup n -1}
+addUserKnob {41 to1 T CornerPin2D.to1}
+addUserKnob {41 enable1 -STARTLINE T CornerPin2D.enable1}
+addUserKnob {41 to2 T CornerPin2D.to2}
+addUserKnob {41 enable2 -STARTLINE T CornerPin2D.enable2}
+addUserKnob {41 to3 T CornerPin2D.to3}
+addUserKnob {41 enable3 -STARTLINE T CornerPin2D.enable3}
+addUserKnob {41 to4 T CornerPin2D.to4}
+addUserKnob {41 enable4 -STARTLINE T CornerPin2D.enable4}
+addUserKnob {41 copy_from l "Copy 'from'" T CornerPin2D.copy_from}
+addUserKnob {20 "extra matrix" n 2}
+addUserKnob {41 transform_matrix l "" -STARTLINE T CornerPin2D.transform_matrix}
+addUserKnob {41 invert T CornerPin2D.invert}
+addUserKnob {41 filter T CornerPin2D.filter}
+addUserKnob {41 clamp T CornerPin2D.clamp}
+addUserKnob {41 black_outside l "black outside" T CornerPin2D.black_outside}
+addUserKnob {41 motionblur T CornerPin2D.motionblur}
+addUserKnob {41 shutter l Shutter T CornerPin2D.shutter}
+addUserKnob {41 shutteroffset l "Shutter Offset" T CornerPin2D.shutteroffset}
+addUserKnob {41 shuttercustomoffset l "" +STARTLINE T CornerPin2D.shuttercustomoffset}
+addUserKnob {20 "" n -1}
+addUserKnob {20 CopyFrom l Misc}
+addUserKnob {26 CopyFrom_1 l CopyFrom}
+addUserKnob {41 from1 T CornerPin2D.from1}
+addUserKnob {41 from2 T CornerPin2D.from2}
+addUserKnob {41 from3 T CornerPin2D.from3}
+addUserKnob {41 from4 T CornerPin2D.from4}
+addUserKnob {41 set_to_input l "Set to input" T CornerPin2D.set_to_input}
+addUserKnob {41 copy_to l "Copy 'to'" T CornerPin2D.copy_to}
+addUserKnob {26 ""}
+addUserKnob {20 MatchMove l "Match Move" n 1}
+addUserKnob {41 disable_2 l Disable T Transform_MatchMove6.disable}
+addUserKnob {41 translate_1 l translate T Transform_MatchMove6.translate}
+addUserKnob {41 rotate_1 l rotate T Transform_MatchMove6.rotate}
+addUserKnob {41 scale_1 l scale T Transform_MatchMove6.scale}
+addUserKnob {41 skewX_1 l "skew X" T Transform_MatchMove6.skewX}
+addUserKnob {41 skewY_1 l "skew Y" T Transform_MatchMove6.skewY}
+addUserKnob {41 skew_order l "skew order" T Transform_MatchMove6.skew_order}
+addUserKnob {41 center_1 l center T Transform_MatchMove6.center}
+addUserKnob {41 invert_matrix l invert T Transform_MatchMove6.invert_matrix}
+addUserKnob {41 filter_1 l filter T Transform_MatchMove6.filter}
+addUserKnob {41 clamp_1 l clamp T Transform_MatchMove6.clamp}
+addUserKnob {41 black_outside_1 l "black outside" T Transform_MatchMove6.black_outside}
+addUserKnob {41 motionblur_1 l motionblur T Transform_MatchMove6.motionblur}
+addUserKnob {41 shutter_1 l Shutter T Transform_MatchMove6.shutter}
+addUserKnob {41 shutteroffset_1 l "Shutter Offset" T Transform_MatchMove6.shutteroffset}
+addUserKnob {41 shuttercustomoffset_1 l "" -STARTLINE T Transform_MatchMove6.shuttercustomoffset}
+addUserKnob {20 endGroup_1 l endGroup n -1}
+addUserKnob {41 matrix_1 l matrix T Transform_MatchMove6.matrix}
+}
+LensDistortion {
+inputs 0
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+"Card Parameters" 1
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1020
+name FG_Lenseoveride_control
+xpos 573
+ypos -374
+disable {{1-parent.boolean_3}}
+}
+Input {
+inputs 0
+name FG
+xpos 509
+ypos -606
+number 1
+}
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+invertDistortion true
+distortionScaling "Choose Format"
+"Card Parameters" 1
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1100
+name FG_LenseDistort
+xpos 509
+ypos -446
+}
+Dot {
+name Dot1
+xpos 543
+ypos -234
+}
+Input {
+inputs 0
+name BG
+xpos 233
+ypos -1036
+}
+Dot {
+name Dot103
+xpos 267
+ypos -976
+}
+set N1d49a450 [stack 0]
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+distortion1 {{parent.BG_LensOveride_control.distortion1}}
+distortion2 {{parent.BG_LensOveride_control.distortion2}}
+distortionCenter {{parent.BG_LensDistort.distortionCenter} {parent.BG_LensDistort.distortionCenter}}
+invertDistortion true
+distortionScaling "Choose Format"
+outputFormat {{{parent.BG_LensDistort.outputFormat}}}
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1100
+name BG_LensDistort_Overide
+xpos 233
+ypos -923
+disable {{parent.BG_LensOveride_control.disable}}
+}
+Reformat {
+format {{{parent.BG_LensDistort.outputFormat}}}
+name Reformat1
+xpos 233
+ypos -895
+disable {{parent.BG_LensOveride_control.disable}}
+}
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+distortion1 {{parent.BG_LensOveride_control.distortion1}}
+distortion2 {{parent.BG_LensOveride_control.distortion2}}
+distortionCenter {{parent.BG_LensDistort.distortionCenter} {parent.BG_LensDistort.distortionCenter}}
+invertDistortion true
+distortionScaling "Choose Format"
+outputFormat {{{parent.BG_LensDistort.outputFormat}}}
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1100
+name BG_LensDistort_Overide1
+xpos 233
+ypos -857
+disable {{parent.BG_LensOveride_control.disable}}
+}
+Reformat {
+format {{{parent.BG_LensDistort.outputFormat}}}
+name Reformat2
+xpos 233
+ypos -831
+disable {{parent.BG_LensOveride_control.disable}}
+}
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+distortion1 {{parent.BG_LensOveride_control.distortion1}}
+distortion2 {{parent.BG_LensOveride_control.distortion2}}
+distortionCenter {{parent.BG_LensDistort.distortionCenter} {parent.BG_LensDistort.distortionCenter}}
+invertDistortion true
+distortionScaling "Choose Format"
+outputFormat {{{parent.BG_LensDistort.outputFormat}}}
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1100
+name BG_LensDistort_Overide2
+xpos 233
+ypos -795
+disable {{parent.BG_LensOveride_control.disable}}
+}
+Reformat {
+format {{{parent.BG_LensDistort.outputFormat}}}
+name Reformat3
+xpos 233
+ypos -769
+}
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+distortion1 {{parent.BG_LensDistort.distortion1}}
+distortion2 {{parent.BG_LensDistort.distortion2}}
+distortionCenter {{parent.BG_LensDistort.distortionCenter.x} {parent.BG_LensDistort.distortionCenter.y}}
+invertDistortion true
+distortionScaling "Choose Format"
+outputFormat {{{parent.BG_LensDistort.outputFormat}}}
+cardScale {1.099106669 1.099106669 1}
+a -0.04543835297
+b -0.02318792045
+c -0.02220793255
+analysisRange "Analysis Range"
+analysisStart {{parent.BG_LensDistort.analysisStart}}
+analysisStop {{parent.BG_LensDistort.analysisStop}}
+name LensDistortion4
+xpos 233
+ypos -729
+}
+Transform {
+center {2054 1044}
+black_outside false
+name Transform
+xpos 233
+ypos -661
+}
+CornerPin2D {
+to1 {0 0}
+to2 {4120 0}
+to3 {4120 2830}
+to4 {0 2830}
+invert false
+from1 {0 0}
+from2 {4120 0}
+from3 {4120 2830}
+from4 {0 2830}
+name CornerPin2D
+xpos 233
+ypos -585
+disable true
+}
+Transform {
+scale {1 1}
+center {1567 2347}
+name Transform_MatchMove6
+xpos 233
+ypos -540
+}
+Reformat {
+format {{{parent.FG_LenseDistort.outputFormat}}}
+name Reformating_crop3
+xpos 233
+ypos -505
+disable {{1-parent.boolean x1001 1}}
+}
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+distortion1 {{parent.FG_LenseDistort.distortion1}}
+distortion2 {{parent.FG_LenseDistort.distortion2}}
+distortionCenter {{parent.FG_LenseDistort.distortionCenter.x} {parent.FG_LenseDistort.distortionCenter.y}}
+distortionScaling "Choose Format"
+outputFormat {{{parent.FG_LenseDistort.outputFormat}}}
+cardScale {1.119734645 1.119734645 1}
+a -0.0774891898
+b -0.01703323424
+c -0.01707515121
+analysisRange "Analysis Range"
+analysisStart {{parent.FG_LenseDistort.analysisStart}}
+analysisStop {{parent.FG_LenseDistort.analysisStop}}
+name LensDistortion2
+xpos 233
+ypos -460
+}
+set Nb4dfbb50 [stack 0]
+Reformat {
+format {{{parent.FG_LenseDistort.outputFormat}}}
+name Reformating_crop2
+xpos 234
+ypos -420
+disable {{1-parent.boolean x1001 1}}
+}
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+distortion1 {{parent.FG_Lenseoveride_control.distortion1}}
+distortion2 {{parent.FG_Lenseoveride_control.distortion2}}
+distortionCenter {{parent.FG_LenseDistort.distortionCenter} {parent.FG_LenseDistort.distortionCenter}}
+distortionScaling "Choose Format"
+outputFormat {{{parent.FG_LenseDistort.outputFormat}}}
+"Card Parameters" 1
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1020
+name FG_LenseDistort_Overide
+xpos 233
+ypos -390
+disable {{parent.FG_Lenseoveride_control.disable}}
+}
+Reformat {
+format {{{parent.FG_LenseDistort.outputFormat}}}
+pbb true
+name Reformating_crop1
+xpos 233
+ypos -310
+}
+Reformat {
+format {{{parent.FG_LenseDistort.outputFormat}}}
+name Reformating_crop
+xpos 233
+ypos -284
+disable {{1-parent.boolean x1001 1}}
+}
+Switch {
+inputs 2
+which 1
+name Switch1
+xpos 233
+ypos -238
+disable {{1-parent.boolean_1}}
+}
+Output {
+name Output1
+xpos 233
+ypos -197
+}
+push $Nb4dfbb50
+Viewer {
+frame 1038
+frame_range 1001-1147
+viewerProcess "Raw (sRGB - Display)"
+monitorOutNDISenderName "NukeX - fms_037_0020_Main_comp_v005 - Viewer1"
+name Viewer1
+xpos 626
+ypos -215
+}
+push $N1d49a450
+LensDistortion {
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+invertDistortion true
+distortionScaling "Choose Format"
+outputFormat "4096 2160 0 0 4096 2160 1 4K_DCP"
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1100
+name BG_LensDistort
+xpos 567
+ypos -802
+}
+LensDistortion {
+inputs 0
+serializeKnob ""
+serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+ignore "Source Alpha"
+analysisRange "Analysis Range"
+analysisStart 1001
+analysisStop 1100
+name BG_LensOveride_control
+xpos 581
+ypos -857
+disable {{1-parent.boolean_2 x1513 0}}
+}
+end_group
