@@ -1,0 +1,360 @@
+set cut_paste_input [stack 0]
+version 14.0 v3
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name RGB_Tweak
+selected true
+xpos 370
+ypos -2356
+addUserKnob {20 User}
+addUserKnob {6 FullMatte l "Full Matte" +STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {20 ColorMap l EXTRA-ColorMap n 1}
+ColorMap 0
+addUserKnob {6 boolean l "Disable ColorMap" +STARTLINE}
+boolean true
+addUserKnob {7 ColorMapGain l "Gain " R 0 4}
+ColorMapGain 1
+addUserKnob {20 endGroup_4 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Luminosity n 1}
+addUserKnob {6 DisableLuminosity l "Disable Luminosity" +STARTLINE}
+addUserKnob {7 Gain R -4 4}
+Gain 1
+addUserKnob {7 Contrast R -4 4}
+Contrast 1
+addUserKnob {7 Gamma R -4 4}
+Gamma 1
+addUserKnob {20 endGroup_1 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Color n 1}
+addUserKnob {6 DisableColor l "Disable Color" +STARTLINE}
+addUserKnob {19 ColorRGB l "Color RGB" R -4 4}
+ColorRGB {1 1 1 1}
+addUserKnob {6 ColorRGB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Hue n 1}
+addUserKnob {6 DisableHue l "Disable Hue" +STARTLINE}
+addUserKnob {7 HueRotation l "Hue Rotation" R -180 180}
+addUserKnob {18 Hue_RGB R -4 4}
+Hue_RGB {1 1 1}
+addUserKnob {6 Hue_RGB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+color_rgb_panelDropped true
+addUserKnob {20 endGroup_2 l endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {20 Saturation n 1}
+addUserKnob {6 DisableSaturation l "Disable Saturation" +STARTLINE}
+addUserKnob {18 Saturation_RGB l "Saturation RGB" R -4 4}
+Saturation_RGB 1
+addUserKnob {6 Saturation_RGB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {26 ""}
+addUserKnob {20 endGroup_3 l endGroup n -1}
+addUserKnob {6 color_rgba_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+color_rgba_panelDropped true
+}
+Input {
+inputs 0
+name Alpha
+xpos 509
+ypos 101
+number 1
+}
+Dot {
+name Matte
+label Matte
+xpos 543
+ypos 229
+}
+Input {
+inputs 0
+name Comp
+xpos 86
+ypos 130
+}
+Dot {
+name Dot50
+xpos 121
+ypos 189
+}
+set N3a9f3b20 [stack 0]
+Clamp {
+minimum 0.5
+maximum 0.5
+name Clamp3
+xpos -49
+ypos 258
+}
+set N314a7000 [stack 0]
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+name Shuffle1
+xpos 335
+ypos 264
+}
+Switch {
+inputs 2
+which 1
+name Switch1
+xpos 509
+ypos 265
+disable {{parent.FullMatte x1099 0}}
+}
+Dot {
+name Dot2
+xpos 543
+ypos 301
+}
+set Nfc7fb4e0 [stack 0]
+Dot {
+name Dot28
+xpos 543
+ypos 467
+}
+set N3bdb9050 [stack 0]
+Dot {
+name Dot34
+xpos 543
+ypos 630
+}
+set N429feec0 [stack 0]
+Dot {
+name Dot35
+xpos 543
+ypos 837
+}
+set Na4ff0a20 [stack 0]
+Dot {
+name Dot40
+xpos 543
+ypos 1026
+}
+push $Na4ff0a20
+push $N429feec0
+push $N3bdb9050
+push $Nfc7fb4e0
+push $N3a9f3b20
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy14
+xpos 87
+ypos 291
+}
+push $N314a7000
+Grade {
+white {{parent.ColorMapGain}}
+name Grade2
+xpos -49
+ypos 330
+}
+PSDMerge {
+inputs 2
+name PSDMerge11
+note_font "Bitstream Vera Sans"
+selected true
+xpos 87
+ypos 329
+operation color
+maskChannelInput -rgba.alpha
+}
+push $N3a9f3b20
+Dot {
+name Dot36
+xpos -98
+ypos 189
+}
+Dot {
+name Dot1
+xpos -98
+ypos 366
+}
+Switch {
+inputs 2
+which 1
+name Switch5
+xpos 87
+ypos 362
+disable {{parent.boolean x1099 0}}
+}
+Dot {
+name Input
+label Input
+xpos 121
+ypos 409
+}
+set N95bf0100 [stack 0]
+ColorCorrect {
+contrast {{parent.Contrast}}
+gamma {{parent.Gamma}}
+gain {{parent.Gain}}
+name Luminosity_correction
+xpos 234
+ypos 405
+disable {{parent.DisableLuminosity}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos 234
+ypos 451
+}
+push $N95bf0100
+PSDMerge {
+inputs 2
+name PSDMerge5
+note_font "Bitstream Vera Sans"
+xpos 87
+ypos 457
+disable {{parent.DisableLuminosity x1099 1}}
+operation luminosity
+maskChannelInput -rgba.alpha
+}
+set N959fea20 [stack 0]
+Dot {
+name Dot37
+xpos 121
+ypos 590
+}
+set N866494c0 [stack 0]
+Grade {
+white {{parent.ColorRGB.r} {parent.ColorRGB.g} {parent.ColorRGB.b} {parent.color_rgba.a}}
+white_panelDropped true
+name Color_Shift
+xpos 254
+ypos 586
+disable {{parent.DisableColor}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy9
+xpos 254
+ypos 620
+}
+push $N866494c0
+PSDMerge {
+inputs 2
+name PSDMerge6
+note_font "Bitstream Vera Sans"
+xpos 87
+ypos 620
+disable {{parent.DisableColor}}
+operation color
+maskChannelInput -rgba.alpha
+}
+Dot {
+name Dot38
+xpos 121
+ypos 716
+}
+set N7ddf88a0 [stack 0]
+HueShift {
+hue_rotation {{parent.HueRotation}}
+name HueShift
+xpos 250
+ypos 712
+disable {{parent.DisableHue}}
+}
+Grade {
+white {{parent.Hue_RGB.r} {parent.Hue_RGB.g} {parent.Hue_RGB.b} 1}
+name Grade1
+xpos 253
+ypos 752
+disable {{parent.DisableHue}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy10
+xpos 253
+ypos 827
+}
+push $N7ddf88a0
+PSDMerge {
+inputs 2
+name PSDMerge7
+note_font "Bitstream Vera Sans"
+xpos 87
+ypos 833
+disable {{parent.DisableHue}}
+operation hue
+maskChannelInput -rgba.alpha
+}
+Dot {
+name Dot41
+xpos 121
+ypos 943
+}
+set N754ff2a0 [stack 0]
+Saturation {
+channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.Saturation_RGB.r}}
+name Red
+xpos 251
+ypos 939
+}
+Saturation {
+channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+saturation {{parent.Saturation_RGB.b}}
+name Blue
+xpos 251
+ypos 965
+}
+Saturation {
+channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.Saturation_RGB.g}}
+name Green
+xpos 251
+ypos 991
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy11
+xpos 250
+ypos 1016
+}
+push $N754ff2a0
+PSDMerge {
+inputs 2
+name PSDMerge8
+note_font "Bitstream Vera Sans"
+xpos 87
+ypos 1022
+disable {{parent.DisableSaturation}}
+operation saturation
+maskChannelInput -rgba.alpha
+}
+Dot {
+name Output
+label Output
+xpos 121
+ypos 1423
+}
+Output {
+name Output1
+xpos 87
+ypos 1483
+}
+push $N959fea20
+Viewer {
+frame_range 1001-1185
+fps 23.97602463
+viewerProcess "ACES 1.0 - SDR Video (sRGB - Display)"
+name Viewer1
+xpos -80
+ypos 515
+}
+end_group
