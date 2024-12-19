@@ -1,0 +1,770 @@
+set cut_paste_input [stack 0]
+version 14.1 v4
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name Op_Keyer
+tile_color 0xff
+selected true
+xpos 4040
+ypos -3026
+addUserKnob {20 User}
+addUserKnob {20 group l Channel n 1}
+group 0
+addUserKnob {41 shuffle l "" +STARTLINE T Channels.shuffle}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {18 Against R -2 2}
+Against {0.5 0.5 0.5}
+addUserKnob {6 Against_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+Against_panelDropped true
+addUserKnob {6 boolean_2 l "Activate c_Against" t "Instead of a constant it uses the \"c_Against \" plate to commit the operation" +STARTLINE}
+addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+color_rgb_panelDropped true
+addUserKnob {26 ""}
+addUserKnob {68 Operation M {IBK screen "color dodge" multiply darken "color burn" "linear burn" lighten "linear dodge" "lighter color" "soft light" "hard light" "vivid light" "linear light" "pin light" "hard mix" diffirence exclusion subtract divide hue saturation color luminosity "" "" "" "" "" "" ""}}
+Operation color
+addUserKnob {6 PSD_Local -STARTLINE}
+PSD_Local true
+addUserKnob {4 AlphaKeyer l "Alpha Keyer" M {Red "Green " Blue Luminosity ""}}
+AlphaKeyer Blue
+addUserKnob {6 boolean l "Invert Alpha" +STARTLINE}
+addUserKnob {6 clampalpha l "Clamp Alpha" +STARTLINE}
+clampalpha true
+addUserKnob {26 ""}
+addUserKnob {41 range T Keyer5.range}
+addUserKnob {7 double_2 l Gain R 0 4}
+double_2 1
+addUserKnob {7 double_3 l Gamma R 0 4}
+double_3 1
+addUserKnob {6 boolean_1 l "Copy Input RGB (last execution)" +STARTLINE}
+boolean_1 true
+}
+Keyer {
+inputs 0
+operation "red keyer"
+name Keyer5
+xpos 1103
+ypos 274
+}
+Constant {
+inputs 0
+channels rgb
+color {{parent.Against x1119 0.5} {parent.Against x1119 0.5} {parent.Against x1119 0.5} {parent.Against x1119 0.5}}
+color_panelDropped true
+name Against
+xpos 1288
+ypos -915
+cached true
+}
+Input {
+inputs 0
+name c_Against
+label c_Against
+xpos 1180
+ypos -904
+number 1
+}
+Dot {
+name Dot2
+xpos 1214
+ypos -720
+}
+Switch {
+inputs 2
+which 1
+name Switch2
+xpos 1288
+ypos -724
+disable {{parent.boolean_2}}
+}
+Dot {
+name Dot87
+xpos 1322
+ypos -251
+}
+Input {
+inputs 0
+name Plate
+label Plate
+xpos 953
+ypos -737
+}
+Dot {
+name Dot86
+xpos 987
+ypos -697
+}
+set N1ae1dec0 [stack 0]
+Shuffle2 {
+fromInput1 {{0} B}
+in1 rgb
+out1 rgb
+fromInput2 {{0} B}
+mappings "3 rgba.green 0 1 rgba.green 0 1 rgba.red 0 0 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2"
+name Channels
+xpos 953
+ypos -671
+cached true
+}
+Shuffle2 {
+fromInput1 {{0} B}
+in1 alpha
+out1 alpha
+fromInput2 {{0} B}
+mappings "1 white -1 -1 rgba.alpha 0 0"
+name Alpha_Active
+tile_color 0xff
+xpos 953
+ypos -615
+cached true
+}
+Dot {
+name Dot93
+xpos 987
+ypos -277
+}
+set N1ae35ef0 [stack 0]
+Dot {
+name Dot1
+xpos 1183
+ypos -277
+}
+Merge2 {
+inputs 2
+operation copy
+name Match_Size
+xpos 1149
+ypos -255
+}
+Dot {
+name Dot88
+xpos 1183
+ypos -170
+}
+push $N1ae35ef0
+Group {
+inputs 2
+name OP_Switch
+selected true
+xpos 953
+ypos -174
+addUserKnob {20 User}
+addUserKnob {41 which T OperationSwitch.which}
+addUserKnob {6 Sc_Mode +STARTLINE}
+Sc_Mode {{parent.PSD_Local-1 i}}
+addUserKnob {6 Active_C +STARTLINE}
+Active_C {{parent.boolean_2 i}}
+addUserKnob {41 color T CNTR_Color.color}
+}
+Input {
+inputs 0
+name Input1
+xpos -105
+ypos 389
+}
+Dot {
+name Dot8
+xpos -71
+ypos 429
+}
+set N1ae63730 [stack 0]
+Saturation {
+channels {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Color.color}}
+name Saturation3
+xpos -105
+ypos 464
+}
+set C1ae687b0 [stack 0]
+Saturation {
+channels {-rgba.red rgba.green -rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Color.color.g}}
+name Saturation5
+xpos -105
+ypos 502
+}
+set C1ae74f90 [stack 0]
+Saturation {
+channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+saturation {{parent.CNTR_Color.color.b}}
+name Saturation6
+xpos -105
+ypos 540
+}
+set C1ae81970 [stack 0]
+push $N1ae63730
+Switch {
+inputs 2
+which 1
+name Switch1
+xpos -8
+ypos 540
+disable {{parent.Active_C-1}}
+}
+Dot {
+name Dot1
+xpos 26
+ypos 579
+}
+set N587b5870 [stack 0]
+Input {
+inputs 0
+name Input2
+xpos 735
+ypos 294
+number 1
+}
+Dot {
+name Dot9
+xpos 769
+ypos 334
+}
+set N1ae93530 [stack 0]
+PSDMerge {
+inputs 2
+name Operation17
+note_font "Bitstream Vera Sans"
+xpos 1278
+ypos 895
+cached true
+operation luminosity
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation18
+note_font "Bitstream Vera Sans"
+xpos 1187
+ypos 867
+cached true
+operation color
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation19
+note_font "Bitstream Vera Sans"
+xpos 1083
+ypos 901
+cached true
+operation saturation
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation20
+note_font "Bitstream Vera Sans"
+xpos 980
+ypos 861
+cached true
+operation hue
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation21
+note_font "Bitstream Vera Sans"
+xpos 884
+ypos 905
+cached true
+operation divide
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation22
+note_font "Bitstream Vera Sans"
+xpos 795
+ypos 857
+cached true
+operation subtract
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation23
+note_font "Bitstream Vera Sans"
+xpos 693
+ypos 909
+cached true
+operation exclusion
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation1
+note_font "Bitstream Vera Sans"
+xpos 602
+ypos 857
+cached true
+operation difference
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation16
+note_font "Bitstream Vera Sans"
+xpos 505
+ypos 901
+cached true
+operation "hard mix"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation15
+note_font "Bitstream Vera Sans"
+xpos 410
+ypos 856
+cached true
+operation "pin light"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation14
+note_font "Bitstream Vera Sans"
+xpos 314
+ypos 901
+cached true
+operation "linear light"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation13
+note_font "Bitstream Vera Sans"
+xpos 203
+ypos 850
+cached true
+operation "vivid light"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation12
+note_font "Bitstream Vera Sans"
+xpos 115
+ypos 891
+cached true
+operation "hard light"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation11
+note_font "Bitstream Vera Sans"
+xpos 22
+ypos 847
+cached true
+operation "soft light"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation10
+note_font "Bitstream Vera Sans"
+xpos -83
+ypos 899
+cached true
+operation "lighter color"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation9
+note_font "Bitstream Vera Sans"
+xpos -194
+ypos 847
+cached true
+operation "linear dodge"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation8
+note_font "Bitstream Vera Sans"
+xpos -291
+ypos 896
+cached true
+operation lighten
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation7
+note_font "Bitstream Vera Sans"
+xpos -370
+ypos 851
+cached true
+operation "linear burn"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation6
+note_font "Bitstream Vera Sans"
+xpos -478
+ypos 887
+cached true
+operation "color burn"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation5
+note_font "Bitstream Vera Sans"
+xpos -578
+ypos 851
+cached true
+operation darken
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation4
+note_font "Bitstream Vera Sans"
+xpos -681
+ypos 887
+cached true
+operation multiply
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation3
+note_font "Bitstream Vera Sans"
+xpos -774
+ypos 848
+cached true
+operation "color dodge"
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N587b5870
+push $N1ae93530
+PSDMerge {
+inputs 2
+name Operation2
+note_font "Bitstream Vera Sans"
+xpos -872
+ypos 883
+cached true
+operation screen
+sRGB {{Sc_Mode}}
+maskChannelInput none
+}
+push $N1ae93530
+Dot {
+name Dot5
+xpos -1020
+ypos 334
+}
+Dot {
+name Dot11
+xpos -1020
+ypos 731
+}
+set N213ca8d0 [stack 0]
+push $N1ae63730
+Dot {
+name Dot4
+xpos -1115
+ypos 429
+}
+Dot {
+name Dot10
+xpos -1115
+ypos 735
+}
+set N213d4ba0 [stack 0]
+Merge2 {
+inputs 2
+operation minus
+name Merge_B1
+xpos -1054
+ypos 827
+}
+set C213d9e80 [stack 0]
+clone $C1ae74f90 {
+xpos -1054
+ypos 857
+selected false
+}
+clone $C1ae81970 {
+xpos -1054
+ypos 895
+selected false
+}
+push $N213d4ba0
+push $N213ca8d0
+clone $C213d9e80 {
+inputs 2
+xpos -1149
+ypos 825
+selected false
+}
+clone $C1ae687b0 {
+xpos -1149
+ypos 880
+selected false
+}
+Dot {
+name Dot12
+xpos -1115
+ypos 925
+}
+Merge2 {
+inputs 2
+operation max
+name Merge1
+xpos -1054
+ypos 921
+}
+Switch {
+inputs 24
+which {{parent.parent.Switch_CNTR.which}}
+name OperationSwitch
+xpos 410
+ypos 1214
+}
+Output {
+name Output1
+xpos 410
+ypos 1314
+}
+Constant {
+inputs 0
+channels rgb
+color {{parent.parent.Against*8} {parent.parent.Against*8} {parent.parent.Against*8} 0}
+color_panelDropped true
+name CNTR_Color
+xpos -330
+ypos 467
+}
+end_group
+Dot {
+name Dot95
+xpos 987
+ypos -70
+}
+set N21444df0 [stack 0]
+Constant {
+inputs 0
+channels rgb
+name Constant1
+xpos 1179
+ypos -138
+}
+Merge2 {
+inputs 2
+operation difference
+name Merge1
+xpos 1159
+ypos -21
+}
+Colorspace {
+colorspace_out HSL
+name Colorspace2
+xpos 1342
+ypos -76
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.blue 0 2 rgba.alpha 0 3"
+name Luminosity
+tile_color 0xffffffff
+xpos 1342
+ypos 223
+}
+push $N21444df0
+Dot {
+name Dot6
+xpos 1261
+ypos -70
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos 1227
+ypos 217
+}
+push $N21444df0
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.blue 0 2 rgba.alpha 0 3"
+name Blue
+tile_color 0xffff
+xpos 1063
+ypos 80
+}
+push $N21444df0
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.green 0 1 rgba.alpha 0 3 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+name Green
+tile_color 0xff00ff
+xpos 953
+ypos 75
+}
+push $N21444df0
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+name Red
+tile_color 0xff0000ff
+xpos 840
+ypos 73
+}
+Switch {
+inputs 4
+which {{parent.AlphaKeyer}}
+name RGB
+xpos 965
+ypos 223
+}
+Clamp {
+minimum_enable false
+name Clamp1
+xpos 961
+ypos 259
+disable {{1-parent.clampalpha}}
+}
+Grade {
+channels alpha
+blackpoint {{parent.Keyer5.range.A}}
+whitepoint {{parent.Keyer5.range.B}}
+white {{parent.double_2}}
+gamma {{parent.double_3}}
+black_clamp false
+name CNTR_edit
+xpos 958
+ypos 294
+}
+Clamp {
+name Clamp2
+xpos 959
+ypos 345
+disable {{1-parent.clampalpha}}
+}
+Invert {
+channels alpha
+name Invert1
+xpos 959
+ypos 423
+disable {{1-parent.boolean}}
+}
+set N214c5c20 [stack 0]
+push $N1ae1dec0
+Dot {
+name Dot91
+xpos 1465
+ypos -697
+}
+Dot {
+name Dot90
+xpos 1465
+ypos 495
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy2
+xpos 1051
+ypos 485
+disable {{1-parent.boolean_1}}
+}
+push $N214c5c20
+Switch {
+inputs 2
+which 1
+name Switch1
+xpos 965
+ypos 491
+disable {{1-parent.boolean_1}}
+}
+Output {
+name Output1
+xpos 965
+ypos 571
+}
+Switch {
+inputs 0
+which {{parent.Operation}}
+name Switch_CNTR
+xpos 810
+ypos -168
+}
+end_group
