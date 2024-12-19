@@ -1,0 +1,343 @@
+set cut_paste_input [stack 0]
+version 14.0 v3
+BackdropNode {
+ inputs 0
+ name BackdropNode13
+ label "Texture Wrap"
+ note_font_size 51
+ selected true
+ xpos -439
+ ypos -809
+ bdwidth 1196
+ bdheight 1408
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode17
+ tile_color 0xffffffff
+ label "Cut out"
+ note_font_size 31
+ selected true
+ xpos 529
+ ypos 217
+ appearance Border
+ bdwidth 194
+ bdheight 192
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode14
+ tile_color 0xffffffff
+ label Texture
+ note_font_size 42
+ selected true
+ xpos -128
+ ypos -708
+ appearance Border
+ bdwidth 215
+ bdheight 297
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode15
+ tile_color 0xffffffff
+ label "Plate L.alpha\n"
+ note_font_size 42
+ selected true
+ xpos 122
+ ypos -716
+ appearance Border
+ bdwidth 287
+ bdheight 302
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode16
+ tile_color 0xffffffff
+ label Control
+ note_font_size 32
+ selected true
+ xpos -421
+ ypos 82
+ appearance Border
+ bdwidth 231
+ bdheight 199
+ z_order 1
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp11
+ selected true
+ xpos 612
+ ypos 304
+ postage_stamp true
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp8
+ selected true
+ xpos 235
+ ypos -573
+ postage_stamp true
+}
+Dot {
+ name Dot30
+ selected true
+ xpos 269
+ ypos -202
+}
+set Nd148f60 [stack 0]
+push $cut_paste_input
+PostageStamp {
+ name PostageStamp9
+ selected true
+ xpos -37
+ ypos -576
+ postage_stamp true
+}
+Dot {
+ name Dot39
+ selected true
+ xpos -3
+ ypos -316
+}
+set Nd375d20 [stack 0]
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 rgba.alpha 0 3 rgba.red 0 0 rgba.alpha 0 3 rgba.alpha 0 3"
+ name Shuffle11
+ selected true
+ xpos 400
+ ypos -320
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy15
+ selected true
+ xpos 400
+ ypos -212
+}
+Dot {
+ name Dot40
+ selected true
+ xpos 434
+ ypos -122
+}
+set Nd110380 [stack 0]
+Dot {
+ name Dot41
+ selected true
+ xpos 434
+ ypos -56
+}
+set Nd115430 [stack 0]
+LensDistortion1_0 {
+ serializeKnob ""
+ serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+ outputType Displacement
+ distortion2 0.001
+ cardScale {1.001003981 1.001003981 1}
+ a -0.002501845593
+ b 0.001595480484
+ c 0.0001254474191
+ name LensDistortion5
+ selected true
+ xpos 294
+ ypos -60
+}
+Shuffle {
+ in motion
+ alpha white
+ name Shuffle12
+ selected true
+ xpos 294
+ ypos 31
+}
+set Nd0faf20 [stack 0]
+push $Nd110380
+push $Nd110380
+Merge2 {
+ inputs 2
+ operation in
+ bbox B
+ name In9
+ selected true
+ xpos 139
+ ypos -126
+}
+Merge2 {
+ inputs 2
+ operation in
+ bbox B
+ name In10
+ selected true
+ xpos 139
+ ypos 31
+}
+Blur {
+ size {{parent.Blur20.size}}
+ name Blur14
+ selected true
+ xpos 139
+ ypos 131
+ disable {{parent.Blur20.disable}}
+}
+push $Nd0faf20
+Merge2 {
+ inputs 2
+ bbox B
+ name Merge32
+ selected true
+ xpos 294
+ ypos 217
+}
+push $Nd115430
+STMap {
+ inputs 2
+ channels rgba
+ uv rgba
+ maskChannel rgba.alpha
+ invert_mask true
+ name STMap5
+ selected true
+ xpos 400
+ ypos 217
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.red 0 0 rgba.red 0 0 rgba.alpha 0 3"
+ name Shuffle13
+ selected true
+ xpos 400
+ ypos 276
+}
+Merge2 {
+ inputs 2
+ operation stencil
+ name Merge33
+ selected true
+ xpos 400
+ ypos 327
+}
+push $Nd148f60
+push $Nd375d20
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy16
+ selected true
+ xpos -37
+ ypos -212
+}
+Dot {
+ name Dot42
+ selected true
+ xpos -3
+ ypos -115
+}
+set Ncca7480 [stack 0]
+Dot {
+ name Dot43
+ selected true
+ xpos -3
+ ypos -49
+}
+set Nccac530 [stack 0]
+LensDistortion1_0 {
+ serializeKnob ""
+ serialiseKnob "22 serialization::archive 19 0 0 0 0 0 0 0 0 0 0 0 0"
+ outputType Displacement
+ distortion2 0.001
+ cardScale {1.001003981 1.001003981 1}
+ a -0.002501845593
+ b 0.001595480484
+ c 0.0001254474191
+ name LensDistortion6
+ selected true
+ xpos -143
+ ypos -53
+}
+Shuffle {
+ in motion
+ alpha white
+ name Shuffle14
+ selected true
+ xpos -143
+ ypos 38
+}
+set Nccce2d0 [stack 0]
+push $Ncca7480
+push $Ncca7480
+Merge2 {
+ inputs 2
+ operation in
+ bbox B
+ name In11
+ selected true
+ xpos -298
+ ypos -119
+}
+Merge2 {
+ inputs 2
+ operation in
+ bbox B
+ name In12
+ selected true
+ xpos -298
+ ypos 38
+}
+Blur {
+ name Blur20
+ selected true
+ xpos -298
+ ypos 130
+}
+push $Nccce2d0
+Merge2 {
+ inputs 2
+ bbox B
+ name Merge34
+ selected true
+ xpos -143
+ ypos 229
+}
+push $Nccac530
+STMap {
+ inputs 2
+ channels rgba
+ uv rgba
+ maskChannel rgba.alpha
+ invert_mask true
+ name STMap6
+ selected true
+ xpos -37
+ ypos 229
+}
+Dot {
+ name Dot44
+ selected true
+ xpos -3
+ ypos 438
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy17
+ selected true
+ xpos 400
+ ypos 428
+}
+Dot {
+ name Dot45
+ selected true
+ xpos 434
+ ypos 546
+}
