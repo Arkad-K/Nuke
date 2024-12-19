@@ -1,0 +1,404 @@
+set cut_paste_input [stack 0]
+version 14.1 v4
+push $cut_paste_input
+Group {
+name Op_Echo
+tile_color 0xff
+selected true
+xpos 18681
+ypos -1461
+addUserKnob {20 User}
+addUserKnob {41 operation T Main.operation}
+addUserKnob {7 EchoFW l "Echo Forwards" R 0 10}
+addUserKnob {7 double_1 l "Echo Backwards" R -10 0}
+}
+Input {
+inputs 0
+name Input1
+xpos 188
+ypos -247
+}
+Dot {
+name Dot3
+xpos 222
+ypos -207
+}
+set N20234690 [stack 0]
+Dot {
+name Dot2
+xpos 48
+ypos -149
+}
+set N245b7b20 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset11
+xpos -92
+ypos -55
+}
+set N1bd8bb80 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset12
+xpos -92
+ypos -4
+}
+set N24718600 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset13
+xpos -92
+ypos 40
+}
+set N2063dfb0 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset14
+xpos -92
+ypos 107
+}
+set N1c5cd2f0 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset15
+xpos -96
+ypos 151
+}
+set N246f16d0 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset16
+xpos -96
+ypos 195
+}
+set N5aed0170 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset17
+xpos -96
+ypos 256
+}
+set N1c3d9df0 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset18
+xpos -96
+ypos 307
+}
+set N207cc710 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset19
+xpos -96
+ypos 351
+}
+set N1e19dad0 [stack 0]
+TimeOffset {
+time_offset -1
+time ""
+name TimeOffset20
+xpos -96
+ypos 412
+}
+push $N1e19dad0
+push $N207cc710
+push $N1c3d9df0
+push $N5aed0170
+push $N246f16d0
+push $N1c5cd2f0
+push $N2063dfb0
+push $N24718600
+push $N1bd8bb80
+push $N245b7b20
+Merge2 {
+inputs 2
+operation max
+name Main
+xpos 14
+ypos -55
+}
+set C1c3fa020 [stack 0]
+set N1e19c540 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos -4
+selected false
+}
+set N1c027ba0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 40
+selected false
+}
+set N1c5f7480 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 100
+selected false
+}
+set N2067e5f0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 151
+selected false
+}
+set N1c591ed0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 195
+selected false
+}
+set N1bd73d00 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 256
+selected false
+}
+set N203807f0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 307
+selected false
+}
+set N7a5d1660 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 14
+ypos 351
+selected false
+}
+set N2065a2c0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 16
+ypos 412
+selected false
+}
+push $N2065a2c0
+push $N7a5d1660
+push $N203807f0
+push $N1bd73d00
+push $N1c591ed0
+push $N2067e5f0
+push $N1c5f7480
+push $N1c027ba0
+push $N1e19c540
+push $N245b7b20
+Switch {
+inputs 11
+which {{parent.double_1*-1}}
+name Switch_BGW
+selected true
+xpos 138
+ypos -49
+}
+push $N20234690
+Dot {
+name Dot1
+xpos 405
+ypos -150
+}
+set N1c5bab50 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset2
+xpos 704
+ypos -55
+}
+set N1c77fea0 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset3
+xpos 704
+ypos -2
+}
+set N1c746470 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset4
+xpos 704
+ypos 40
+}
+set N1c457e80 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset5
+xpos 704
+ypos 107
+}
+set N1c17a980 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset6
+xpos 704
+ypos 160
+}
+set N20678560 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset7
+xpos 704
+ypos 203
+}
+set N1bd97cd0 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset8
+xpos 704
+ypos 256
+}
+set N20526cb0 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset9
+xpos 704
+ypos 307
+}
+set Nbef4100 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset10
+xpos 704
+ypos 365
+}
+set N201cdc20 [stack 0]
+TimeOffset {
+time_offset 1
+time ""
+name TimeOffset1
+xpos 704
+ypos 414
+}
+push $N201cdc20
+push $Nbef4100
+push $N20526cb0
+push $N1bd97cd0
+push $N20678560
+push $N1c17a980
+push $N1c457e80
+push $N1c746470
+push $N1c77fea0
+push $N1c5bab50
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos -55
+selected false
+}
+set N1c776380 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos -4
+selected false
+}
+set N236318a0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 40
+selected false
+}
+set N1c364b20 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 100
+selected false
+}
+set N1c08dc00 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 151
+selected false
+}
+set N1c154dd0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 195
+selected false
+}
+set N54e16fa0 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 256
+selected false
+}
+set N1c843150 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 307
+selected false
+}
+set N1c6eee70 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 351
+selected false
+}
+set N1c85c910 [stack 0]
+clone $C1c3fa020 {
+inputs 2
+xpos 371
+ypos 414
+selected false
+}
+push $N1c85c910
+push $N1c6eee70
+push $N1c843150
+push $N54e16fa0
+push $N1c154dd0
+push $N1c08dc00
+push $N1c364b20
+push $N236318a0
+push $N1c776380
+push $N1c5bab50
+Switch {
+inputs 11
+which {{parent.EchoFW}}
+name Switch_FRW
+xpos 261
+ypos -55
+}
+clone $C1c3fa020 {
+inputs 2
+xpos 199
+ypos 188
+selected false
+}
+Output {
+name Output1
+xpos 210
+ypos 589
+}
+end_group
