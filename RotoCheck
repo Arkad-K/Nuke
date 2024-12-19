@@ -1,0 +1,183 @@
+set cut_paste_input [stack 0]
+version 14.0 v3
+BackdropNode {
+inputs 0
+name Roto_Check
+tile_color 0xff
+gl_color 0xccccffff
+label Roto_Check
+note_font_size 42
+note_font_color 0xffffffff
+selected true
+xpos 4137
+ypos 1195
+appearance Border
+bdwidth 1035
+bdheight 744
+}
+BackdropNode {
+inputs 0
+name BackdropNode5
+tile_color 0x545454ff
+label Control
+note_font_size 42
+note_font_color 0xffffffff
+selected true
+xpos 4434
+ypos 1570
+bdwidth 479
+bdheight 256
+z_order 1
+}
+push 0
+push $cut_paste_input
+Dot {
+name Dot8
+label "OG Plate"
+note_font_color 0xffffffff
+selected true
+xpos 4631
+ypos 1309
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy5
+selected true
+xpos 4597
+ypos 1461
+}
+Dot {
+name Dot12
+selected true
+xpos 4631
+ypos 1499
+}
+set Ncbb7b1e0 [stack 0]
+Dot {
+name Dot10
+selected true
+xpos 4328
+ypos 1499
+}
+set N34288120 [stack 0]
+Premult {
+name Premult5
+selected true
+xpos 4147
+ypos 1493
+}
+Saturation {
+channels {-rgba.red -rgba.green rgba.blue -rgba.alpha}
+saturation 25
+name Saturation5
+selected true
+xpos 4147
+ypos 1909
+}
+push $N34288120
+push $Ncbb7b1e0
+ColorCorrect {
+contrast 4
+shadows 0
+midtones 0
+highlights 0
+name Contrast
+selected true
+xpos 4597
+ypos 1517
+}
+Dot {
+name Dot9
+selected true
+xpos 4631
+ypos 1649
+}
+set N8666e700 [stack 0]
+Saturation {
+channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+saturation 4
+name Saturation4
+selected true
+xpos 4811
+ypos 1645
+}
+Keyer {
+operation "blue keyer"
+range {0.08939799499 0.2351518901 1 1}
+name BG_Keyer
+selected true
+xpos 4811
+ypos 1725
+}
+push $N8666e700
+Multiply {
+inputs 1+1
+value {1 1 4 1}
+value_panelDropped true
+mix 0.265
+name Multiply_BG
+selected true
+xpos 4597
+ypos 1725
+disable true
+}
+Premult {
+name Premult2
+selected true
+xpos 4597
+ypos 1795
+}
+push $N8666e700
+Grade {
+white {1 1 0 1}
+white_panelDropped true
+name Oppoite_Contrast
+selected true
+xpos 4444
+ypos 1645
+}
+Merge2 {
+inputs 2
+name Merge10
+selected true
+xpos 4444
+ypos 1795
+}
+Dot {
+name Dot11
+selected true
+xpos 4478
+ypos 1913
+}
+Switch {
+inputs 3
+which 0.68
+name Switch4
+selected true
+xpos 4294
+ypos 1909
+}
+Premult {
+name Premult6
+selected true
+xpos 4991
+ypos 1909
+hide_input true
+}
+CheckerBoard2 {
+inputs 0
+format "8192 6144 0 0 8192 6144 1 8K_CubeMap"
+name CheckerBoard3
+selected true
+xpos 5082
+ypos 1746
+}
+Merge2 {
+inputs 2
+name Merge19
+selected true
+xpos 5082
+ypos 1909
+}
