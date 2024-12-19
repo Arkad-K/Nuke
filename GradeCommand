@@ -1,0 +1,26 @@
+set cut_paste_input [stack 0]
+version 14.1 v4
+push $cut_paste_input
+Multiply {
+ value {1 1 1 1}
+ value_panelDropped true
+ name GradeCommand_PreComp
+ tile_color 0xff
+ gl_color 0xffffffff
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffffffff
+ selected true
+ xpos 5188
+ ypos 2475
+}
+Multiply {
+ value {{1/parent.GradeCommand_PreComp.value} {1/parent.GradeCommand_PreComp.value} {1/parent.GradeCommand_PreComp.value} {parent.GradeCommand_PreComp.value}}
+ value_panelDropped true
+ name GradeCommand_PostComp
+ tile_color 0xff
+ note_font "DejaVu Sans Bold"
+ note_font_color 0xffffffff
+ selected true
+ xpos 5188
+ ypos 2555
+}
