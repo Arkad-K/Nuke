@@ -1,0 +1,245 @@
+set cut_paste_input [stack 0]
+version 14.1 v4
+push $cut_paste_input
+Group {
+name Edge_Malt
+tile_color 0x4f4f4fff
+gl_color 0xffffffff
+selected true
+xpos -1712
+ypos -5064
+addUserKnob {20 User}
+addUserKnob {41 pulldown l View T Group1.pulldown}
+addUserKnob {26 ""}
+addUserKnob {26 text l "" +STARTLINE T "<font size=\"4\"><strong>Matte"}
+addUserKnob {41 BlackPoint T Group1.BlackPoint}
+addUserKnob {41 WhitePoint T Group1.WhitePoint}
+addUserKnob {26 ""}
+addUserKnob {26 text_1 l "" +STARTLINE T "<font size=\"4\"><strong>Edge"}
+addUserKnob {41 size l MoveEdge T Group1.size}
+addUserKnob {26 ""}
+addUserKnob {26 text_2 l "" +STARTLINE T "<font size=\"4\"><strong>Fade"}
+addUserKnob {41 double l in T Group1.double}
+addUserKnob {41 double_2 l "in Gamma" T Group1.double_2}
+addUserKnob {41 filter l "" -STARTLINE T Group1.filter}
+addUserKnob {41 double_1 l out T Group1.double_1}
+addUserKnob {41 double_3 l "out Gamma" T Group1.double_3}
+addUserKnob {41 filter_1 l "" -STARTLINE T Group1.filter_1}
+addUserKnob {26 ""}
+addUserKnob {26 text_3 l "" +STARTLINE T "<font size=\"4\"><strong>Final"}
+addUserKnob {41 white l gain T Group1.white}
+addUserKnob {41 gamma T Group1.gamma}
+addUserKnob {26 ""}
+}
+Input {
+inputs 0
+name Isolate
+xpos -588
+ypos -1171
+number 1
+}
+Dot {
+name Dot82
+xpos -554
+ypos -440
+}
+Input {
+inputs 0
+name Matte
+xpos -1181
+ypos -1130
+}
+Dot {
+name Dot34
+xpos -1147
+ypos -1034
+}
+set N9c7f7980 [stack 0]
+Group {
+name Group1
+xpos -1625
+ypos -1038
+addUserKnob {20 User}
+addUserKnob {4 pulldown l View M {Matte Edge Fade Final}}
+pulldown Final
+addUserKnob {26 ""}
+addUserKnob {26 text l "" +STARTLINE T "<font size=\"4\"><strong>Matte"}
+addUserKnob {7 BlackPoint}
+addUserKnob {7 WhitePoint}
+WhitePoint 1
+addUserKnob {26 ""}
+addUserKnob {26 text_1 l "" +STARTLINE T "<font size=\"4\"><strong>Edge"}
+addUserKnob {41 size l MoveEdge T Move_Edge.size}
+addUserKnob {26 ""}
+addUserKnob {26 text_2 l "" +STARTLINE T "<font size=\"4\"><strong>Fade"}
+addUserKnob {7 double l in R 0 100}
+addUserKnob {7 double_2 l "in Gamma" R 0.2 4}
+double_2 1
+addUserKnob {41 filter l "" -STARTLINE T In.filter}
+addUserKnob {7 double_1 l out R 0 100}
+addUserKnob {7 double_3 l "out Gamma" R 0.2 4}
+double_3 1
+addUserKnob {41 filter_1 l "" -STARTLINE T out.filter}
+addUserKnob {26 ""}
+addUserKnob {26 text_3 l "" +STARTLINE T "<font size=\"4\"><strong>Final"}
+addUserKnob {41 white l gain T Grade26.white}
+addUserKnob {41 gamma T Grade26.gamma}
+addUserKnob {26 ""}
+}
+Input {
+inputs 0
+name Input1
+xpos 0
+}
+Output {
+name Output1
+xpos 0
+ypos 300
+}
+end_group
+push $N9c7f7980
+Grade {
+channels alpha
+blackpoint {{parent.Group1.BlackPoint}}
+whitepoint {{parent.Group1.WhitePoint}}
+gamma 1.04
+white_clamp true
+name Grade25
+xpos -1181
+ypos -977
+}
+set N7c68e870 [stack 0]
+FilterErode {
+channels alpha
+size 0
+name Move_Edge
+xpos -1181
+ypos -904
+}
+set N5dc00560 [stack 0]
+Dot {
+name Dot33
+xpos -1233
+ypos -894
+}
+FilterErode {
+channels alpha
+size {{parent.Group1.double}}
+filter gaussian
+name In
+xpos -1267
+ypos -861
+}
+Gamma {
+channels alpha
+value {{parent.Group1.double_2}}
+name Gamma2
+xpos -1267
+ypos -823
+}
+push $N5dc00560
+Dot {
+name Dot25
+xpos -1052
+ypos -894
+}
+set N1a597c30 [stack 0]
+FilterErode {
+channels alpha
+size {{parent.Group1.double_1*-1}}
+filter gaussian
+name out
+xpos -1086
+ypos -859
+}
+Gamma {
+channels alpha
+value {{parent.Group1.double_3}}
+name Gamma1
+xpos -1086
+ypos -821
+}
+Merge2 {
+inputs 2
+operation stencil
+output {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+name Merge32
+xpos -1173
+ypos -815
+}
+Dot {
+name Dot45
+xpos -1139
+ypos -749
+}
+set Nffffb20 [stack 0]
+Grade {
+channels alpha
+white_clamp true
+name Grade26
+selected true
+xpos -1173
+ypos -700
+}
+Dot {
+name Dot79
+xpos -942
+ypos -690
+}
+push $Nffffb20
+Dot {
+name Dot72
+xpos -931
+ypos -749
+}
+push $N1a597c30
+Dot {
+name Dot36
+xpos -915
+ypos -894
+}
+push $N7c68e870
+Dot {
+name Dot35
+xpos -890
+ypos -967
+}
+set N62eba0e0 [stack 0]
+Switch {
+inputs 5
+which {{parent.Group1.pulldown}}
+name Choice
+xpos -924
+ypos -444
+}
+Constant {
+inputs 0
+channels rgb
+format "640 480 0 0 640 480 1 PC_Video"
+name Constant7
+xpos -740
+ypos -1053
+}
+push $N62eba0e0
+Merge2 {
+inputs 2
+operation copy
+name Reformat
+tile_color 0xffffffff
+xpos -740
+ypos -971
+}
+Merge2 {
+inputs 2+1
+operation copy
+output {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+name Merge33
+xpos -740
+ypos -450
+}
+Output {
+name Output1
+xpos -740
+ypos -350
+}
+end_group
