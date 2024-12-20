@@ -1,0 +1,1245 @@
+set cut_paste_input [stack 0]
+version 15.0 v4
+BackdropNode {
+inputs 0
+name BackdropNode49
+label "Channel/Merge\n---------------------------------------\nBinaryAlpha\n\nChannelCombiner\n\nChannelControl\n\nChannelCreator\n\nInjectMatteChannel\n\nID_Extractor\n\nStreamCart\n\nRenameChannels\n\nContactSheetAuto\n\nMergeAtmos\n\nKeymixbbox\n\nMergeBlend\n\nMergeAll\n"
+note_font_size 31
+selected true
+xpos 40931
+ypos -3438
+bdwidth 429
+bdheight 993
+}
+push $cut_paste_input
+Group {
+name BinaryAlpha
+tile_color 0x2a2a2aff
+label "(\[value an] --> \[value output1])"
+note_font Verdana
+note_font_color 0xfffff9ff
+selected true
+xpos 41214
+ypos -3349
+addUserKnob {20 BinaryAlpha}
+addUserKnob {4 an l Analyze: M {rgb rgba alpha "" "" ""}}
+addUserKnob {4 output1 l Output: M {rgba alpha "" "" "" ""}}
+output1 alpha
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l Creator: T "<b><big>Tony Lyons"}
+addUserKnob {26 desc l Description: t "Analyzes channel input and creates a binary result 0 or 1 and outputs it into output channel" T BinaryAlpha}
+addUserKnob {26 ver l Version: T v03}
+}
+Input {
+inputs 0
+name Input
+xpos -398
+ypos 275
+}
+Expression {
+temp_name0 rgb_an
+temp_expr0 "r !=0 || g!=0 || b!=0?1:0"
+temp_name1 rgba_an
+temp_expr1 "r!=0 || g!=0 || b!=0 || a!=0?1:0"
+temp_name2 alpha_an
+temp_expr2 a!=0?1:0
+expr3 "parent.an == 0 ? rgb_an : parent.an == 1 ? rgba_an : alpha_an"
+name Expression
+xpos -398
+ypos 341
+}
+Shuffle {
+red alpha
+green alpha
+blue alpha
+name Shuffle
+label "\[value in]"
+xpos -398
+ypos 367
+disable {{parent.output1}}
+}
+Output {
+name Output1
+xpos -398
+ypos 456
+}
+end_group
+push $cut_paste_input
+Group {
+name ChannelCombiner
+tile_color 0x9e3c63ff
+note_font "Verdana Bold"
+note_font_color 0xffffffff
+selected true
+xpos 41212
+ypos -3275
+addUserKnob {20 ChannelCombiner}
+addUserKnob {41 from0 l "Channel 1" T Cmask01.from0}
+addUserKnob {41 value T Mult_red.value}
+addUserKnob {41 operation_4 l Ch1-->Ch2 T MergeR_G.operation}
+addUserKnob {41 disable_1 l disable -STARTLINE T MergeR_G.disable}
+addUserKnob {41 from0_1 l "Channel 2" T Cmask02.from0}
+addUserKnob {41 value_1 l value T Mult_Green.value}
+addUserKnob {41 operation_1 l Ch2-->Ch3 T Merge_G_B.operation}
+addUserKnob {41 disable_2 l disable -STARTLINE T Merge_G_B.disable}
+addUserKnob {41 from0_2 l "Channel 3" T Cmask03.from0}
+addUserKnob {41 value_2 l value T Mult_blue1.value}
+addUserKnob {41 operation_2 l Ch3-->Ch4 T MergeB_A.operation}
+addUserKnob {41 disable_3 l disable -STARTLINE T MergeB_A.disable}
+addUserKnob {41 from0_3 l "Channel 4" T Cmask04.from0}
+addUserKnob {41 mix l value T Cmask04.mix}
+addUserKnob {26 ""}
+addUserKnob {6 clampCheck l "Clamp Values?" +STARTLINE}
+clampCheck true
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l Creator: T "<b><big>Tony Lyons"}
+addUserKnob {26 desc l Description: t "Choose channels and a mix of the channel, and the merge operation between the different channels.\n\nOption to clamp the output" T ChannelCombiner}
+addUserKnob {26 ver l Version: T v07}
+}
+Input {
+inputs 0
+name Input
+xpos 83
+ypos -657
+}
+Dot {
+name Dot1
+xpos 117
+ypos -633
+}
+set N8cd9a2c0 [stack 0]
+push $N8cd9a2c0
+push $N8cd9a2c0
+push $N8cd9a2c0
+push $N8cd9a2c0
+Remove {
+name Remove1
+xpos -371
+ypos -643
+}
+Copy {
+inputs 2
+to0 rgba.red
+name Cmask01
+xpos -371
+ypos -519
+}
+Copy {
+inputs 2
+to0 rgba.green
+name Cmask02
+xpos -203
+ypos -519
+}
+Copy {
+inputs 2
+to0 rgba.blue
+name Cmask03
+xpos -65
+ypos -519
+}
+Copy {
+inputs 2
+to0 rgba.alpha
+name Cmask04
+xpos 83
+ypos -519
+}
+Shuffle {
+name channel_selector
+label "\[value in]"
+xpos 83
+ypos -356
+}
+set N8cde6940 [stack 0]
+Shuffle {
+red alpha
+green alpha
+blue alpha
+name Alpha
+xpos 83
+ypos -193
+}
+Multiply {
+name Mult_alpha
+xpos 83
+ypos -134
+}
+push $N8cde6940
+Shuffle {
+red blue
+green blue
+alpha blue
+name Blue
+xpos -65
+ypos -192
+}
+Multiply {
+name Mult_blue1
+xpos -75
+ypos -131
+}
+push $N8cde6940
+Shuffle {
+red green
+blue green
+alpha green
+name Green
+xpos -190
+ypos -193
+}
+Multiply {
+name Mult_Green
+xpos -190
+ypos -139
+}
+push $N8cde6940
+Shuffle {
+green red
+blue red
+alpha red
+name Red
+xpos -303
+ypos -194
+}
+Multiply {
+name Mult_red
+xpos -303
+ypos -139
+}
+Merge2 {
+inputs 2
+name MergeR_G
+xpos -249
+ypos -53
+}
+Merge2 {
+inputs 2
+name Merge_G_B
+xpos -75
+ypos -53
+}
+Merge2 {
+inputs 2
+name MergeB_A
+xpos 83
+ypos -53
+}
+Clamp {
+name Clamp1
+xpos 83
+ypos 104
+disable {{!parent.clampCheck}}
+}
+Shuffle {
+red alpha
+green black
+blue black
+name Shuffle20
+label "\[value in]"
+xpos 83
+ypos 232
+}
+Output {
+name Output2
+xpos 83
+ypos 398
+}
+end_group
+push $cut_paste_input
+Group {
+name ChannelControl
+help "Mix the ratio of Red, Green, Blue, Alpha Channels and choose a Merge operation.\nResult is a matte output to RGBA"
+tile_color 0x9e3c63ff
+note_font_color 0xffffffff
+selected true
+xpos 41214
+ypos -3207
+addUserKnob {20 ChannelControl}
+addUserKnob {41 channel l Channel T Shuffle6.in}
+addUserKnob {41 op l Operation T Merge1.operation}
+addUserKnob {6 clamp l "Clamp Output" -STARTLINE}
+clamp true
+addUserKnob {7 red l "<b><font color=crimson>Red"}
+red 1
+addUserKnob {7 green l "<b><font color=limegreen>Green"}
+green 1
+addUserKnob {7 blue l "<b><font color=dodgerblue>Blue"}
+blue 1
+addUserKnob {7 alpha l "<b><font color=white>Alpha"}
+addUserKnob {26 ""}
+addUserKnob {26 "" l mask T ""}
+addUserKnob {41 maskChannelInput l "" -STARTLINE T Merge4.maskChannelInput}
+addUserKnob {41 inject -STARTLINE T Merge4.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge4.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge4.fringe}
+addUserKnob {41 mix T Merge4.mix}
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l Creator: T "<big> Tony Lyons"}
+addUserKnob {26 desc l Description: T ChannelControl}
+addUserKnob {26 ver l Version: T v07}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 354
+ypos 238
+number 1
+}
+Input {
+inputs 0
+name Input
+xpos 141
+ypos -279
+}
+AddChannels {
+channels rgba
+name AddChannels1
+xpos 141
+ypos -224
+}
+Dot {
+name Dot1
+note_font_size 41
+xpos 175
+ypos -181
+}
+set N863ee5c0 [stack 0]
+Shuffle {
+name Shuffle6
+note_font_color 0xffffffff
+xpos 258
+ypos -188
+}
+Multiply {
+channels rgba
+value {{parent.red} {parent.green} {parent.blue} {parent.alpha}}
+name Multiply1
+label "\[value value]"
+xpos 258
+ypos -131
+}
+set N86205330 [stack 0]
+Shuffle {
+red alpha
+green alpha
+blue alpha
+name Shuffle5
+tile_color 0xffffffff
+note_font_color 0xffffffff
+xpos 545
+ypos -22
+}
+push $N86205330
+Shuffle {
+red blue
+green blue
+alpha blue
+name Shuffle4
+tile_color 0x3d3f8e00
+note_font_color 0xffffffff
+xpos 447
+ypos -23
+}
+push $N86205330
+Shuffle {
+red green
+blue green
+alpha green
+name Shuffle2
+tile_color 0x3f633800
+note_font_color 0xffffffff
+xpos 350
+ypos -24
+}
+push $N86205330
+Shuffle {
+green red
+blue red
+alpha red
+name Shuffle3
+tile_color 0x93000000
+note_font_color 0xffffffff
+xpos 258
+ypos -23
+}
+Merge2 {
+inputs 2
+operation plus
+name Merge1
+xpos 258
+ypos 28
+}
+Merge2 {
+inputs 2
+operation {{parent.Merge1.operation}}
+name Merge2
+xpos 258
+ypos 77
+}
+Merge2 {
+inputs 2
+operation {{parent.Merge1.operation}}
+name Merge3
+xpos 258
+ypos 128
+}
+Clamp {
+channels rgba
+name Clamp1
+xpos 258
+ypos 177
+disable {{!parent.clamp}}
+}
+push $N863ee5c0
+Multiply {
+channels rgba
+value 0
+name Multiply2
+label "\[value value]"
+xpos 141
+ypos -128
+}
+Merge2 {
+inputs 2+1
+operation copy
+name Merge4
+selected true
+xpos 141
+ypos 238
+}
+Output {
+name Output1
+xpos 141
+ypos 296
+}
+end_group
+push $cut_paste_input
+Group {
+name ChannelCreator
+tile_color 0x9e3c63ff
+label "\n"
+note_font "Verdana Bold"
+note_font_color 0xffffffff
+selected true
+xpos 41217
+ypos -3135
+addUserKnob {20 User l ChannelCreator}
+addUserKnob {41 in l input T Shuffle1.in}
+addUserKnob {22 pop_list l "Populate List" T "channelName = nuke.thisNode()\[\"in\"].value()\n\nnewRed = str(channelName) + \".red\"\nnewGreen = str(channelName) + \".green\"\nnewBlue = str(channelName) + \".blue\"\nnewAlpha = str(channelName) + \".alpha\"\n\nnuke.thisNode()\[\"in_red\"].setValue(newRed)\nnuke.thisNode()\[\"in_green\"].setValue(newGreen)\nnuke.thisNode()\[\"in_blue\"].setValue(newBlue)\nnuke.thisNode()\[\"in_alpha\"].setValue(newAlpha)\n" +STARTLINE}
+addUserKnob {1 in_red l Red}
+in_red rgba.red
+addUserKnob {1 channel1 l Channel1 -STARTLINE}
+addUserKnob {1 in_green l Green}
+in_green rgba.green
+addUserKnob {1 channel2 l Channel2 -STARTLINE}
+addUserKnob {1 in_blue l Blue}
+in_blue rgba.blue
+addUserKnob {1 channel3 l Channel3 -STARTLINE}
+addUserKnob {1 in_alpha l Alpha}
+in_alpha rgba.alpha
+addUserKnob {1 channel4 l Channel4 -STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {22 generateCopy l "generate copy node" T "## Function Variables\nchannelDict = \{\} ## Dictionary for all channel variables\ncopyChannels = \{\} ## Dictionary for Copy node to place layer variable\ntoList = \['to0', 'to1', 'to2', 'to3'] ## List of Copy Node to variables\ngroupLayerName = \[ 'in_red', 'in_green', 'in_blue', 'in_alpha'] ## List of Channel knobs\ncopyLayerNames = \[ 'from0', 'from1', 'from2', 'from3'] ## List of Copy Node knobs\n\n## Grab group node name\t\ngroup = nuke.toNode('this')\ngroup.end()\n\n## Deselect all nodes\nnuke.selectAll()\nnuke.invertSelection()\n\n## List for channel variables\nchannelList = sorted (\[ each for each in group.knobs().keys() if 'channel' in each.lower()])\n\n## Set up channel dictionary with values\nfor each in channelList:\n\tvalue = group\[each].getValue()\n\tchannelDict\[each] = value\n\n## Creates new channel and sets up copyNode dictionary\nfor each, copy in zip(sorted(channelDict.keys()), toList):\n\tif channelDict\[each] == '':\n\t\t## Store name in copy Dictionary\n\t\tcopyChannels\[copy] = 'none'\n\t\n\tif channelDict\[each] != '':\n\t\tif ' ' in channelDict\[each]:\n\t\t\tchannelDict\[each] = channelDict\[each].replace( ' ', '_')\n\t\t\n\t\t## Construct channel name\n\t\tvalue = channelDict\[each]+'.red'\n\n\t\t## Store name in copy Dictionary\n\t\tcopyChannels\[copy] = value \n\t\t\n\t\t## Create layer from channel values\n\t\tnuke.Layer( channelDict\[each], \[ value] )\n\n## Create Copy Node\ncopyNode = nuke.createNode('Copy')\n\n## Grab layer names\nfor each, x in zip( groupLayerName, copyLayerNames):\n\tvalue = group\[each].getValue()\n\t\n\t## Set Copy node layer\n\tcopyNode\[x].setValue( value)\n\n## Set Copy Node channel\nfor key in sorted(copyChannels.keys()):\n\tcopyNode\[ key].setValue( copyChannels\[key])\n\n\nfor num, channel in enumerate( sorted( copyChannels.keys())):\n\tprint copyChannels\[ channel], channel\n\tif copyChannels\[channel] == 'none':\n\t\tcopyNode\[ copyLayerNames\[num]].setValue( 'none')" +STARTLINE}
+addUserKnob {26 help_2 l " " T "All new Channels will end in .red\n<New_Channel_Name>.red"}
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l Creator T "<b><big>Tony Lyons"}
+addUserKnob {26 desc l Description: t "Add layer name descriptions to Channels 1,2,3,4\n\nPopulate list enters rgba.red, rgba.green, rgba.blue, rgba.alpha into input side\n\nCreates a copy node, that copies red, green, blue, alpha channels over to newly created channels with layernames\n\nThis creates layer.red only to minimize channels, Does Not create layer.red, layer.green, layer.blue, etc" T ChannelCreator}
+addUserKnob {26 ver l Version: T v02}
+}
+Input {
+inputs 0
+name Input
+xpos 170
+ypos -177
+}
+Shuffle {
+name Shuffle1
+xpos 170
+ypos -136
+}
+Output {
+name Output1
+xpos 170
+ypos -36
+}
+end_group
+push $cut_paste_input
+Group {
+name InjectMatteChannel
+help "this node creates a new single channel\n<NewChannelName>.red and injects it into the stream before a deep recolor.\n\nThis workflow is to create single channel mattes for your elements in your deep combine tree.  which you can later pull out with a shuffle node after you have pre-rendered.\n\nThe benifit: you know what your elements look like deep combined, as a sanity check reference, and the pre-render itself has all the matte channels needed to recreate the deep render.\n\nWhen replacing your alpha, remember to unpremult(all), copy the holdout alpha, and premult(all)"
+knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\n\nif k.name() == 'addPrefix':\n    if n.knob('addPrefix').value() == 1:\n        n.knob('prefix').setVisible(True)\n    else:\n        n.knob('prefix').setVisible(False)\n\nif k.name() == 'addPostfix':\n    if n.knob('addPostfix').value() == 1:\n        n.knob('postfix').setVisible(True)\n    else:\n        n.knob('postfix').setVisible(False)"
+tile_color 0x272727ff
+note_font "Bitstream Vera Sans Bold"
+note_font_color 0xffffffff
+selected true
+xpos 41218
+ypos -3072
+addUserKnob {20 InjectMatteChannel}
+addUserKnob {22 grabTitle l "<b><font color = lightskyblue>Grab Title</font color = lightskyblue></b>" t "grabs title from either a stamp or a read node from the 'color' stream and fills in the 'new channel name' field" T "from stamps_config import defaultTitle\n\nn = nuke.thisNode()\nncn = n.knob('newChannelName')\n\niNode = nuke.thisNode()\n\ndef upstream(iNode):\n    found = False\n    name = ''\n    while found == False:\n        \n        if iNode.input(1) != None:\n\n            if iNode.input(1).Class() in \['Read']:\n                found = True\n                name  = defaultTitle(iNode.input(0))\n                \n    \n            elif iNode.input(1).Class() in \['NoOp','PostageStamp']:   \n                \n                try: \n                    found = True \n                    name = iNode.input(1)\['title'].value()           \n                    \n                except:\n                    iNode = iNode.input(1)\n            \n                            \n            else:\n                iNode = iNode.input(1)\n        else:\n            nuke.message('please connect a read node or a stamp')\n            found = True\n            \n    return name\n      \nname = upstream(iNode)\nncn.setValue(name)" +STARTLINE}
+addUserKnob {22 injectNewChannel l "<b><font color = salmon>Inject New Channel</font color = salmon></b>" t "Copies the alpha from the color stream into a new channel <newChannel>.red into the stream  to be used as a matte when pulled out later down the stream." -STARTLINE T "n = nuke.thisNode()\ncd = n.knob('channelDisplay')\ncs = n.knob('channel_select').value()\nncn = n.knob('newChannelName').getValue()\n\nif n.knob('addPrefix').value() == 1 and n.knob('prefix').getValue() != '':\n    prefix = n.knob('prefix').value() + '_'\nelse:\n    prefix = ''\n    \nif n.knob('addPostfix').value() == 1 and n.knob('postfix').getValue() != '':\n    postfix = '_' + n.knob('postfix').value()\nelse:\n    postfix = ''\n\nchannelName = prefix+ncn+postfix\n\nwith n:\n    nodeName = n.name()\n    copy = nuke.toNode('Copy1')\n    if channelName != '':\n        channelName = ''.join(channelName.split('.'))\n        channelName = '_'.join(channelName.split(' '))\n        fullChannelName = channelName + '.red'\n        nuke.Layer('\{\}'.format(channelName), \[fullChannelName])\n        copy.knob('from0').setValue('rgba.'+cs)\n        copy.knob('to0').setValue(fullChannelName)\n        copy.knob('tile_color').setValue(437918463)\n        copy.knob('note_font_color').setValue(4280090879)\n        \ncd.setValue(fullChannelName)\ncd.setVisible(True)\nn.knob('note_font_color').setValue(4280090879)\nn.knob('label').setValue('\{\} --> \{\}.red'.format(cs, channelName))"}
+addUserKnob {22 reset l "<b><font color = limegreen>Reset</font color = limegreen></b>" t "resets the node to default values" -STARTLINE T "n = nuke.thisNode()\nncn = n.knob('newChannelName')\ncd = n.knob('channelDisplay')\nwith n:\n    copy = nuke.toNode('Copy1')\n    copy.knob('from0').setValue('rgba.alpha')\n    copy.knob('to0').setValue('rgba.alpha')\n    copy.knob('tile_color').setValue(2654757632)\n    copy.knob('note_font_color').setValue(235802367)\ncd.setValue('')\ncd.setVisible(False)\nncn.setValue('')\nn.knob('note_font_color').setValue(4294967295)\nn.knob('label').setValue('')\nn.knob('addPrefix').setValue(0)\nn.knob('addPostfix').setValue(0)\nn.knob('prefix').setValue('ID')\nn.knob('postfix').setValue('')\nn.knob('channel_select').setValue('alpha')"}
+addUserKnob {1 newChannelName l "New Channel Name"}
+addUserKnob {83 channel_select l "Input Matte Channel" M {red green blue alpha}}
+channel_select alpha
+addUserKnob {6 addPrefix l "Add Prefix" +STARTLINE}
+addUserKnob {6 addPostfix l "Add Postfix" -STARTLINE}
+addUserKnob {1 prefix +HIDDEN}
+prefix ID
+addUserKnob {1 postfix +HIDDEN}
+addUserKnob {1 channelDisplay l ---> +INVISIBLE}
+addUserKnob {41 bbox l "Set BBox to " T Copy1.bbox}
+addUserKnob {26 text l " " T " "}
+addUserKnob {26 info l " " T "<span style=\"color:#666\"><b>InjectMatteChannel v1.2</b> | <a style=\"color:#666;text-decoration: none;\">Tony Lyons</a> 2020</span>"}
+}
+Input {
+inputs 0
+name Inputmatte
+xpos 192
+ypos 456
+number 1
+}
+Input {
+inputs 0
+name Input
+xpos 378
+ypos 319
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+tile_color 0x9e3c6300
+note_font_color 0xe0e0eff
+xpos 378
+ypos 450
+}
+Output {
+name Output1
+xpos 378
+ypos 641
+}
+end_group
+push $cut_paste_input
+Group {
+name renameChannels
+tile_color 0x9e3c6300
+selected true
+xpos 41215
+ypos -2861
+addUserKnob {20 Rename}
+addUserKnob {26 message01 l "" +STARTLINE T "<i><font color=\"Aqua\">1. Select old Layer and enter a new one"}
+addUserKnob {41 oldLayer l "old Layer" T Copy1.channels}
+addUserKnob {1 newLayer l "new Layer"}
+addUserKnob {22 clear -STARTLINE T "nuke.thisNode()\['newLayer'].setValue('')"}
+addUserKnob {26 ""}
+addUserKnob {26 message02 l "" +STARTLINE T "<i><font color=\"DeepSkyBlue\">2. Select channels and populate list"}
+addUserKnob {22 rgba l "<i><font color=\"yellow\">rgba" T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['red', 'green', 'blue', 'alpha'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewRed = str(newLayer) + \".red\"\nnewGreen = str(newLayer) + \".green\"\nnewBlue = str(newLayer) + \".blue\"\nnewAlpha = str(newLayer) + \".alpha\"\n\noldRed = str(oldLayer) + \".red\"\noldGreen = str(oldLayer) + \".green\"\noldBlue = str(oldLayer) + \".blue\"\noldAlpha = str(oldLayer) + \".alpha\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(oldRed)\n    nuke.thisNode()\[\"from_channel02\"].setValue(oldGreen)\n    nuke.thisNode()\[\"from_channel03\"].setValue(oldBlue)\n    nuke.thisNode()\[\"from_channel04\"].setValue(oldAlpha)\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(newRed)\n    nuke.thisNode()\[\"to_channel02\"].setValue(newGreen)\n    nuke.thisNode()\[\"to_channel03\"].setValue(newBlue)\n    nuke.thisNode()\[\"to_channel04\"].setValue(newAlpha)\nelse:\n    nuke.message(\"Insert the name of new Layer\")" +STARTLINE}
+addUserKnob {22 rgb l "<i><font color=\"gold\">rgb" -STARTLINE T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['red', 'green', 'blue'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewRed = str(newLayer) + \".red\"\nnewGreen = str(newLayer) + \".green\"\nnewBlue = str(newLayer) + \".blue\"\n\noldRed = str(oldLayer) + \".red\"\noldGreen = str(oldLayer) + \".green\"\noldBlue = str(oldLayer) + \".blue\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(oldRed)\n    nuke.thisNode()\[\"from_channel02\"].setValue(oldGreen)\n    nuke.thisNode()\[\"from_channel03\"].setValue(oldBlue)\n    nuke.thisNode()\[\"from_channel04\"].setValue(\"\")\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(newRed)\n    nuke.thisNode()\[\"to_channel02\"].setValue(newGreen)\n    nuke.thisNode()\[\"to_channel03\"].setValue(newBlue)\n    nuke.thisNode()\[\"to_channel04\"].setValue(\"\")\nelse:\n    nuke.message(\"Insert the name of new Layer\")"}
+addUserKnob {22 a l "<i><font color=\"orange\">a" -STARTLINE T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['alpha'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewAlpha =  str(newLayer) + \".a\"\n\noldAlpha = str(oldLayer) + \".a\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel02\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel04\"].setValue(oldAlpha)\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel02\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel04\"].setValue(newAlpha)\nelse:\n    nuke.message(\"Insert the name of new Layer\")"}
+addUserKnob {22 uv l "<i><font color=\"coral\">u v" -STARTLINE T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['u', 'v'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewRed = str(newLayer) + \".u\"\nnewGreen = str(newLayer) + \".v\"\n\noldRed = str(oldLayer) + \".u\"\noldGreen = str(oldLayer) + \".v\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(oldRed)\n    nuke.thisNode()\[\"from_channel02\"].setValue(oldGreen)\n    nuke.thisNode()\[\"from_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel04\"].setValue(\"\")\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(newRed)\n    nuke.thisNode()\[\"to_channel02\"].setValue(newGreen)\n    nuke.thisNode()\[\"to_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel04\"].setValue(\"\")\nelse:\n    nuke.message(\"Insert the name of new Layer\")"}
+addUserKnob {22 N l "<i><font color=\"orangered\">nx ny nz" -STARTLINE T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['NX', 'NY', 'NZ'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewRed = str(newLayer) + \".NX\"\nnewGreen = str(newLayer) + \".NY\"\nnewBlue = str(newLayer) + \".NZ\"\n\noldRed = str(oldLayer) + \".NX\"\noldGreen = str(oldLayer) + \".NY\"\noldBlue = str(oldLayer) + \".NZ\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(oldRed)\n    nuke.thisNode()\[\"from_channel02\"].setValue(oldGreen)\n    nuke.thisNode()\[\"from_channel03\"].setValue(oldBlue)\n    nuke.thisNode()\[\"from_channel04\"].setValue(\"\")\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(newRed)\n    nuke.thisNode()\[\"to_channel02\"].setValue(newGreen)\n    nuke.thisNode()\[\"to_channel03\"].setValue(newBlue)\n    nuke.thisNode()\[\"to_channel04\"].setValue(\"\")\nelse:\n    nuke.message(\"Insert the name of new Layer\")"}
+addUserKnob {22 front l "<i><font color=\"red\">front back" -STARTLINE T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['red', 'green', 'blue', 'alpha'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewRed = str(newLayer) + \".front\"\nnewGreen = str(newLayer) + \".back\"\n\noldRed = str(oldLayer) + \".front\"\noldGreen = str(oldLayer) + \".back\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(oldRed)\n    nuke.thisNode()\[\"from_channel02\"].setValue(oldGreen)\n    nuke.thisNode()\[\"from_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel04\"].setValue(\"\")\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(newRed)\n    nuke.thisNode()\[\"to_channel02\"].setValue(newGreen)\n    nuke.thisNode()\[\"to_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel04\"].setValue(\"\")\nelse:\n    nuke.message(\"Insert the name of new Layer\")"}
+addUserKnob {22 z l "<i><font color=\"maroon\">Z" -STARTLINE T "newLayer = nuke.thisNode()\[\"newLayer\"].value()\n#nuke.Layer(newLayer,  \['red', 'green', 'blue', 'alpha'] )\n\noldLayer = nuke.thisNode()\[\"oldLayer\"].value()\n\nnewZ = str(newLayer) + \".Z\"\n\noldZ = str(oldLayer) + \".Z\"\n\nif (newLayer != \"\"):\n    nuke.thisNode()\[\"from_channel01\"].setValue(oldZ)\n    nuke.thisNode()\[\"from_channel02\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"from_channel04\"].setValue(\"\")\n    \n    nuke.thisNode()\[\"to_channel01\"].setValue(newZ)\n    nuke.thisNode()\[\"to_channel02\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel03\"].setValue(\"\")\n    nuke.thisNode()\[\"to_channel04\"].setValue(\"\")\nelse:\n    nuke.message(\"Insert the name of new Layer\")"}
+addUserKnob {22 clearAll l "Clear All" T "nuke.thisNode()\[\"from_channel01\"].setValue(\"\")\nnuke.thisNode()\[\"from_channel02\"].setValue(\"\")\nnuke.thisNode()\[\"from_channel03\"].setValue(\"\")\nnuke.thisNode()\[\"from_channel04\"].setValue(\"\")    \nnuke.thisNode()\[\"to_channel01\"].setValue(\"\")\nnuke.thisNode()\[\"to_channel02\"].setValue(\"\")\nnuke.thisNode()\[\"to_channel03\"].setValue(\"\")\nnuke.thisNode()\[\"to_channel04\"].setValue(\"\")" +STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {26 message03 l "" +STARTLINE T "<i><font color=\"RoyalBlue\">3. Create Copy and Remove nodes"}
+addUserKnob {1 from_channel01 l "Channel 1"}
+addUserKnob {1 to_channel01 l --> -STARTLINE}
+addUserKnob {1 from_channel02 l "Channel 2"}
+addUserKnob {1 to_channel02 l --> -STARTLINE}
+addUserKnob {1 from_channel03 l "Channel 3"}
+addUserKnob {1 to_channel03 l --> -STARTLINE}
+addUserKnob {1 from_channel04 l "Channel 4"}
+addUserKnob {1 to_channel04 l --> -STARTLINE}
+addUserKnob {22 createNodes l "<i><font color=\"indianred\">Create Copy and Remove Nodes" T "def generate():\n    toList = \['to0', 'to1', 'to2', 'to3'] ## List of Copy Node to variables\n    fromList = \[ 'from0', 'from1', 'from2', 'from3'] ## List of Copy Node knobs\n      \n    fromKnob = \['from_channel01', 'from_channel02', 'from_channel03', 'from_channel04']\n    toKnob = \['to_channel01', 'to_channel02', 'to_channel03', 'to_channel04']\n    \n\n\t## Grab group node name\t\n    group = nuke.thisNode()\n    group.end()\n    \n    #read position\n    x_pos = group\['xpos'].value()\n    y_pos = group\['ypos'].value()\n\t\n\t## Deselect all nodes\n    nuke.selectAll()\n    nuke.invertSelection()\n    \n    listChannels = \[]\n    newLayer = group\['newLayer'].value()\n    oldLayer = group\['oldLayer'].value()\n\n    #layers = list( set(\[c.split('.')\[0] for c in channels]) )\n    for name_knob in toKnob:\n        value_knob = group\[name_knob].value()\n        value_knob = value_knob.replace( ' ', '_')\n        #value_knob = value_knob.lower()\n        if value_knob != \"\":\n            value_knob = value_knob.split('.')\[1]\n            listChannels.append(newLayer + '.' + value_knob)\n            \n    if newLayer != \"\":\n        nuke.Layer( newLayer, listChannels)\n        \n        \n        ##Create Dots\n        dot01 = nuke.createNode('Dot')\n        dot01.setYpos( int(y_pos) + 80 )\n        \n        \n        \n\t    ## Create Copy Node\n        copyNode = nuke.createNode('Copy')\n        #copyNode.setYpos( int(y_pos) + 160 )\n        \n        copyNode.connectInput(0, dot01)\n    \n        for i in range(4):\n            copyNode\[fromList\[i]].setValue(group\[fromKnob\[i]].value())\n        \n        for i in range(4):\n            copyNode\[toList\[i]].setValue(group\[toKnob\[i]].value())\n        \n        #Create Remove Node\n        removeNode = nuke.createNode('Remove')\n        removeNode\['channels'].setValue(oldLayer)\n        \n        \n\n\ngenerate()" +STARTLINE}
+addUserKnob {20 help_1 l ?}
+addUserKnob {26 message02_1 l "" +STARTLINE T "<b><font color=\"RED\">HELP:"}
+addUserKnob {26 message l "" +STARTLINE T "1. Connect renameChannels node to your script.\n2. Select the oldLayer and insert the name of the newLayer. Basically you want to rename the old name with the new one. \n3. Select the Channels you want to create. They depend from the oldLayer \n4. Click on button \"Create Copy and Remove Nodes\" \n5. Connect the nodes created to your script."}
+addUserKnob {26 ""}
+addUserKnob {22 info l Info T "nuke.tcl('start', 'http://www.andreageremia.it/tutorial.html')" +STARTLINE}
+addUserKnob {26 gizmo l "" +STARTLINE T "Gizmo created by Andrea Geremia\n\nwww.andreageremia.it\nandrea.geremia89@gmail.com"}
+}
+Input {
+inputs 0
+name Input1
+xpos 170
+ypos -176
+}
+Shuffle {
+in forward
+name Shuffle1
+xpos 170
+ypos -136
+disable true
+}
+Dot {
+name Dot1
+xpos 204
+ypos -112
+}
+set N8613fd30 [stack 0]
+push $N8613fd30
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+channels rgba
+name Copy1
+xpos 170
+ypos -77
+}
+Output {
+name Output1
+xpos 170
+ypos -36
+}
+end_group
+push $cut_paste_input
+Group {
+name streamCart
+tile_color 0xd1ffff
+selected true
+xpos 41218
+ypos -2925
+addUserKnob {20 tab_general l General}
+addUserKnob {22 get_items l "get channels / geo" t "Run get items first, it will check the input type  (e.g. Deep, 2D, or Geo) and what items/channels available from upstream." T "import re\n\nthisGRP = nuke.thisGroup()\ngoStore = nuke.toNode('store')\ngoStore\['fn'].execute()\n\n### cleanup ###\n\ncleanKnobs(thisGRP)\n\n### init ###\n\ncount = 0\nchans_ls = \[]\nchans_dict = \{\}\ninType = \['Deep','2D','Geo','Unsupport','No Input']\n\n### input check ###\n\nif thisGRP.inputs() :\n  inDetect = nuke.toNode('inDetect')\n  tempD = nuke.nodes.DeepSample( inputs=\[inDetect] )\n  if tempD.inputs() > 0 :\n    temp2D = nuke.nodes.Blur( inputs=\[inDetect] )\n    if temp2D.inputs() > 0 :\n      p = nuke.Panel('select input type :')\n      p.addEnumerationPulldown( '' , '2D Deep' )\n      if p.show() :\n        if p.value('') == 'Deep' :\n          status = 0\n        else :\n          status = 1\n    else :\n      status = 0\n    nuke.delete( tempD )\n    nuke.delete( temp2D )\n  else :\n    nuke.delete( tempD )\n    tempD = nuke.nodes.Blur( inputs=\[inDetect] )\n    if tempD.inputs() > 0 :\n      status = 1\n      nuke.delete( tempD )\n    else :\n      nuke.delete( tempD )\n      tempD = nuke.nodes.Scene( inputs=\[inDetect] )\n      if tempD.inputs() > 0 :\n        status = 2\n        nuke.delete( tempD )\n      else :\n        status = 3\n        nuke.delete( tempD )\nelse :\n  status = 4\n\n### panel setting ###\n\nif inType\[status] == '2D' :\n  thisGRP\['shuffle_method'].setVisible(True)\nelse :\n  thisGRP\['shuffle_method'].setVisible(False)\n\nif inType\[status] == 'Deep' or inType\[status] == '2D' :\n  thisGRP\['alpha_type'].setVisible(True)\nelse :\n  thisGRP\['alpha_type'].setVisible(False)\n\nif inType\[status] ==  'Geo' :\n  thisGRP\['import_method'].setVisible(True)\nelse :\n  thisGRP\['import_method'].setVisible(False)\n\n### proc ###\n\nif inType\[status] == 'Deep' :\n  thisGRP\['input_type'].setValue( '<font color=cyan>' + inType\[status] + '</font>' )\n  d2img = nuke.nodes.DeepToImage( inputs=\[nuke.toNode('inDetect')] )\n  for i in d2img.channels() :\n    try :\n      chans_dict\[ i.split('.')\[0] ].append( i.split('.')\[1] )\n    except :\n      chans_dict\[ i.split('.')\[0] ] = \[ i.split('.')\[1] ]\n      chans_ls.append( i.split('.')\[0] )\n  nuke.delete( d2img )\n\n  for key,value in enumerate( chans_ls ) :\n    nknob = nuke.PyScript_Knob( 'cs_\{0\}'.format( value ) , '\{0\}'.format( value ) , 'thisGRP = nuke.thisGroup()\\ngoSTORE = nuke.toNode(\\'store\\')\\ngoSTORE\[\\'fn\\'].execute()\\nwith getLevel() :\\n\\tgen = extract(\\'\{0\}\\',\{1\},\{2\},\{3\},\{4\},\{5\})\\n\\tgen.setInput(0, thisGRP)'.format(value, chans_dict\[value] , 'int( thisGRP\[\\'shuffle_method\\'].getValue() )', 'int( thisGRP\[\\'alpha_type\\'].getValue() )', '\[thisGRP\[\\'tile_color\\'].getValue()]', status))\n    thisGRP.addKnob( nknob )\n    if count%3 == 0 :\n      thisGRP\['cs_' + value].setFlag(0x00001000)\n    count += 1\n\nif inType\[status] == '2D' :\n  thisGRP\['input_type'].setValue( '<font color=cyan>' + inType\[status] + '</font>' )\n  for i in thisGRP.channels() :\n    try :\n      chans_dict\[ i.split('.')\[0] ].append( i.split('.')\[1] )\n    except :\n      chans_dict\[ i.split('.')\[0] ] = \[ i.split('.')\[1] ]\n      chans_ls.append( i.split('.')\[0] )\n\n  for key,value in enumerate( chans_ls ) :\n    nknob = nuke.PyScript_Knob( 'cs_\{0\}'.format( value ) , '\{0\}'.format( value ) , 'thisGRP = nuke.thisGroup()\\ngoSTORE = nuke.toNode(\\'store\\')\\ngoSTORE\[\\'fn\\'].execute()\\nwith getLevel() :\\n\\tgen = extract(\\'\{0\}\\',\{1\},\{2\},\{3\},\{4\},\{5\})\\n\\tgen.setInput(0, thisGRP)'.format(value, chans_dict\[value] , 'int( thisGRP\[\\'shuffle_method\\'].getValue() )', 'int( thisGRP\[\\'alpha_type\\'].getValue() )', '\[thisGRP\[\\'tile_color\\'].getValue()]', status))\n    thisGRP.addKnob( nknob )\n    if count%3 == 0 :\n      thisGRP\['cs_' + value].setFlag(0x00001000)\n    count += 1\n\nif inType\[status] == 'Geo' :\n  readg = thisGRP.dependencies()\[0]\n  if readg.Class() != 'ReadGeo2' :\n    thisGRP\['import_method'].setVisible(False)\n    nuke.message(\"This function only support 'ReadGeo2' class node direct from input.\")\n  else :\n    thisGRP\['import_method'].setVisible(True)\n    thisGRP\['input_type'].setValue( '<font color=cyan>' + inType\[status] + '</font>' )\n    allshapes = readg\['scene_view'].getAllItems()\n    for i in allshapes :\n      nknob = nuke.Boolean_Knob( 'cs_\{0\}'.format( '_'.join( re.split('/|\\.', i)\[2:] ) ) , '\{0\}'.format( '/'.join( i.split('/')\[2:] ) ) )\n      thisGRP.addKnob( nknob )\n      thisGRP\['cs_' + '_'.join( re.split('/|\\.', i)\[2:] )].setFlag(0x00001000)\n    nknob = nuke.Text_Knob( 'cs_spacer' , ' ' )\n    thisGRP.addKnob( nknob )\n    nknob = nuke.PyScript_Knob( 'cs_invert_selection' , '\[---invert selection---]' , 'thisGRP = nuke.thisGroup()\\ngoSTORE = nuke.toNode(\\'store\\')\\ngoSTORE\[\\'fn\\'].execute()\\ninvSelGeo( \{0\} )'.format( 'thisGRP' ) )\n    thisGRP.addKnob( nknob )\n    thisGRP\['cs_invert_selection'].setFlag(0x00001000)\n    nknob = nuke.PyScript_Knob( 'cs_checkout' , '\[---READGEO CHECKOUT---]' , 'thisGRP = nuke.thisGroup()\\ngoSTORE = nuke.toNode(\\'store\\')\\ngoSTORE\[\\'fn\\'].execute()\\nwith getLevel() :\\n\\tgeoCheckout( \\'\{0\}\\' , \{1\} , \{2\} , \{3\} )'.format( readg\['file'].value() , int(readg\['range_first'].getValue()) , int(readg\['range_last'].getValue()) , 'thisGRP' ) )\n    thisGRP.addKnob( nknob )\n    thisGRP\['cs_checkout'].setFlag(0x00001000)\n\nif inType\[status] == 'Unsupport' :\n  thisGRP\['input_type'].setValue( \"connect your input and run 'get channels / geo' first.\" )\n  nuke.message(\"Input type does not support. Only work with 2D, Deep and Geo from upstream.\")\n\nif inType\[status] == 'No Input' :\n  thisGRP\['input_type'].setValue( \"connect your input and run 'get channels / geo' first.\" )\n  nuke.message(\"connect your input and run 'get channels / geo' first.\")" +STARTLINE}
+addUserKnob {22 reset -STARTLINE T "thisGRP = nuke.thisGroup()\ngoStore = nuke.toNode('store')\ngoStore\['fn'].execute()\n\n### cleanup ###\n\ncleanKnobs(thisGRP)\nthisGRP\['input_type'].setValue( \"connect your input and run 'get channels / geo' first.\" )\nthisGRP\['shuffle_method'].setVisible(False)\nthisGRP\['alpha_type'].setVisible(False)\nthisGRP\['import_method'].setVisible(False)"}
+addUserKnob {20 shuffle_define l "shuffle define setting" n 1}
+shuffle_define 0
+addUserKnob {1 r_clist l red t "name in this text field will shuffle to red channel.\n\nrules :\n- Split the item with \" , \"\n- no space\n- not a matter of upper/lower cases"}
+r_clist red,r,front,z,u,x
+addUserKnob {1 g_clist l green t "name in this text field will shuffle to red channel.\n\nrules :\n- Split the item with \" , \"\n- no space\n- not a matter of upper/lower cases"}
+g_clist green,g,back,v,y
+addUserKnob {1 b_clist l blue t "name in this text field will shuffle to red channel.\n\nrules :\n- Split the item with \" , \"\n- no space\n- not a matter of upper/lower cases"}
+b_clist blue,b
+addUserKnob {1 a_clist l alpha t "name in this text field will shuffle to red channel.\n\nrules :\n- Split the item with \" , \"\n- no space\n- not a matter of upper/lower cases"}
+a_clist alpha,a
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 ""}
+addUserKnob {26 input_type l "input type" T "connect your input and run 'get channels / geo' first."}
+addUserKnob {4 shuffle_method l "shuffle method" +HIDDEN M {"shuffle node" "expression node"}}
+addUserKnob {4 alpha_type l alpha +HIDDEN M {rgba.alpha self.alpha "alpha = 0" "alpha = 1" "" "" "" ""}}
+addUserKnob {4 import_method l "import method" +HIDDEN M {"import & activate only selected geo" "import all, activate only selected geo"}}
+addUserKnob {26 title_extract l "extraction items"}
+}
+BackdropNode {
+inputs 0
+name BackdropNode1
+tile_color 0xff
+label "Dont touch"
+note_font_size 42
+xpos -385
+ypos 7
+bdwidth 512
+bdheight 186
+}
+BackdropNode {
+inputs 0
+name BackdropNode2
+tile_color 0x575757ff
+label bin
+note_font_size 42
+xpos -386
+ypos 220
+bdwidth 220
+bdheight 167
+}
+Input {
+inputs 0
+name input
+xpos 0
+ypos -95
+}
+Dot {
+name inDetect
+xpos 34
+ypos 91
+}
+Output {
+name Output1
+xpos 0
+ypos 300
+}
+NoOp {
+inputs 0
+name menu01
+knobChanged "\nstatus = nuke.thisGroup()\['view_LayerContactSheet'].getValue()\nstDot = nuke.toNode('start_dot')\nedDot = nuke.toNode('end_dot')\n\nfor node in nuke.allNodes() :\n    if node.Class() == 'LayerContactSheet' :\n        nuke.delete( node )\n\nif status :\n    LCS = nuke.nodes.LayerContactSheet( roworder=0 , colorder=0 , showLayerNames=1 , inputs=\[stDot] )\n    edDot.setInput( 0 , LCS )\nelse :\n    edDot.setInput( 0 , stDot )\n"
+xpos -311
+ypos 131
+addUserKnob {20 User}
+addUserKnob {6 view_LayerContactSheet l "view LayerContactSheet" +STARTLINE}
+}
+NoOp {
+inputs 0
+name store
+xpos -313
+ypos 301
+addUserKnob {20 User}
+addUserKnob {22 fn T "def getLevel() :\n\t### level define ###\n\tif len(nuke.thisNode().fullName().split('.')) == 1 :\n\t\t  ggLevel = nuke.root()\n\telse :\n\t\t  nodePath = nuke.thisNode().fullName().split('.')\n\t\t  nodePath.pop()\n\t\t  ggLevel = nuke.toNode('.'.join(nodePath))\n\treturn ggLevel\n\n#########\n\ndef cleanKnobs(node) :\n\tfor knob in node.knobs() :\n\t\tif knob\[0:3] == 'cs_' :\n\t\t\tnode.removeKnob( node\[knob] )\n\n#########\n\ndef invSelGeo( thisG ) :\n\tfor i in thisG.knobs() :\n\t\tif thisG\[i].Class() == 'Boolean_Knob' and i\[:3] == 'cs_' :\n\t\t\tif thisG\[i].getValue() == 0 :\n\t\t\t\tthisG\[i].setValue(1)\n\t\t\telse :\n\t\t\t\tthisG\[i].setValue(0)\n\n#########\n\ndef extract(chans, color, shuffle_method, alpha_mode, mainSet, code) :\n\twhitelist = \{\n\t\t\t'cr' : thisGRP\['r_clist'].value().split(',') ,\n\t\t\t'cg' : thisGRP\['g_clist'].value().split(',') ,\n\t\t\t'cb' : thisGRP\['b_clist'].value().split(','),\n\t\t\t'ca' : thisGRP\['a_clist'].value().split(',')\n\t\t\}\n\n\taset = ''\n\n\tif code == 0 :\n\t\tnewnode = nuke.nodes.DeepExpression( chans0='rgba', tile_color=mainSet\[0] )\n\t\tnewnode\['rgba.red'].setValue( '0' )\n\t\tnewnode\['rgba.green'].setValue( '0' )\n\t\tnewnode\['rgba.blue'].setValue( '0' )\n\t\tnewnode\['rgba.alpha'].setValue( '0' )\n\n\t\tfor i in color :\n\t\t\tif i.lower() in whitelist\['cr'] :\n\t\t\t\tnewnode\['rgba.red'].setValue( '\{0\}.\{1\}'.format( chans , i ) )\n\n\t\t\tif i.lower() in whitelist\['cg'] :\n\t\t\t\tnewnode\['rgba.green'].setValue( '\{0\}.\{1\}'.format( chans , i ) )\n\n\t\t\tif i.lower() in whitelist\['cb'] :\n\t\t\t\tnewnode\['rgba.blue'].setValue( '\{0\}.\{1\}'.format( chans , i ) )\n\n\t\t\tif alpha_mode == 0 :\n\t\t\t\tnewnode\['rgba.alpha'].setValue( 'rgba.alpha' )\n\t\t\t\taset = 'rgba.alpha'\n\t\t\telif alpha_mode == 1 :\n\t\t\t\tif i.lower() in whitelist\['ca'] :\n\t\t\t\t\tnewnode\['rgba.alpha'].setValue( '\{0\}.\{1\}'.format(chans , i ) )\n\t\t\t\t\taset = chans + '.alpha'\n\t\t\t\telse :\n\t\t\t\t\taset = chans + ' no alpha found'\n\t\t\telif alpha_mode == 2 :\n\t\t\t\tnewnode\['rgba.alpha'].setValue( '0' )\n\t\t\t\taset = '0'\n\t\t\telif alpha_mode == 3 :\n\t\t\t\tnewnode\['rgba.alpha'].setValue( '1' )\n\t\t\t\taset = '1'\n\n\tif code == 1 :\n\t\tif shuffle_method == 0 :\n\t\t\tnewnode = nuke.nodes.Shuffle( red='black', green='black', blue='black', alpha='black', tile_color=mainSet\[0] )\n\t\t\tnewnode\['in'].setValue( chans )\n\t\t\tfor i in color :\n\t\t\t\tif i.lower() in whitelist\['cr'] :\n\t\t\t\t\tnewnode\['red'].setValue( 'red' )\n\n\t\t\t\tif i.lower() in whitelist\['cg'] :\n\t\t\t\t\tnewnode\['green'].setValue( 'green' )\n\n\t\t\t\tif i.lower() in whitelist\['cb'] :\n\t\t\t\t\tnewnode\['blue'].setValue( 'blue' )\n\n\t\t\t\tif alpha_mode == 0 :\n\t\t\t\t\tnewnode\['in2'].setValue( 'alpha' )\n\t\t\t\t\tnewnode\['alpha'].setValue( 7 )\n\t\t\t\t\taset = 'rgba.alpha'\n\t\t\t\telif alpha_mode == 1 :\n\t\t\t\t\tif i.lower() in whitelist\['ca'] :\n\t\t\t\t\t\tnewnode\['alpha'].setValue( '\{0\}'.format( i ) )\n\t\t\t\t\t\taset = chans + '.alpha'\n\t\t\t\t\telse :\n\t\t\t\t\t\taset = chans + ' no alpha found'\n\t\t\t\telif alpha_mode == 2 :\n\t\t\t\t\tnewnode\['alpha'].setValue( 'black' )\n\t\t\t\t\taset = '0'\n\t\t\t\telif alpha_mode == 3 :\n\t\t\t\t\tnewnode\['alpha'].setValue( 'white' )\n\t\t\t\t\taset = '1'\n\t\telse :\n\t\t\tnewnode = nuke.nodes.Expression( channel0='red' , channel1='green' , channel2='blue' , channel3='alpha' , expr0='0' , expr1='0', expr2='0' , expr3='0' , tile_color=mainSet\[0] )\n\t\t\tfor i in color :\n\t\t\t\tif i.lower() in whitelist\['cr'] :\n\t\t\t\t\tnewnode\['expr0'].setValue( '\{0\}.\{1\}'.format( chans , i ) )\n\n\t\t\t\tif i.lower() in whitelist\['cg'] :\n\t\t\t\t\tnewnode\['expr1'].setValue( '\{0\}.\{1\}'.format( chans , i ) )\n\n\t\t\t\tif i.lower() in whitelist\['cb'] :\n\t\t\t\t\tnewnode\['expr2'].setValue( '\{0\}.\{1\}'.format( chans , i ) )\n\n\t\t\t\tif alpha_mode == 0 :\n\t\t\t\t\tnewnode\['expr3'].setValue( 'rgba.alpha' )\n\t\t\t\t\taset = 'rgba.alpha'\n\t\t\t\telif alpha_mode == 1 :\n\t\t\t\t\tif i.lower() in whitelist\['ca'] :\n\t\t\t\t\t\tnewnode\['expr3'].setValue( '\{0\}.\{1\}'.format(chans , i ) )\n\t\t\t\t\t\taset = chans + '.alpha'\n\t\t\t\t\telse :\n\t\t\t\t\t\taset = chans + ' no alpha found'\n\t\t\t\telif alpha_mode == 2 :\n\t\t\t\t\tnewnode\['expr3'].setValue( '0' )\n\t\t\t\t\taset = '0'\n\t\t\t\telif alpha_mode == 3 :\n\t\t\t\t\tnewnode\['expr3'].setValue( '1' )\n\t\t\t\t\taset = '1'\n\n\tnewnode\['label'].setValue( '<b><font size=4>' + chans + '</font></b><br>alpha : ' + aset)\n\t\n\treturn newnode\n\n#########\n\ndef geoCheckout( filepath, frameST, frameED, thisG ) :\n\timport random\n\txspace = nuke.toNode('preferences')\['GridWidth'].getValue() + random.randint(0,nuke.toNode('preferences')\['GridWidth'].getValue()*3)\n\n\titem_ls = \[]\n\tfor i in thisG.knobs() :\n\t\tif thisG\[i].Class() == 'Boolean_Knob' and i\[:3] == 'cs_' :\n\t\t\tif thisG\[i].getValue() == 1 :\n\t\t\t\titem_ls.append( '/root/' + thisG\[i].label() )\n\n\tnewRG = nuke.nodes.ReadGeo2( file=filepath , range_first=frameST , range_last=frameED , tile_color=int(thisG\['tile_color'].getValue()) , xpos=int(thisG.xpos()+xspace) , ypos=int(thisG.ypos()) )\n\tnewRG.showControlPanel()\n\tif thisG\['import_method'].getValue() == 0 :\n\t\tnewRG\['scene_view'].setImportedItems( item_ls )\n\telse :\n\t\tnewRG\['scene_view'].setImportedItems( newRG\['scene_view'].getAllItems() )\n\tnewRG\['scene_view'].setSelectedItems( item_ls )\n\tnewRG.hideControlPanel()" +STARTLINE}
+}
+NoOp {
+inputs 0
+name version_tag
+tile_color 0xffb700ff
+xpos -546
+ypos 127
+addUserKnob {20 t_VERSION l Version}
+addUserKnob {26 l_VERSION l Version T 1.1}
+addUserKnob {26 l_DATE l "Date Modified" T 2020-01-07}
+addUserKnob {22 btn_CHANGELOG l Changelog T "log = \"1.1<br>-&nbsp;when&nbsp;input&nbsp;support&nbsp;2D&nbsp;or&nbsp;Deep,&nbsp;it&nbsp;will&nbsp;prompt&nbsp;up&nbsp;selection&nbsp;for&nbsp;user<br>&nbsp;&nbsp;(e.g.&nbsp;input&nbsp;from&nbsp;scanlineRender)<br>-&nbsp;input&nbsp;type&nbsp;-&nbsp;Geo<br>&nbsp;&nbsp;changed&nbsp;knobs&nbsp;to&nbsp;checkbox&nbsp;instead&nbsp;of&nbsp;button<br>-&nbsp;exposed&nbsp;r,g,b,a&nbsp;define&nbsp;setting,<br>&nbsp;&nbsp;so&nbsp;user&nbsp;can&nbsp;setup&nbsp;their&nbsp;own&nbsp;rgba&nbsp;naming&nbsp;list.<br>-&nbsp;unblock&nbsp;deep&nbsp;&&nbsp;depth&nbsp;channel&nbsp;when&nbsp;input&nbsp;is&nbsp;deep,<br>&nbsp;&nbsp;so&nbsp;user&nbsp;can&nbsp;shuffle&nbsp;these&nbsp;2&nbsp;channels&nbsp;out&nbsp;if&nbsp;input&nbsp;is&nbsp;deep.<br><br>1.0<br>-&nbsp;quickly&nbsp;create&nbsp;shuffle&nbsp;nodes<br>-&nbsp;quickly&nbsp;generate&nbsp;ReadGeo&nbsp;with&nbsp;selection<br>-&nbsp;input&nbsp;support&nbsp;2D&nbsp;data,&nbsp;deep&nbsp;data&nbsp;and&nbsp;ReadGeo&nbsp;data.\"\nnuke.message( log )" +STARTLINE}
+addUserKnob {26 l_DEV l "Developed by" T "<a href='https://facebook.com/MJTLab'><font color='orange'>Mark Joey Tang</font></a>"}
+}
+end_group
+push $cut_paste_input
+Group {
+name ID_Extractor
+tile_color 0x3d3d3dff
+label "<big><font color=\"white\">\[value Achannels]\n<font color=\"Red\">\[value Red]\n<font color=\"Green\">\[value Green]\n<font color=\"royal blue\">\[value Blue]"
+note_font "Verdana Bold"
+note_font_color 0xb8d2dfff
+selected true
+xpos 41218
+ypos -3028
+addUserKnob {20 ID_Extract}
+addUserKnob {41 Achannels l "ID channel" t "Pick the layer you want to extract from" T ID2.Achannels}
+addUserKnob {26 text l " " T "<font color = gray>Name your channels something:"}
+addUserKnob {1 Red l "<font color = orangered>Red" t "Enter a name for your red channel"}
+addUserKnob {1 Green l "<font color = limegreen>Green" t "Enter a name for your green channel"}
+addUserKnob {1 Blue l "<font color = dodgerblue>Blue" t "Enter a name for your blue channel"}
+addUserKnob {26 text_1 l " " T "<font color = gray>Extract your channels into Stamps:"}
+addUserKnob {22 extractRed l "<font color = orangered>Extract Red" t "Extract Red Channel into Stamp" T "import NST_ID_Extractor\nNST_ID_Extractor.extractRed()" +STARTLINE}
+addUserKnob {22 extractGreen l " <font color = limegreen>Extract Green" t "Extract Blue Channel into Stamp" -STARTLINE T "import NST_ID_Extractor\nNST_ID_Extractor.extractGreen()"}
+addUserKnob {22 extractBlue l "<font color = dodgerblue>Extract Blue" t "Extract Blue Channel into Stamp" -STARTLINE T "import NST_ID_Extractor\nNST_ID_Extractor.extractBlue()"}
+addUserKnob {26 ""}
+addUserKnob {22 extractAll l "<big><font color = limegreen>Extract All" t "Extract all 3 Channels at once" T "import NST_ID_Extractor\nNST_ID_Extractor.extractAll()" +STARTLINE}
+addUserKnob {22 set l "<big><font color = skyblue>Set Names" t "Reset the names of Existing Stamp outputs" -STARTLINE T "import NST_ID_Extractor\nNST_ID_Extractor.set()"}
+addUserKnob {22 reset l "<font color = orange><big>Clear Names" t "Clear all 3 name text input fields" -STARTLINE T "import NST_ID_Extractor\nNST_ID_Extractor.reset()"}
+}
+Input {
+inputs 0
+name Input1
+xpos -576
+ypos -418
+}
+Dot {
+name Dot1
+xpos -542
+ypos -354
+}
+set N861ad370 [stack 0]
+push $N861ad370
+Dot {
+name Dot2
+xpos -667
+ypos -354
+}
+Remove {
+name Remove1
+xpos -701
+ypos -209
+}
+Merge2 {
+inputs 2
+Achannels rgb
+Bchannels none
+output rgb
+name ID2
+tile_color 0xffffffff
+label "R=\[value Red]\nG=\[value Green]\nB=\[value Blue]\nframe \[value postage_stamp_frame]"
+note_font_size 15
+xpos -576
+ypos -234
+postage_stamp_frame 1001
+}
+Output {
+name Output1
+xpos -576
+ypos -124
+}
+end_group
+push $cut_paste_input
+push 0
+Group {
+inputs 2
+name MergeBlend
+tile_color 0x4b5ec6ff
+label "\[value merge1] | \[value merge2]"
+note_font "Verdana Bold"
+note_font_color 0xffffffff
+selected true
+xpos 41221
+ypos -2579
+addUserKnob {20 MergeBlend}
+addUserKnob {41 channels T Merge1.also_merge}
+addUserKnob {41 bbox l "set bbox to " T Merge9.bbox}
+addUserKnob {41 metainput l "metadata from" -STARTLINE T Merge9.metainput}
+addUserKnob {41 rangeinput l "range from" -STARTLINE T Merge9.rangeinput}
+addUserKnob {26 ""}
+addUserKnob {41 merge1 l Merge1 T Merge9.operation}
+addUserKnob {41 merge2 l "         Merge2" -STARTLINE T Merge8.operation}
+addUserKnob {26 text l " " T "0 is Merge1 <------> 1 is Merge2"}
+addUserKnob {41 blend l Blend T Dissolve1.which}
+addUserKnob {26 ""}
+addUserKnob {26 "" l mask T ""}
+addUserKnob {41 maskChannelInput l "" -STARTLINE T Merge1.maskChannelInput}
+addUserKnob {41 inject -STARTLINE T Merge1.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge1.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge1.fringe}
+addUserKnob {41 mix T Merge1.mix}
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l Creator: T "<b><big>Tony Lyons"}
+addUserKnob {26 desc l Description: t "Mix between 2 Merge Operations" T MergeBlend}
+addUserKnob {26 ver l Version: T v03}
+}
+Input {
+inputs 0
+name Inputmask
+xpos -239
+ypos 761
+number 2
+}
+Input {
+inputs 0
+name InputA
+xpos -332
+ypos 355
+number 1
+}
+Dot {
+name Dot16
+xpos -298
+ypos 448
+}
+set N68944370 [stack 0]
+Input {
+inputs 0
+name InputB
+xpos -569
+ypos 353
+}
+Dot {
+name Dot19
+xpos -535
+ypos 461
+}
+set N6894f5f0 [stack 0]
+Merge2 {
+inputs 2
+operation plus
+bbox {{Merge9.bbox}}
+metainput {{Merge9.metainput}}
+rangeinput {{Merge9.rangeinput}}
+also_merge all
+name Merge8
+xpos -332
+ypos 572
+}
+push $N68944370
+push $N6894f5f0
+Merge2 {
+inputs 2
+operation screen
+also_merge all
+name Merge9
+xpos -569
+ypos 572
+}
+Dissolve {
+inputs 2
+which 0.5
+name Dissolve1
+xpos -460
+ypos 673
+}
+push $N6894f5f0
+Dot {
+name Dot1
+note_font_size 41
+xpos -645
+ypos 461
+}
+Dot {
+name Dot2
+note_font_size 41
+xpos -645
+ypos 764
+}
+Merge2 {
+inputs 2+1
+operation copy
+bbox {{Merge9.bbox}}
+metainput {{Merge9.metainput}}
+rangeinput {{Merge9.rangeinput}}
+Achannels none
+Bchannels none
+output none
+also_merge rgba
+name Merge1
+xpos -460
+ypos 757
+}
+Output {
+name Output1
+xpos -460
+ypos 854
+}
+end_group
+push $cut_paste_input
+push 0
+Group {
+inputs 2
+name MergeAll
+help "MergeAll v1.0\n\nMerges all the channels as expected! Especially useful for workflows with AOVs or multi-channel mattes, where you want to mask or stencil multiple channels at the same time.\n\nDecyphered with the awesome Tony Lyons.\n\nadrianpueyo.com, 2019"
+tile_color 0x4b60c3ff
+selected true
+xpos 41227
+ypos -2508
+addUserKnob {20 MergeAll}
+addUserKnob {41 operation T MergeAllChannels.operation}
+addUserKnob {41 sRGB l "Video colorspace" -STARTLINE T MergeAllChannels.sRGB}
+addUserKnob {41 screen_alpha l "alpha masking" -STARTLINE T MergeAllChannels.screen_alpha}
+addUserKnob {41 bbox l "set bbox to " T MergeAllChannels.bbox}
+addUserKnob {41 metainput l "metadata from" -STARTLINE T MergeAllChannels.metainput}
+addUserKnob {41 rangeinput l "range from" -STARTLINE T MergeAllChannels.rangeinput}
+addUserKnob {26 ""}
+addUserKnob {41 Achannels l "A channels" T MergeAllChannels.Achannels}
+addUserKnob {41 Bchannels l "B channels" T MergeAllChannels.Bchannels}
+addUserKnob {41 output T MergeAllChannels.output}
+addUserKnob {41 also_merge l "also merge" T MergeAllChannels.also_merge}
+addUserKnob {26 ""}
+addUserKnob {26 "" l mask T ""}
+addUserKnob {41 maskChannelInput l "" -STARTLINE T MergeAllChannels.maskChannelInput}
+addUserKnob {41 inject -STARTLINE T MergeAllChannels.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T MergeAllChannels.invert_mask}
+addUserKnob {41 fringe -STARTLINE T MergeAllChannels.fringe}
+addUserKnob {41 mix T MergeAllChannels.mix}
+addUserKnob {26 version_author l " " t "MergeAll v1.0\n24 Sep 2019" T "<br/><span style=\"color:#666\"><b>MergeAll v1.0</b> - <a href=\"http://www.adrianpueyo.com\" style=\"color:#666;text-decoration: none;\">adrianpueyo.com</a>, 2019</span>"}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 941
+ypos -466
+number 2
+}
+Input {
+inputs 0
+name InputB
+xpos 831
+ypos -663
+}
+set N689ba2c0 [stack 0]
+Multiply {
+value 0
+name Multiply11
+label "\[value value]"
+xpos 502
+ypos -572
+}
+Input {
+inputs 0
+name InputA
+xpos 392
+ypos -672
+number 1
+}
+set N689cc8f0 [stack 0]
+Merge2 {
+inputs 2
+operation plus
+bbox B
+Achannels {{{parent.MergeAllChannels.Achannels}}}
+Bchannels {{{parent.MergeAllChannels.Bchannels}}}
+output {{{parent.MergeAllChannels.output}}}
+also_merge {{{parent.MergeAllChannels.also_merge}}}
+name MergeBChannels
+xpos 392
+ypos -560
+}
+Dot {
+name Dot1
+xpos 426
+ypos -462
+}
+push $N689cc8f0
+Multiply {
+value 0
+name Multiply12
+label "\[value value]"
+xpos 721
+ypos -571
+}
+push $N689ba2c0
+Merge2 {
+inputs 2
+operation plus
+bbox B
+Achannels {{{parent.MergeAllChannels.Achannels}}}
+Bchannels {{{parent.MergeAllChannels.Bchannels}}}
+output {{{parent.MergeAllChannels.output}}}
+also_merge {{{parent.MergeAllChannels.also_merge}}}
+name MergeAChannels
+selected true
+xpos 831
+ypos -559
+}
+Merge2 {
+inputs 2+1
+also_merge all
+name MergeAllChannels
+xpos 831
+ypos -466
+}
+Output {
+name Output1
+xpos 831
+ypos -413
+}
+end_group
+push $cut_paste_input
+ContactSheet {
+width {{input.width*columns*resMult}}
+height {{input.height*rows*resMult}}
+rows {{"\[expr \{int( (sqrt( \[numvalue inputs] ) ) )\} ] * \[expr \{int( ceil ( (\[numvalue inputs] /(sqrt( \[numvalue inputs] ) ) )) )\} ] < \[numvalue inputs]   ? \[expr \{int( (sqrt( \[numvalue inputs] ) ) )\} ] +1 : \[expr \{int( (sqrt( \[numvalue inputs] ) ) )\} ]"}}
+columns {{"\[expr \{int( ceil ( (\[numvalue inputs] /(sqrt( \[numvalue inputs] )) )) )\} ]"}}
+center true
+roworder TopBottom
+name ContactSheetAuto
+tile_color 0xff69f7ff
+selected true
+xpos 41218
+ypos -2798
+addUserKnob {20 Settings}
+addUserKnob {7 resMult l "Resolution Multiplier" R 0.1 2}
+resMult 1
+}
+Group {
+inputs 0
+name KeymixBBox
+tile_color 0x4b5ec6ff
+selected true
+xpos 41218
+ypos -2661
+addUserKnob {20 KeymixBBox}
+addUserKnob {41 channels T Keymix8.channels}
+addUserKnob {41 maskChannel l "mask channel" T Keymix8.maskChannel}
+addUserKnob {41 invertMask l invert -STARTLINE T Keymix8.invertMask}
+addUserKnob {41 mix T Keymix8.mix}
+addUserKnob {41 bbox l "Set BBox to" T Keymix8.bbox}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 531
+ypos -493
+number 2
+}
+set N5a18e4f0 [stack 0]
+Input {
+inputs 0
+name InputA
+xpos 189
+ypos -485
+number 1
+}
+set N5a193c10 [stack 0]
+Merge2 {
+inputs 2
+operation plus
+bbox intersection
+name Merge1
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 285
+ypos -410Merge
+}
+set N5a199290 [stack 0]
+push $N5a18e4f0
+CopyBBox {
+inputs 2
+name CopyBBox2
+xpos 531
+ypos -350
+}
+push $N5a199290
+push $N5a193c10
+CopyBBox {
+inputs 2
+name CopyBBox1
+xpos 189
+ypos -350
+}
+Input {
+inputs 0
+name InputB
+xpos 378
+ypos -493
+}
+Keymix {
+inputs 3
+channels rgba
+name Keymix8
+selected true
+xpos 378
+ypos -350
+}
+Output {
+name Output1
+xpos 378
+ypos -249
+}
+end_group
+push $cut_paste_input
+push 0
+Group {
+inputs 2
+name MergeAtmos
+tile_color 0x4b5ec6ff
+note_font "Verdana Bold"
+note_font_color 0xffffffff
+selected true
+xpos 41216
+ypos -2736
+addUserKnob {20 MergeAtmos}
+addUserKnob {41 channels T MergeKeymix.also_merge}
+addUserKnob {41 size l "blur size" T Blur1.size}
+addUserKnob {26 text_1 l " " T " "}
+addUserKnob {41 plusmix l "plus mix" T MergePlus.mix}
+addUserKnob {41 mix_1 l "over mix" T MergeOver.mix}
+addUserKnob {26 text l " " T " "}
+addUserKnob {41 value l "Gamma Alpha A" T Gamma1.value}
+addUserKnob {26 ""}
+addUserKnob {26 "" l mask T ""}
+addUserKnob {41 maskChannelInput l "" -STARTLINE T MergeKeymix.maskChannelInput}
+addUserKnob {41 inject -STARTLINE T MergeKeymix.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T MergeKeymix.invert_mask}
+addUserKnob {41 fringe -STARTLINE T MergeKeymix.fringe}
+addUserKnob {41 mix T MergeKeymix.mix}
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l Creator: T "<b><big>Tony Lyons"}
+addUserKnob {26 desc l Description: t "For merging Dust, Smoke, Atmos\n\nMix between plus and over\n\nUses alpha of FG to blur the BG which mimicks diffusion." T MergeAtmos}
+addUserKnob {26 ver l Version: T v03}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 508
+ypos 591
+number 2
+}
+Dot {
+name Dot7
+xpos 542
+ypos 729
+}
+Input {
+inputs 0
+name InputA
+xpos 358
+ypos 84
+number 1
+}
+AddChannels {
+channels rgba
+name AddChannels2
+xpos 358
+ypos 212
+}
+Gamma {
+channels alpha
+name Gamma1
+xpos 358
+ypos 280
+}
+Dot {
+name Dot87
+xpos 392
+ypos 377
+}
+set N5a004a40 [stack 0]
+Dot {
+name Dot8
+note_font_size 41
+xpos 392
+ypos 452
+}
+set N5a00a340 [stack 0]
+Dot {
+name Dot1
+xpos 392
+ypos 522
+}
+push $N5a00a340
+push $N5a004a40
+Input {
+inputs 0
+name InputB
+xpos 155
+ypos 83
+}
+Dot {
+name Dot4
+xpos 189
+ypos 250
+}
+set N5a01ae80 [stack 0]
+Blur {
+inputs 1+1
+size 10
+crop false
+name Blur1
+label "\[value size]"
+xpos 155
+ypos 365
+}
+Merge2 {
+inputs 2
+operation plus
+Achannels none
+Bchannels none
+output none
+also_merge all
+mix 0.5
+name MergePlus
+xpos 155
+ypos 445
+}
+Merge2 {
+inputs 2
+also_merge all
+mix 0.5
+name MergeOver
+xpos 155
+ypos 519
+}
+push $N5a01ae80
+Dot {
+name Dot5
+xpos 34
+ypos 250
+}
+Dot {
+name Dot6
+note_font_size 41
+xpos 34
+ypos 729
+}
+Merge2 {
+inputs 2+1
+operation copy
+Achannels none
+Bchannels none
+output none
+also_merge rgba
+name MergeKeymix
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 155
+ypos 722
+}
+Output {
+name Output1
+xpos 155
+ypos 989
+}
+end_group
