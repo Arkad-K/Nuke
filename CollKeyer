@@ -1,0 +1,3450 @@
+set cut_paste_input [stack 0]
+version 15.0 v4
+BackdropNode {
+inputs 0
+name BackdropNode51
+label "Keyer\n---------------------------------------\nap Despill\n\nSpillCorrect\n\nDespilToColor\n\nAdditiveKeyerPro\n\nScreenClean\n\nKeyChew\n\nLumaKeyer\n\nCloudKeyer\n\napDirLight\n"
+note_font_size 31
+selected true
+xpos 41938
+ypos -3435
+bdwidth 452
+bdheight 729
+}
+push $cut_paste_input
+Group {
+name DespillToColor1
+tile_color 0x475247ff
+note_font "Bitstream Vera Sans Bold"
+note_font_color 0xffffffff
+selected true
+xpos 42213
+ypos -3204
+addUserKnob {20 User l main}
+addUserKnob {68 sto l "screen type" t "- auto - The screen type will be controlled by \n  the screen color:\n\n   g>b : green despill\n   b>g : blue despill\n\n- 'blue' and  'green' act as an override so you can pick a blue-ish screen color but still despill green tones and vice versa.\n" M {auto green blue "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+addUserKnob {18 sc l "screen color"}
+sc {0.11 0.11 0.1}
+addUserKnob {6 sc_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 sc_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 sc_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {18 tc l "target color"}
+tc {0.11 0.11 0.1}
+addUserKnob {6 tc_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 tc_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 tc_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {7 balance t "- determines which colors get affected more by the despill operation. \nlower : red\nhigher : green / blue" R 0 2}
+balance 1
+addUserKnob {7 gain t "Increasing gain will affect a wider range of colors." R 0.5 3.5}
+gain 1
+addUserKnob {26 ""}
+addUserKnob {6 enableErode l "enable erode" +STARTLINE}
+addUserKnob {6 spillmatte l "spillmatte output" t "- spillmatte output to alpha channel.\nThis channel is normalised, so the picked color has an alpha value of 1. \nIn ordner not to clamp values above 1 you might choose to grade this mask down a bit." -STARTLINE}
+addUserKnob {7 erode t "For blurry edges, eroding the despill matte is an alternative to increasing the gain." R 0.1 50}
+erode 1
+addUserKnob {7 erodeMix l mix}
+erodeMix 1
+addUserKnob {26 ""}
+addUserKnob {7 falloff t "- controls the gamma on the despill matte." R 0.5 1.5}
+falloff 1
+addUserKnob {26 ""}
+addUserKnob {41 maskChannelMask l mask -STARTLINE T Merge1.maskChannelMask}
+addUserKnob {41 inject -STARTLINE T Merge1.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge1.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge1.fringe}
+addUserKnob {41 unpremult l "(un)premult by" T despillGreen.unpremult}
+addUserKnob {7 mix}
+mix 1
+addUserKnob {26 ""}
+addUserKnob {20 info l "info / advanced" n 1}
+info 0
+addUserKnob {26 jm l "" +STARTLINE T "Despill to Color by Johannes Masanz\nVersion: 4.1"}
+addUserKnob {26 ""}
+addUserKnob {7 ir l "increase range" t "compensates for screen values higher than 1" R 0 100}
+ir 50
+addUserKnob {20 endGroup_1 l endGroup n -1}
+}
+Input {
+inputs 0
+name mask
+xpos -234
+ypos 479
+number 1
+}
+set N745dc0f0 [stack 0]
+Input {
+inputs 0
+name source
+xpos -84
+ypos 76
+}
+set N745f3030 [stack 0]
+Expression {
+expr0 r
+expr1 g
+expr2 b
+channel3 alpha
+expr3 parent.gain<1?min((b-(r*parent.balance+g*(1-(parent.balance-1)))/2),(b*parent.gain-(r*parent.balance+g*(1-(parent.balance-1)))/2)):(b*parent.gain-(r*parent.balance+g*(1-(parent.balance-1)))/2)
+name ExpBlue
+xpos 516
+ypos 76
+}
+Grade {
+channels alpha
+whitepoint {{parent.NoOp1.avb}}
+name despillWhite1
+xpos 516
+ypos 102
+}
+set N74408420 [stack 0]
+push $N745f3030
+Expression {
+expr0 r
+expr1 g
+expr2 b
+channel3 alpha
+expr3 parent.gain<1?min((g*parent.gain-(r*parent.balance+b*(1-(parent.balance-1)))/2),(g-(r*parent.balance+b*(1-(parent.balance-1)))/2)):(g*parent.gain-(r*parent.balance+b*(1-(parent.balance-1)))/2)
+name ExpGreen
+xpos 402
+ypos 76
+}
+Grade {
+channels alpha
+whitepoint {{parent.NoOp1.avg}}
+name despillWhite
+xpos 402
+ypos 102
+}
+set N7442a570 [stack 0]
+push $N7442a570
+push $N74408420
+Switch {
+inputs 2
+which {{parent.sc.b>parent.sc.g?0:1}}
+name Switch2
+xpos 456
+ypos 149
+}
+Switch {
+inputs 3
+which {{parent.sto}}
+name Switch3
+xpos 456
+ypos 175
+}
+FilterErode {
+size {{-parent.erode}}
+filter gaussian
+mix {{parent.erodeMix}}
+name despillGaussian
+xpos 456
+ypos 219
+disable {{1-parent.enableErode}}
+}
+set N7444eb40 [stack 0]
+Grade {
+channels alpha
+gamma {{parent.falloff}}
+black_clamp false
+name falloff
+xpos 346
+ypos 264
+}
+set N7445c510 [stack 0]
+push $N7444eb40
+ChannelMerge {
+inputs 2
+operation max
+name ChannelMerge1
+xpos 456
+ypos 257
+}
+push $N7445c510
+push $N7444eb40
+ChannelMerge {
+inputs 2
+operation min
+name ChannelMerge2
+xpos 563
+ypos 257
+disable {{parent.falloff==1?1:0}}
+}
+Switch {
+inputs 2
+which {{parent.falloff>1?1:0}}
+name Switch1
+xpos 456
+ypos 307
+}
+set N7448a110 [stack 0]
+push $N745dc0f0
+push $N7448a110
+Grade {
+channels alpha
+whitepoint {{parent.NoOp1.avb}}
+white {{parent.ir+1}}
+reverse true
+name Grade2
+xpos 516
+ypos 347
+}
+push $N745f3030
+Grade {
+inputs 1+1
+channels rgba
+add {{parent.tc*(clamp(1/clamp(parent.NoOp1.avb/(parent.ir+1)),0,1000000))-parent.sc*(clamp(1/clamp(parent.NoOp1.avb/(parent.ir+1)),0,1000000))} {parent.tc*(clamp(1/clamp(parent.NoOp1.avb/(parent.ir+1)),0,1000000))-parent.sc*(clamp(1/clamp(parent.NoOp1.avb/(parent.ir+1)),0,1000000))} {parent.tc*(clamp(1/clamp(parent.NoOp1.avb/(parent.ir+1)),0,1000000))-parent.sc*(clamp(1/clamp(parent.NoOp1.avb/(parent.ir+1)),0,1000000))} {curve}}
+black_clamp false
+unpremult {{{parent.despillGreen.unpremult}}}
+name despillBlue
+xpos 516
+ypos 383
+}
+set N744a5fa0 [stack 0]
+push $N7448a110
+Grade {
+channels alpha
+whitepoint {{parent.NoOp1.avg}}
+white {{parent.ir+1}}
+reverse true
+name Grade4
+xpos 402
+ypos 348
+}
+push $N745f3030
+Grade {
+inputs 1+1
+channels rgba
+add {{parent.tc*(clamp(1/clamp(parent.NoOp1.avg/(parent.ir+1)),0,inf))-parent.sc*(clamp(1/clamp(parent.NoOp1.avg/(parent.ir+1)),0,inf))} {parent.tc*(clamp(1/clamp(parent.NoOp1.avg/(parent.ir+1)),0,inf))-parent.sc*(clamp(1/clamp(parent.NoOp1.avg/(parent.ir+1)),0,inf))} {parent.tc*(clamp(1/clamp(parent.NoOp1.avg/(parent.ir+1)),0,inf))-parent.sc*(clamp(1/clamp(parent.NoOp1.avg/(parent.ir+1)),0,inf))} {curve}}
+black_clamp false
+unpremult -rgba.alpha
+name despillGreen
+xpos 402
+ypos 383
+}
+set N744cb510 [stack 0]
+push $N744cb510
+push $N744a5fa0
+Switch {
+inputs 2
+which {{parent.sc.b>parent.sc.g?0:1}}
+name Switch4
+xpos 456
+ypos 453
+}
+Switch {
+inputs 3
+which {{parent.sto}}
+name Switch5
+xpos 456
+ypos 479
+}
+push $N745f3030
+Merge2 {
+inputs 2+1
+operation copy
+bbox B
+maskChannelInput -rgba.alpha
+mix {{parent.mix}}
+name Merge1
+xpos -84
+ypos 479
+}
+Shuffle {
+alpha black
+name Shuffle1
+xpos -84
+ypos 505
+disable {{1-spillmatte}}
+}
+Copy {
+inputs 2+1
+from0 rgba.alpha
+to0 rgba.alpha
+bbox B
+name Copy2
+xpos -84
+ypos 545
+disable {{1-spillmatte}}
+}
+Output {
+name Output1
+xpos -84
+ypos 599
+}
+NoOp {
+inputs 0
+name NoOp1
+xpos 181
+ypos 160
+addUserKnob {20 User}
+addUserKnob {7 avg l alphavalueGreen}
+avg {{parent.sc.g*clamp(1,parent.gain,inf)-(parent.sc.b*(1-(parent.balance-1))+parent.sc.r*parent.balance)/2}}
+addUserKnob {7 avb l alphavalueBlue}
+avb {{parent.sc.b*clamp(1,parent.gain,inf)-(parent.sc.g*(1-(parent.balance-1))+parent.sc.r*parent.balance)/2}}
+}
+end_group
+push $cut_paste_input
+Group {
+name Spill_Correct
+help "Use this tool to \"despill\" or mute colors introduced from Red/Green/Blue screens."
+knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nkName = k.name()\nif kName == \"neutralize\":\n    n.knob('neutral_color').setEnabled(k.value())\n    n.knob('plate_only').setEnabled(k.value())"
+selected true
+xpos 42214
+ypos -3273
+addUserKnob {20 Spill_Correct}
+addUserKnob {68 algorithm l Algorithm t "Choose Algorithm to perform Despill.\nKillspill is using an IBK inspired process.\nAverage/Double Average/Limits are algorithms taken from Despill_Madness, extrapolated to work on red despill as well." M {KeySpill Average "Double Average R>G>B" "Double Average B>G>R" "Limit R>G>B" "Limit B>G>R" "" ""}}
+addUserKnob {18 screen_color l "Screen Color" t "Pick the color of the spill to remove."}
+screen_color {0 1 0}
+addUserKnob {6 screen_color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {7 fine_tune l "Fine Tune" t "Tweak for the algorithms." R 0.5 1.5}
+fine_tune 1
+addUserKnob {26 ""}
+addUserKnob {6 neutralize l "Neutralize Color" t "On a plate with an overall color tint, the despill might affect more than the spill areas. \nNeutralizing the color before the despill can solve these this problem." +STARTLINE}
+addUserKnob {18 neutral_color l "Neutral Color" t "Pick the color to protect.\nNote: No Neutralize will happen if one of the color values is 0, as this would break the math." +DISABLED}
+neutral_color {1 1 1}
+addUserKnob {6 neutral_color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 plate_only l "Plate Only" t "By cheking this box, the Neutralize will leave the replacement color untouched. \nOtherwise, the replacement color will be tinted according to the original plate tint." -STARTLINE +DISABLED}
+plate_only true
+addUserKnob {26 ""}
+addUserKnob {18 replace l "Replacement Gain" t "Spill color is desaturated to preserve brightness.\nGain this up or down to fix dark/bright edges." R 0 2}
+replace 1
+addUserKnob {6 replace_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {18 gamma l "Replacement Gamma" t "Gamma correct your spill replacement." R 0.5 1.5}
+gamma 1
+addUserKnob {6 gamma_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {26 ""}
+addUserKnob {6 out_alpha l "Output Spill Alpha" t "If checked, the node will output an alpha of the area despilled. Otherwise the original alpha will be left untouched." +STARTLINE}
+addUserKnob {7 mix l Mix t "Mix between original and despilled version."}
+mix 1
+addUserKnob {26 spin_copyright_div l "" +STARTLINE}
+addUserKnob {26 spin_copyright l "" t "© <b>SPIN<span style=\"color:#b32026\">VFX</span></b>\nSpill_Correct\nVersion 2.0" +STARTLINE T "<span style=\"color:#aaa;font-family:sans-serif;font-size:8pt\"><b>SPIN<span style=\"color:#b32026\">VFX</span></b> - Version 2.0 - 2017-2019 - <a href=\"https://github.com/SpinVFX/spin_nuke_gizmos/\" style=\"color:#aaa\">Github Page</a></span>"}
+}
+BackdropNode {
+inputs 0
+name kbd8310
+tile_color 0x5963525e
+label "KeySpill(IBK Style)"
+note_font_size 40
+xpos -168
+ypos -650
+bdwidth 532
+bdheight 471
+}
+BackdropNode {
+inputs 0
+name kbd9376
+tile_color 0x5b655f64
+label Average
+note_font_size 40
+xpos 414
+ypos -650
+bdwidth 408
+bdheight 359
+z_order 1
+}
+BackdropNode {
+inputs 0
+name kbd1
+tile_color 0x587077ff
+label "Double Average BGR"
+note_font_size 40
+xpos 1270
+ypos -648
+bdwidth 408
+bdheight 359
+z_order 2
+}
+BackdropNode {
+inputs 0
+name kbd2
+tile_color 0x587077ff
+label "Limit BGR"
+note_font_size 40
+xpos 2127
+ypos -649
+bdwidth 408
+bdheight 359
+z_order 2
+}
+BackdropNode {
+inputs 0
+name kbd3
+tile_color 0x5850645d
+label "Limit RGB"
+note_font_size 40
+xpos 1716
+ypos -647
+bdwidth 408
+bdheight 359
+z_order 2
+}
+BackdropNode {
+inputs 0
+name kbd3580
+tile_color 0x5850645d
+label "Double Average RGB"
+note_font_size 40
+xpos 859
+ypos -647
+bdwidth 408
+bdheight 359
+z_order 2
+}
+Input {
+inputs 0
+name mask
+xpos 151
+ypos 1031
+number 1
+}
+Input {
+inputs 0
+name Input
+xpos 262
+ypos -920
+}
+Grade {
+whitepoint {{parent.neutral_color} {parent.neutral_color} {parent.neutral_color} {parent.neutral_color}}
+white {{parent.neutral_color.r*0.2126+parent.neutral_color.g*0.7152+parent.neutral_color.b*0.0722}}
+black_clamp false
+name Neutralize
+xpos 262
+ypos -860
+disable {{(parent.neutral_color.r==0|parent.neutral_color.g==0|parent.neutral_color.b==0)|!parent.neutralize}}
+}
+Dot {
+name Dot12
+tile_color 0x7aa9ff00
+xpos 296
+ypos -725
+}
+set N74387550 [stack 0]
+Dot {
+name Dot13
+tile_color 0x7aa9ff00
+xpos 616
+ypos -725
+}
+set N7438cc60 [stack 0]
+Dot {
+name Dot24
+tile_color 0x7aa9ff00
+xpos 1061
+ypos -725
+}
+set N743925f0 [stack 0]
+Dot {
+name Dot26
+tile_color 0x7aa9ff00
+xpos 1472
+ypos -725
+}
+set N74397f80 [stack 0]
+Dot {
+name Dot31
+tile_color 0x7aa9ff00
+xpos 1918
+ypos -725
+}
+set N7439d910 [stack 0]
+Dot {
+name Dot36
+tile_color 0x7aa9ff00
+xpos 2329
+ypos -725
+}
+Dot {
+name Dot37
+tile_color 0x7aa9ff00
+xpos 2329
+ypos -559
+}
+set N743a8bb0 [stack 0]
+Dot {
+name Dot38
+tile_color 0x7aa9ff00
+xpos 2439
+ypos -559
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr2 b>g*LimitPercentage?g*LimitPercentage:b
+name Limit_BG
+xpos 2405
+ypos -457
+}
+push $N743a8bb0
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr1 g>r*LimitPercentage?r*LimitPercentage:g
+name Limit_GR
+xpos 2295
+ypos -459
+}
+push $N743a8bb0
+Dot {
+name Dot39
+tile_color 0x7aa9ff00
+xpos 2211
+ypos -559
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr0 r>b*LimitPercentage?b*LimitPercentage:r
+name Limit_RB
+xpos 2177
+ypos -460
+}
+Switch {
+inputs 3
+which {{parent.screen_color.r>max(parent.screen_color.g,parent.screen_color.b)?0:parent.screen_color.b>=max(parent.screen_color.r,parent.screen_color.g)?2:1}}
+name Switch_maxRGB6
+xpos 2295
+ypos -360
+}
+Dot {
+name Dot40
+xpos 2329
+ypos -130
+}
+push $N7439d910
+Dot {
+name Dot32
+tile_color 0x7aa9ff00
+xpos 1918
+ypos -557
+}
+set N743f7a90 [stack 0]
+Dot {
+name Dot33
+tile_color 0x7aa9ff00
+xpos 2028
+ypos -557
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr2 b>r*LimitPercentage?r*LimitPercentage:b
+name Limit_BR
+xpos 1994
+ypos -455
+}
+push $N743f7a90
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr1 g>b*LimitPercentage?b*LimitPercentage:g
+name Limit_GB
+xpos 1884
+ypos -457
+}
+push $N743f7a90
+Dot {
+name Dot34
+tile_color 0x7aa9ff00
+xpos 1800
+ypos -557
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr0 r>g*LimitPercentage?g*LimitPercentage:r
+name Limit_RG
+xpos 1766
+ypos -458
+}
+Switch {
+inputs 3
+which {{parent.screen_color.r>max(parent.screen_color.g,parent.screen_color.b)?0:parent.screen_color.b>=max(parent.screen_color.r,parent.screen_color.g)?2:1}}
+name Switch_maxRGB5
+xpos 1884
+ypos -358
+}
+Dot {
+name Dot35
+xpos 1918
+ypos -119
+}
+push $N74397f80
+Dot {
+name Dot27
+tile_color 0x7aa9ff00
+xpos 1472
+ypos -558
+}
+set N74246b40 [stack 0]
+Dot {
+name Dot28
+tile_color 0x7aa9ff00
+xpos 1582
+ypos -558
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr2 b>(2*g+r)/2*LimitPercentage?(r+2*g)/2*LimitPercentage:b
+name DoubleAverage_B_2
+xpos 1548
+ypos -456
+}
+push $N74246b40
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr1 g>(b+2*r)/3*LimitPercentage?(b+2*r)/3*LimitPercentage:g
+name DoubleAverage_G_2
+xpos 1438
+ypos -458
+}
+push $N74246b40
+Dot {
+name Dot29
+tile_color 0x7aa9ff00
+xpos 1354
+ypos -558
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr0 r>(g+2*b)/3*LimitPercentage?(g+2*b)/3*LimitPercentage:r
+name DoubleAverage_R_2
+xpos 1320
+ypos -459
+}
+Switch {
+inputs 3
+which {{parent.screen_color.r>max(parent.screen_color.g,parent.screen_color.b)?0:parent.screen_color.b>=max(parent.screen_color.r,parent.screen_color.g)?2:1}}
+name Switch_maxRGB4
+xpos 1438
+ypos -359
+}
+Dot {
+name Dot30
+xpos 1472
+ypos -130
+}
+push $N743925f0
+Dot {
+name Dot21
+tile_color 0x7aa9ff00
+xpos 1061
+ypos -557
+}
+set N74295cc0 [stack 0]
+Dot {
+name Dot22
+tile_color 0x7aa9ff00
+xpos 1171
+ypos -557
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr2 b>(g+2*r)/2*LimitPercentage?(2*r+g)/2*LimitPercentage:b
+name DoubleAverage_B_1
+xpos 1137
+ypos -455
+}
+push $N74295cc0
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr1 g>(2*b+r)/3*LimitPercentage?(2*b+r)/3*LimitPercentage:g
+name DoubleAverage_G_1
+xpos 1027
+ypos -457
+}
+push $N74295cc0
+Dot {
+name Dot23
+tile_color 0x7aa9ff00
+xpos 943
+ypos -557
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr0 r>(2*g+b)/3*LimitPercentage?(2*g+b)/3*LimitPercentage:r
+name DoubleAverage_R_1
+xpos 909
+ypos -458
+}
+Switch {
+inputs 3
+which {{parent.screen_color.r>max(parent.screen_color.g,parent.screen_color.b)?0:parent.screen_color.b>=max(parent.screen_color.r,parent.screen_color.g)?2:1}}
+name Switch_maxRGB3
+xpos 1027
+ypos -358
+}
+Dot {
+name Dot25
+xpos 1061
+ypos -119
+}
+push $N7438cc60
+Dot {
+name Dot6
+tile_color 0x7aa9ff00
+xpos 616
+ypos -560
+}
+set N742e4de0 [stack 0]
+Dot {
+name Dot15
+tile_color 0x7aa9ff00
+xpos 726
+ypos -560
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr2 b>(r+g)/2*LimitPercentage?(r+g)/2*LimitPercentage:b
+name Average_B
+xpos 692
+ypos -458
+}
+push $N742e4de0
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr1 g>(b+r)/2*LimitPercentage?(b+r)/2*LimitPercentage:g
+name Average_G
+xpos 582
+ypos -460
+}
+push $N742e4de0
+Dot {
+name Dot14
+tile_color 0x7aa9ff00
+xpos 498
+ypos -560
+}
+Expression {
+temp_name0 LimitPercentage
+temp_expr0 parent.fine_tune
+expr0 r>(g+b)/2*LimitPercentage?(g+b)/2*LimitPercentage:r
+name Average_R
+xpos 464
+ypos -461
+}
+Switch {
+inputs 3
+which {{parent.screen_color.r>max(parent.screen_color.g,parent.screen_color.b)?0:parent.screen_color.b>=max(parent.screen_color.r,parent.screen_color.g)?2:1}}
+name Switch_maxRGB2
+xpos 582
+ypos -361
+}
+Dot {
+name Dot20
+xpos 616
+ypos -130
+}
+push $N74387550
+Dot {
+name Dot9
+tile_color 0x7aa9ff00
+xpos 296
+ypos -560
+}
+set N74134780 [stack 0]
+Dot {
+name Dot3
+tile_color 0x7aa9ff00
+xpos 296
+ypos -505
+}
+set N74139e20 [stack 0]
+Dot {
+name Dot11
+tile_color 0x7aa9ff00
+xpos 229
+ypos -505
+}
+set N7413f5f0 [stack 0]
+Expression {
+temp_name0 weight
+temp_expr0 parent.fine_tune-0.5
+channel0 rgba
+expr0 (b-(g*weight+r*(1-weight)))/(parent.screen_color.b-(parent.screen_color.g*weight+parent.screen_color.r*(1-weight)))
+name SpillMatte_B
+xpos 195
+ypos -451
+}
+push $N7413f5f0
+Dot {
+name Dot10
+tile_color 0x7aa9ff00
+xpos 122
+ypos -505
+}
+set N74155100 [stack 0]
+Expression {
+temp_name0 weight
+temp_expr0 parent.fine_tune-0.5
+channel0 rgba
+expr0 (g-(r*weight+b*(1-weight)))/(parent.screen_color.g-(parent.screen_color.r*weight+parent.screen_color.b*(1-weight)))
+name SpillMatte_G
+xpos 88
+ypos -451
+}
+push $N74155100
+Dot {
+name Dot1
+tile_color 0x7aa9ff00
+xpos 25
+ypos -505
+}
+Expression {
+temp_name0 weight
+temp_expr0 parent.fine_tune-0.5
+channel0 rgba
+expr0 (r-(b*weight+g*(1-weight)))/(parent.screen_color.r-(parent.screen_color.b*weight+parent.screen_color.g*(1-weight)))
+name SpillMatte_R
+xpos -9
+ypos -454
+}
+Switch {
+inputs 3
+which {{parent.screen_color.r>max(parent.screen_color.g,parent.screen_color.b)?0:parent.screen_color.b>=max(parent.screen_color.r,parent.screen_color.g)?2:1}}
+name Switch_maxRGB1
+xpos 89
+ypos -395
+}
+Clamp {
+maximum_enable false
+name Clamp1
+xpos 89
+ypos -365
+}
+Expression {
+channel0 rgba
+expr0 "isinf(r)? 0:r"
+name fix_inf
+xpos 89
+ypos -327
+}
+Expression {
+channel0 rgba
+expr0 "isnan(r)? 0:r"
+name fix_nan
+xpos 89
+ypos -301
+}
+Dot {
+name Dot8
+xpos 123
+ypos -276
+}
+Dot {
+name Dot7
+xpos -50
+ypos -276
+}
+push $N74134780
+Dot {
+name Dot2
+tile_color 0x7aa9ff00
+xpos -84
+ypos -560
+}
+Expression {
+expr0 parent.screen_color.r
+expr1 parent.screen_color.g
+expr2 parent.screen_color.b
+name Screen_Color
+xpos -118
+ypos -479
+}
+Dot {
+name Dot47
+xpos -84
+ypos -419
+}
+set N741d9490 [stack 0]
+Merge2 {
+inputs 2
+operation multiply
+bbox B
+name Merge1
+xpos -118
+ypos -251
+}
+push $N74139e20
+Merge2 {
+inputs 2
+operation from
+bbox B
+name Merge2
+xpos 262
+ypos -251
+}
+Dot {
+name Dot4
+xpos 296
+ypos -139
+}
+Switch {
+inputs 6
+which {{parent.algorithm}}
+name Algorithm_Switch
+xpos 582
+ypos 225
+}
+Dot {
+name Dot19
+tile_color 0xcccccc00
+xpos 616
+ypos 310
+}
+set N74010ed0 [stack 0]
+push $N74387550
+Dot {
+name Dot17
+tile_color 0x7aa9ff00
+xpos -236
+ypos -725
+}
+Dot {
+name Dot18
+tile_color 0x7aa9ff00
+xpos -236
+ypos 310
+}
+set N7401c0c0 [stack 0]
+Merge2 {
+inputs 2
+operation from
+bbox B
+name Merge3
+xpos 371
+ypos 306
+}
+Saturation {
+saturation 0
+name DeSaturate
+xpos 371
+ypos 362
+}
+set N740334f0 [stack 0]
+Input {
+inputs 0
+name Inputbg
+xpos -198
+ypos 364
+number 2
+}
+push $N741d9490
+Dot {
+name Dot48
+xpos -155
+ypos -419
+}
+Saturation {
+saturation 0
+name DeSaturate1
+xpos -68
+ypos 211
+}
+Merge2 {
+inputs 2
+operation divide
+name Merge7
+xpos -68
+ypos 362
+}
+Merge2 {
+inputs 2
+operation multiply
+name Merge6
+xpos 88
+ypos 362
+}
+Dot {
+name Dot49
+xpos 122
+ypos 416
+}
+push $N740334f0
+Switch {
+inputs 2
+which {{"\[exists parent.input2]"}}
+name Switch2
+xpos 371
+ypos 412
+}
+Dot {
+name Dot43
+tile_color 0x7aa9ff00
+xpos 405
+ypos 450
+}
+set N7408aca0 [stack 0]
+Multiply {
+value {{parent.replace} {parent.replace} {parent.replace} {parent.replace}}
+name Replace_color_Mult
+xpos 371
+ypos 484
+}
+Gamma {
+value {{parent.gamma} {parent.gamma} {parent.gamma} {parent.gamma}}
+name Gamma
+xpos 371
+ypos 536
+}
+Dot {
+name Dot16
+tile_color 0x7aa9ff00
+xpos 405
+ypos 609
+}
+push $N74010ed0
+Grade {
+whitepoint {{parent.neutral_color} {parent.neutral_color} {parent.neutral_color} {parent.neutral_color}}
+white {{parent.neutral_color.r*0.2126+parent.neutral_color.g*0.7152+parent.neutral_color.b*0.0722}}
+reverse true
+black_clamp false
+name Neutralize1
+xpos 582
+ypos 456
+disable {{((parent.neutral_color.r==0|parent.neutral_color.g==0|parent.neutral_color.b==0)|!parent.neutralize)|!parent.plate_only}}
+}
+Merge2 {
+inputs 2
+operation plus
+bbox B
+output rgb
+name Merge5
+xpos 582
+ypos 605
+}
+Dot {
+name Dot44
+tile_color 0x4b5ec600
+xpos 616
+ypos 692
+}
+push $N7401c0c0
+Copy {
+inputs 2
+from0 rgba.red
+to0 rgba.red
+from1 rgba.green
+to1 rgba.green
+from2 rgba.blue
+to2 rgba.blue
+bbox B
+name Copy2
+xpos -270
+ypos 670
+}
+push $N7401c0c0
+Dot {
+name Dot46
+tile_color 0x7aa9ff00
+xpos -346
+ypos 310
+}
+Dot {
+name Dot41
+tile_color 0x7aa9ff00
+xpos -346
+ypos 879
+}
+set N740f0fd0 [stack 0]
+Dissolve {
+inputs 2
+which {{parent.mix}}
+name Dissolve1
+xpos -270
+ypos 869
+}
+set N740f81c0 [stack 0]
+Expression {
+expr0 0
+expr1 0
+expr2 0
+expr3 1
+name Expression1
+xpos 26
+ypos 875
+}
+Switch {
+inputs 2
+which {{"\[exists parent.input1] "}}
+name Switch1
+xpos 26
+ypos 1031
+}
+Invert {
+channels alpha
+name Invert1
+xpos -88
+ypos 1025
+}
+set N73f1da70 [stack 0]
+push $N7408aca0
+Dot {
+name Dot5
+tile_color 0x7aa9ff00
+xpos 295
+ypos 450
+}
+Multiply {
+value {{parent.mix}}
+name Multiply1
+xpos 261
+ypos 917
+}
+Dot {
+name Dot45
+tile_color 0x7aa9ff00
+xpos 295
+ypos 1162
+}
+Merge2 {
+inputs 2
+operation stencil
+bbox B
+name Merge4
+xpos -88
+ypos 1158
+}
+Clamp {
+channels alpha
+name Clamp2
+xpos -88
+ypos 1238
+}
+push $N73f1da70
+push $N740f0fd0
+Dot {
+name Dot42
+tile_color 0x7aa9ff00
+xpos -346
+ypos 1035
+}
+push $N740f81c0
+Keymix {
+inputs 3
+bbox B
+name Keymix1
+xpos -270
+ypos 1025
+}
+Copy {
+inputs 2
+from0 rgba.red
+to0 rgba.alpha
+bbox B
+name Copy1
+xpos -270
+ypos 1238
+disable {{!parent.out_alpha}}
+}
+Grade {
+whitepoint {{parent.neutral_color} {parent.neutral_color} {parent.neutral_color} {parent.neutral_color}}
+white {{parent.neutral_color.r*0.2126+parent.neutral_color.g*0.7152+parent.neutral_color.b*0.0722}}
+reverse true
+black_clamp false
+name Neutralize2
+xpos -270
+ypos 1332
+disable {{((parent.neutral_color.r==0|parent.neutral_color.g==0|parent.neutral_color.b==0)|!parent.neutralize)|parent.plate_only}}
+}
+Output {
+name Output1
+xpos -270
+ypos 1429
+}
+end_group
+push $cut_paste_input
+Group {
+name KeyChew
+help "Cheaply dilates and erodes a matte"
+onCreate "n = nuke.thisNode()\nn.knob(\"shrinkDilate\").setRange(-50,50)\n"
+tile_color 0x878787ff
+selected true
+xpos 42217
+ypos -2991
+addUserKnob {20 User l Keychew}
+addUserKnob {14 shrinkDilate l "Shrink / Dilate" R -50 50}
+addUserKnob {41 filter l "" -STARTLINE T Blur1.filter}
+addUserKnob {7 contrast l Contrast R 0 10}
+addUserKnob {14 postBlur l "Post Blur" R 0 100}
+addUserKnob {41 filter_1 l "" -STARTLINE T Blur11.filter}
+addUserKnob {26 ""}
+addUserKnob {26 "" l mask T ""}
+addUserKnob {41 maskChannelInput l "" -STARTLINE T Merge1.maskChannelInput}
+addUserKnob {41 inject -STARTLINE T Merge1.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge1.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge1.fringe}
+addUserKnob {41 mix T Merge1.mix}
+addUserKnob {20 info l Info}
+addUserKnob {26 created l created: T "1/1/2015 by <a href=\\'http://movingimagearts.com'> Rafal Kaniewski</a>"}
+addUserKnob {26 adjustments l "adjustments by:" T "Igor Gama + Tony Lyons"}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 327
+ypos 707
+number 1
+}
+Input {
+inputs 0
+name Input
+xpos 180
+ypos 104
+}
+Dot {
+name Dot1
+note_font_size 41
+xpos 214
+ypos 161
+}
+set N73fb2ef0 [stack 0]
+Blur {
+channels alpha
+size {{abs(shrinkDilate) x1004 8} {abs(shrinkDilate) x1004 8}}
+filter quadratic
+crop false
+name Blur1
+xpos 180
+ypos 221
+addUserKnob {20 User}
+addUserKnob {7 Chew R -300 300}
+Chew 106
+}
+Invert {
+channels alpha
+name Invert2
+xpos 180
+ypos 320
+disable {{parent.Invert3.disable}}
+}
+Grade {
+channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+white {{abs(shrinkDilate)+1 x1004 1.32}}
+gamma {{1/abs(abs(shrinkDilate)/(1-contrast+10)+1)}}
+black_clamp false
+name Grade3
+xpos 180
+ypos 371
+}
+Invert {
+channels alpha
+name Invert3
+xpos 180
+ypos 424
+disable {{shrinkDilate>0?1:0}}
+}
+Clamp {
+channels alpha
+name Clamp5
+xpos 180
+ypos 494
+}
+Blur {
+channels alpha
+size {{parent.postBlur} {parent.postBlur}}
+crop false
+name Blur11
+xpos 180
+ypos 594
+}
+push $N73fb2ef0
+Dot {
+name Dot2
+note_font_size 41
+xpos 63
+ypos 161
+}
+Dot {
+name Dot3
+note_font_size 41
+xpos 63
+ypos 710
+}
+Merge2 {
+inputs 2+1
+operation copy
+also_merge rgba
+name Merge1
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 180
+ypos 707
+}
+Output {
+name Output1
+xpos 180
+ypos 772
+}
+end_group
+push $cut_paste_input
+Group {
+name apeScreenClean5
+help "apeScreenClean v0.5 - apEssentials by Adrian Pueyo\n\nClean up an irregular green or blue screen using your plate and a clean plate.\n\napeScreenClean is my own flavor of clean screen tool (ScreenCorrect, PxF_ScreenClean, ...) offering extended functionality.\n\napeScreenClean v0.5 by Adrian Pueyo\nwww.adrianpueyo.com, 2015-2019"
+knobChanged "k = nuke.thisKnob()\nif k.name() in \[\"use_screen_color\",\"screen_color\"]:\n    n = nuke.thisNode()\n    kv = n\[\"use_screen_color\"].value()\n    n\['screen_replace'].setEnabled(not kv)\n    if kv:\n        n\['screen_replace'].setValue(n\['screen_color'].getValue())"
+tile_color 0x8c8c8cff
+selected true
+xpos 42213
+ypos -3063
+addUserKnob {20 apeScreenClean}
+addUserKnob {18 screen_color l "screen color" t "Pick the main color of your screen."}
+screen_color {0 0 0}
+addUserKnob {6 screen_color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {18 screen_replace l "screen replace" t "Select a color to replace your screen with. By default is ganged to the screen color." +DISABLED}
+screen_replace {0 0 0}
+addUserKnob {6 screen_replace_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 use_screen_color l "use screen color" t "Gang screen color / screen replace color." +STARTLINE}
+use_screen_color true
+addUserKnob {6 output_alpha l "output alpha" t "Output the alpha of the screenclean. If disabled outputs original alpha." -STARTLINE}
+output_alpha true
+addUserKnob {26 ""}
+addUserKnob {7 blackpoint t "Black point of the replacement matte." R -0.2 0.2}
+addUserKnob {7 gamma t "Gamma of the replacement matte (to fill darks)."}
+gamma 0.5
+addUserKnob {26 ""}
+addUserKnob {41 maskChannel l "mask channel" T KeymixCleanScreen.maskChannel}
+addUserKnob {41 invertMask l invert -STARTLINE T KeymixCleanScreen.invertMask}
+addUserKnob {7 mix}
+mix 1
+addUserKnob {26 version_author l "" t "apeScreenClean v0.5\n2015-2019" +STARTLINE T "<span style=\"color:#666\"><br/><b>apeScreenClean v0.5</b> - <a href=\"http://www.adrianpueyo.com\" style=\"color:#666;text-decoration: none;\">adrianpueyo.com</a>, 2015-2019</span>"}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 346
+ypos 154
+number 2
+}
+Input {
+inputs 0
+name plate
+xpos 456
+ypos 29
+}
+set N73e488d0 [stack 0]
+push $N73e488d0
+OFXuk.co.thefoundry.keylight.keylight_v201 {
+show "Intermediate Result"
+unPreMultiply false
+screenColour {{parent.screen_color x10 0.1965884119} {parent.screen_color x10 0.5346660018} {parent.screen_color x10 0.1694011688}}
+screenGain 1
+screenBalance 0.5
+alphaBias {0.5 0.5 0.5}
+despillBias {0.5 0.5 0.5}
+gangBiases true
+preBlur 0
+"Screen Matte" 0
+screenClipMin 0
+screenClipMax 1
+screenClipRollback 0
+screenGrowShrink 0
+screenSoftness 0
+screenDespotBlack 0
+screenDespotWhite 0
+screenReplaceMethod "Soft Colour"
+screenReplaceColour {0.5 0.5 0.5}
+Tuning 0
+midPoint 0.5
+lowGain 1
+midGain 1
+highGain 1
+"Inside Mask" 0
+sourceAlphaHandling Ignore
+insideReplaceMethod "Soft Colour"
+insideReplaceColour {0.5 0.5 0.5}
+Crops 0
+SourceXMethod Colour
+SourceYMethod Colour
+SourceEdgeColour 0
+SourceCropL 0
+SourceCropR 1
+SourceCropB 0
+SourceCropT 1
+balanceSet false
+insideComponent None
+outsideComponent None
+cacheBreaker true
+name KeyP
+xpos 236
+ypos 29
+}
+Invert {
+channels alpha
+name InvertP
+xpos 236
+ypos 53
+}
+Input {
+inputs 0
+name cleanplate
+xpos 346
+ypos -8
+number 1
+}
+set N73d18b20 [stack 0]
+OFXuk.co.thefoundry.keylight.keylight_v201 {
+show "Intermediate Result"
+unPreMultiply false
+screenColour {{parent.screen_color x10 0.1965884119} {parent.screen_color x10 0.5346660018} {parent.screen_color x10 0.1694011688}}
+screenGain 1
+screenBalance 0.5
+alphaBias {0.5 0.5 0.5}
+despillBias {0.5 0.5 0.5}
+gangBiases true
+preBlur 0
+"Screen Matte" 0
+screenClipMin 0
+screenClipMax 1
+screenClipRollback 0
+screenGrowShrink 0
+screenSoftness 0
+screenDespotBlack 0
+screenDespotWhite 0
+screenReplaceMethod "Soft Colour"
+screenReplaceColour {0.5 0.5 0.5}
+Tuning 0
+midPoint 0.5
+lowGain 1
+midGain 1
+highGain 1
+"Inside Mask" 0
+sourceAlphaHandling Ignore
+insideReplaceMethod "Soft Colour"
+insideReplaceColour {0.5 0.5 0.5}
+Crops 0
+SourceXMethod Colour
+SourceYMethod Colour
+SourceEdgeColour 0
+SourceCropL 0
+SourceCropR 1
+SourceCropB 0
+SourceCropT 1
+balanceSet false
+insideComponent None
+outsideComponent None
+cacheBreaker true
+name KeyCP
+xpos 126
+ypos -8
+}
+Invert {
+channels alpha
+name InvertCP
+xpos 126
+ypos 16
+}
+ChannelMerge {
+inputs 2
+operation divide
+name NormalizeScreen
+xpos 126
+ypos 48
+}
+Grade {
+channels alpha
+blackpoint {{parent.blackpoint}}
+gamma {{parent.gamma}}
+name GradeAlpha
+xpos 126
+ypos 90
+}
+set N73df78e0 [stack 0]
+Dot {
+name Dot1
+xpos 160
+ypos 125
+}
+push $N73df78e0
+push $N73d18b20
+Grade {
+channels rgba
+white 0
+add {{parent.screen_replace} {parent.screen_replace} {parent.screen_replace} {parent.screen_replace}}
+name GradeScreenColor
+xpos 346
+ypos 16
+}
+push $N73d18b20
+Merge2 {
+inputs 2
+operation from
+name MergeSC
+xpos 346
+ypos 40
+}
+Merge2 {
+inputs 2
+operation mask
+name Merge1
+xpos 346
+ypos 94
+}
+push $N73e488d0
+Merge2 {
+inputs 2
+operation from
+output {rgba.red rgba.green rgba.blue -rgba.alpha}
+name Merge3
+xpos 456
+ypos 94
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos 456
+ypos 118
+disable {{!parent.output_alpha}}
+}
+Keymix {
+inputs 3
+channels {{{parent.DirBlur.channels}}}
+mix {{parent.mix}}
+name KeymixCleanScreen
+xpos 456
+ypos 150
+disable {{"!\[exists parent.input2]"}}
+}
+Output {
+name Output1
+xpos 456
+ypos 182
+}
+end_group
+push $cut_paste_input
+Group {
+name AdditiveKeyerPro
+tile_color 0x5200ff
+note_font "Verdana Bold"
+note_font_color 0xffffffff
+selected true
+xpos 42215
+ypos -3134
+addUserKnob {20 AdditiveKeyer}
+addUserKnob {6 useSC l "Use Screen Color as CleanPlate" +STARTLINE}
+addUserKnob {41 screenColor l "Screen Color" T Keylight1.screenColour}
+addUserKnob {6 despillSat l "Despill Screen Color from Saturation?" +STARTLINE}
+despillSat true
+addUserKnob {26 ""}
+addUserKnob {7 DarkValue l "Dark Value" R 0 5}
+DarkValue 1
+addUserKnob {7 satDarks l "Saturate Darks"}
+satDarks 0.2
+addUserKnob {18 darkTint l "Dark Tint"}
+darkTint 1
+addUserKnob {6 darkTint_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {26 ""}
+addUserKnob {6 lightTint_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+addUserKnob {7 ExtraLightValue l "Light Value Plus" R 0 2}
+ExtraLightValue 1
+addUserKnob {7 satLights l "Saturate Lights"}
+satLights 0.2
+addUserKnob {18 lightTint l "Light Tint"}
+lightTint 1
+addUserKnob {6 lightTint_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {7 LightValue l "Light Value BG Mult" R 0 5}
+LightValue 0.25
+addUserKnob {26 ""}
+addUserKnob {6 darkTint_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" +HIDDEN +STARTLINE}
+addUserKnob {6 lightTint_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" +HIDDEN +STARTLINE}
+addUserKnob {6 compositeSwitch l "Output Difference to RGB" +STARTLINE}
+addUserKnob {6 outputDiffAlpha l "Output Difference Matte to Alpha" +STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {41 maskChannelMask l mask T MergeKeymix.maskChannelMask}
+addUserKnob {41 inject -STARTLINE T MergeKeymix.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T MergeKeymix.invert_mask}
+addUserKnob {41 fringe -STARTLINE T MergeKeymix.fringe}
+addUserKnob {41 mix T MergeKeymix.mix}
+addUserKnob {20 info l Info}
+addUserKnob {26 creator l "Modified By:" T "<b><big>Tony Lyons"}
+addUserKnob {26 desc l Description: t "adds the difference between cleanplate and key plate to the BG\n\nGood for hair details and shadows and sensitive edge treatment" T AdditiveKeyer}
+addUserKnob {26 ver l Version: T v04}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 685
+ypos 1141
+number 3
+}
+Dot {
+name Dot10
+label Mask
+note_font_size 41
+xpos 719
+ypos 1883
+}
+Dot {
+name Dot11
+note_font_size 41
+xpos 719
+ypos 1983
+}
+Input {
+inputs 0
+name fg
+label "\[value number]"
+xpos -500
+ypos -221
+number 1
+}
+Remove {
+channels alpha
+name Remove2
+xpos -500
+ypos -147
+}
+AddChannels {
+channels rgba
+name AddChannels2
+xpos -500
+ypos -109
+}
+Dot {
+name Dot26
+note_font_size 41
+xpos -466
+ypos 5
+}
+set N73cb1a40 [stack 0]
+OFXuk.co.thefoundry.keylight.keylight_v201 {
+show "Final Result"
+unPreMultiply false
+screenColour {0 0 0}
+screenGain 1
+screenBalance 0.5
+alphaBias {0.5 0.5 0.5}
+despillBias {0.5 0.5 0.5}
+gangBiases true
+preBlur 0
+"Screen Matte" 0
+screenClipMin 0
+screenClipMax 1
+screenClipRollback 0
+screenGrowShrink 0
+screenSoftness 0
+screenDespotBlack 0
+screenDespotWhite 0
+screenReplaceMethod "Soft Colour"
+screenReplaceColour {0.5 0.5 0.5}
+Tuning 0
+midPoint 0.5
+lowGain 1
+midGain 1
+highGain 1
+"Inside Mask" 0
+sourceAlphaHandling Ignore
+insideReplaceMethod "Soft Colour"
+insideReplaceColour {0.5 0.5 0.5}
+Crops 0
+SourceXMethod Colour
+SourceYMethod Colour
+SourceEdgeColour 0
+SourceCropL 0
+SourceCropR 1
+SourceCropB 0
+SourceCropT 1
+balanceSet false
+insideComponent None
+outsideComponent None
+cacheBreaker true
+name Keylight1
+xpos -500
+ypos 73
+}
+set N73cb7340 [stack 0]
+push $N73cb1a40
+Dot {
+name Dot27
+note_font_size 41
+xpos -356
+ypos 5
+}
+Merge2 {
+inputs 2
+operation from
+name Merge3
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos -390
+ypos 73
+}
+Clamp {
+channels rgba
+name Clamp1
+xpos -390
+ypos 99
+}
+Saturation {
+saturation 0
+name Saturation4
+xpos -390
+ypos 125
+}
+push $N73cb7340
+Merge2 {
+inputs 2
+operation plus
+name Merge7
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos -500
+ypos 125
+}
+push $N73cb1a40
+Dot {
+name Dot30
+note_font_size 41
+xpos -598
+ypos 5
+}
+Dot {
+name Dot31
+note_font_size 41
+xpos -598
+ypos 218
+}
+Switch {
+inputs 2
+which {{parent.despillSat}}
+name DespillSwitch1
+label "\[value which]"
+xpos -500
+ypos 208
+}
+Dot {
+name Dot8
+xpos -466
+ypos 373
+}
+set N73bcefd0 [stack 0]
+Input {
+inputs 0
+name clean
+label "\[value number]"
+xpos 126
+ypos -175
+number 2
+}
+Remove {
+channels alpha
+name Remove3
+xpos 126
+ypos -101
+}
+AddChannels {
+channels rgba
+name AddChannels1
+xpos 126
+ypos -63
+}
+Grade {
+multiply 0
+add {{parent.Keylight1.screenColour} {parent.Keylight1.screenColour} {parent.Keylight1.screenColour} {parent.Keylight1.screenColour}}
+name ScreenColor
+xpos 126
+ypos -14
+disable {{!parent.useSC}}
+}
+Dot {
+name Dot28
+note_font_size 41
+xpos 160
+ypos 50
+}
+set N73a00610 [stack 0]
+OFXuk.co.thefoundry.keylight.keylight_v201 {
+show "Final Result"
+unPreMultiply false
+screenColour {{parent.Keylight1.screenColour x1039 0} {parent.Keylight1.screenColour x1039 0} {parent.Keylight1.screenColour x1039 0}}
+screenGain 1
+screenBalance 0.5
+alphaBias {0.5 0.5 0.5}
+despillBias {0.5 0.5 0.5}
+gangBiases true
+preBlur 0
+"Screen Matte" 0
+screenClipMin 0
+screenClipMax 1
+screenClipRollback 0
+screenGrowShrink 0
+screenSoftness 0
+screenDespotBlack 0
+screenDespotWhite 0
+screenReplaceMethod "Soft Colour"
+screenReplaceColour {0.5 0.5 0.5}
+Tuning 0
+midPoint 0.5
+lowGain 1
+midGain 1
+highGain 1
+"Inside Mask" 0
+sourceAlphaHandling Ignore
+insideReplaceMethod "Soft Colour"
+insideReplaceColour {0.5 0.5 0.5}
+Crops 0
+SourceXMethod Colour
+SourceYMethod Colour
+SourceEdgeColour 0
+SourceCropL 0
+SourceCropR 1
+SourceCropB 0
+SourceCropT 1
+balanceSet false
+insideComponent None
+outsideComponent None
+cacheBreaker true
+name Keylight2
+xpos 126
+ypos 118
+}
+set N73a05f40 [stack 0]
+push $N73a00610
+Dot {
+name Dot29
+note_font_size 41
+xpos 270
+ypos 50
+}
+Merge2 {
+inputs 2
+operation from
+name Merge8
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 236
+ypos 118
+}
+Clamp {
+channels rgba
+name Clamp2
+xpos 236
+ypos 144
+}
+Saturation {
+saturation 0
+name Saturation5
+xpos 236
+ypos 170
+}
+push $N73a05f40
+Merge2 {
+inputs 2
+operation plus
+name Merge9
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 126
+ypos 170
+}
+push $N73a00610
+Dot {
+name Dot33
+note_font_size 41
+xpos 28
+ypos 50
+}
+Dot {
+name Dot34
+note_font_size 41
+xpos 28
+ypos 230
+}
+Switch {
+inputs 2
+which {{parent.despillSat}}
+name DespillSwitch2
+label "\[value which]"
+xpos 126
+ypos 223
+}
+Dot {
+name Dot35
+note_font_size 41
+xpos 160
+ypos 320
+}
+set N7391f160 [stack 0]
+Dot {
+name Dot6
+xpos 412
+ypos 320
+}
+Merge2 {
+inputs 2
+operation difference
+Achannels rgb
+Bchannels rgb
+name Merge6
+xpos 378
+ypos 370
+}
+Group {
+name ChannelControl_v3
+label "\[value channel_selector.in]"
+note_font "Bitstream Vera Sans"
+xpos 378
+ypos 440
+mapsize {0.15 0.15}
+addUserKnob {20 channelControl}
+addUserKnob {41 Channel_Selection T channel_selector.in}
+addUserKnob {26 Description l "" +STARTLINE T ":Channel Control:\n\nChannel math with choice of merge operation"}
+addUserKnob {26 ""}
+addUserKnob {7 redGain}
+redGain 0.3
+addUserKnob {7 greenGain}
+greenGain 0.59
+addUserKnob {7 blueGain}
+blueGain 0.11
+addUserKnob {7 alphaGain}
+addUserKnob {41 operation T Merge1.operation}
+}
+Input {
+inputs 0
+name Input1
+xpos 558
+ypos -694
+}
+Shuffle {
+name channel_selector
+label "\[value in]"
+xpos 558
+ypos -668
+}
+set N7394d550 [stack 0]
+Shuffle {
+green red
+blue red
+alpha red
+name Shuffle1
+xpos 386
+ypos -536
+}
+Grade {
+channels rgba
+white {{parent.redGain i}}
+name Grade12
+xpos 386
+ypos -492
+}
+push $N7394d550
+Shuffle {
+red green
+blue green
+alpha green
+name Shuffle2
+xpos 499
+ypos -534
+}
+Grade {
+channels rgba
+white {{parent.greenGain i}}
+name Grade13
+xpos 499
+ypos -493
+}
+Merge2 {
+inputs 2
+operation plus
+name Merge1
+xpos 411
+ypos -428
+}
+set C739a4dc0 [stack 0]
+push $N7394d550
+Shuffle {
+red blue
+green blue
+alpha blue
+name Shuffle3
+xpos 610
+ypos -538
+}
+Grade {
+channels rgba
+white {{parent.blueGain i}}
+name Grade14
+xpos 610
+ypos -494
+}
+clone $C739a4dc0 {
+inputs 2
+xpos 486
+ypos -369
+selected false
+}
+push $N7394d550
+Shuffle {
+red alpha
+green alpha
+blue alpha
+name Shuffle4
+selected true
+xpos 725
+ypos -535
+}
+Grade {
+channels rgba
+white {{parent.alphaGain i}}
+name Grade15
+xpos 725
+ypos -494
+}
+clone $C739a4dc0 {
+inputs 2
+xpos 580
+ypos -307
+selected false
+}
+Output {
+name Output1
+xpos 600
+ypos -210
+}
+end_group
+Dot {
+name Dot14
+note_font_size 41
+xpos 412
+ypos 1768
+}
+Input {
+inputs 0
+name bg
+label "\[value number]"
+xpos -845
+ypos -242
+}
+AddChannels {
+channels rgba
+name AddChannels3
+xpos -845
+ypos -151
+}
+Dot {
+name Dot9
+note_font_size 41
+xpos -811
+ypos -78
+}
+Dot {
+name Dot4
+xpos -811
+ypos 1449
+}
+set N73842c70 [stack 0]
+Dot {
+name Dot13
+note_font_size 41
+xpos -811
+ypos 1688
+}
+set N73848670 [stack 0]
+push $N73bcefd0
+Dot {
+name Dot2
+note_font_size 41
+xpos -466
+ypos 421
+}
+set N7384dff0 [stack 0]
+Saturation {
+saturation {{parent.satDarks}}
+name Saturation9
+xpos -378
+ypos 418
+}
+push $N7391f160
+Saturation {
+saturation {{parent.satDarks}}
+name Saturation8
+xpos -215
+ypos 317
+}
+Merge2 {
+inputs 2
+operation divide
+name Merge5
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos -215
+ypos 418
+}
+Dot {
+name Dot38
+note_font_size 41
+xpos -181
+ypos 674
+}
+Clamp {
+channels rgba
+minimum 1
+minimum_enable false
+name Clamp4
+xpos -215
+ypos 786
+}
+Add {
+channels rgba
+value -1
+name Add3
+xpos -215
+ypos 840
+}
+Multiply {
+channels rgb
+value {{parent.DarkValue} {parent.DarkValue} {parent.DarkValue} 0}
+name DARK_VALUE
+xpos -215
+ypos 892
+}
+Grade {
+multiply {{parent.darkTint} {parent.darkTint} {parent.darkTint} {parent.darkTint}}
+reverse true
+black_clamp false
+name DARK_TINT
+xpos -215
+ypos 931
+}
+Add {
+channels rgba
+value 1
+name Add4
+xpos -215
+ypos 988
+}
+Clamp {
+channels rgb
+name Clamp5
+xpos -215
+ypos 1065
+}
+Dot {
+name Dot39
+note_font_size 41
+xpos -181
+ypos 1257
+}
+push $N7384dff0
+Dot {
+name Dot36
+note_font_size 41
+xpos -466
+ypos 577
+}
+Saturation {
+saturation {{parent.satLights}}
+name Saturation1
+xpos -101
+ypos 574
+}
+set N738ebe90 [stack 0]
+push $N7391f160
+Saturation {
+saturation {{parent.satLights}}
+name Saturation6
+xpos 126
+ypos 500
+}
+set N738f92b0 [stack 0]
+Merge2 {
+inputs 2
+operation divide
+also_merge all
+name Merge10
+label all
+xpos 126
+ypos 568
+}
+Clamp {
+channels rgba
+minimum 1
+maximum_enable false
+name Clamp3
+xpos 126
+ypos 780
+}
+Add {
+channels rgba
+value -1
+name Add1
+xpos 126
+ypos 838
+}
+Multiply {
+channels rgb
+value {{parent.LightValue} {parent.LightValue} {parent.LightValue} 0}
+name LIGHT_VALUE
+xpos 126
+ypos 961
+}
+Multiply {
+channels rgb
+value {{parent.lightTint.r} {parent.lightTint.g} {parent.lightTint.b} 0}
+name LIGHT_TINT
+xpos 126
+ypos 1039
+}
+Add {
+channels rgba
+value 1
+name Add2
+xpos 126
+ypos 1120
+}
+Merge2 {
+inputs 2
+operation multiply
+Achannels rgb
+Bchannels rgb
+output rgb
+name __CONSTRAIN_DARKS__
+xpos 128
+ypos 1253
+}
+Dot {
+name Dot19
+note_font_size 41
+xpos 162
+ypos 1354
+}
+set N7376f070 [stack 0]
+Dot {
+name Dot3
+xpos -8
+ypos 1354
+}
+Dot {
+name Dot16
+note_font_size 41
+xpos -8
+ypos 1611
+}
+push $N738f92b0
+Dot {
+name Dot7
+note_font_size 41
+xpos 310
+ypos 503
+}
+push $N738ebe90
+Dot {
+name Dot5
+note_font_size 41
+xpos -67
+ypos 691
+}
+Merge2 {
+inputs 2
+operation from
+name Merge1
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 276
+ypos 688
+}
+Clamp {
+channels rgba
+maximum_enable false
+name Clamp6
+xpos 276
+ypos 781
+}
+Multiply {
+channels rgba
+value {{parent.ExtraLightValue}}
+name Multiply1
+label "\[value value]"
+xpos 276
+ypos 899
+}
+Multiply {
+channels rgb
+value {{parent.lightTint.r} {parent.lightTint.g} {parent.lightTint.b} 0}
+name LIGHT_TINT1
+xpos 276
+ypos 1036
+}
+Dot {
+name Dot15
+note_font_size 41
+xpos 310
+ypos 1513
+}
+push $N7376f070
+Dot {
+name Dot1
+note_font_size 41
+xpos 162
+ypos 1449
+}
+push $N73842c70
+Merge2 {
+inputs 2
+operation multiply
+Achannels rgb
+Bchannels rgb
+output rgb
+name CONSTRAIN_LIGHTS
+xpos 128
+ypos 1446
+}
+Merge2 {
+inputs 2
+operation plus
+output rgb
+name Merge2
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 128
+ypos 1510
+}
+Switch {
+inputs 2
+which {{parent.compositeSwitch}}
+name Switch1
+label "\[value which]"
+xpos 128
+ypos 1604
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos 128
+ypos 1678
+disable {{parent.outputDiffAlpha}}
+}
+Copy {
+inputs 2
+from0 rgba.blue
+to0 rgba.alpha
+name __LUMA_INTO_ALPHA__
+xpos 128
+ypos 1758
+disable {{!parent.outputDiffAlpha}}
+}
+Dot {
+name Dot17
+label A
+note_font_size 41
+xpos 162
+ypos 1910
+}
+push $N73848670
+Dot {
+name Dot18
+label B
+note_font_size 41
+xpos -811
+ypos 1895
+}
+Dot {
+name Dot12
+note_font_size 41
+xpos -811
+ypos 1986
+}
+Merge2 {
+inputs 2+1
+operation copy
+bbox B
+Achannels none
+Bchannels none
+output none
+also_merge rgba
+name MergeKeymix
+xpos 128
+ypos 1973
+}
+Output {
+name Output1
+xpos 128
+ypos 2235
+}
+end_group
+push $cut_paste_input
+Group {
+name apDespill
+help "apDespill v2.0 by Adrian Pueyo\n\nGizmo to despill an image, with options to despill any hue (and not only the primaries), select different algorithms for de/respilling, and protect tones from the despill.\n\nIf you just want a basic despill, its default values should already be enough and the tool will avoid any extra calculations.\n\nv2 includes a new \"absolute\" mode which lets you basically perform a key, or do a \"despill to color\" operation. Also, the despill color, respill color and limit can now be plugged as image inputs if you wish, letting you perform a fully image-based despill or key, sort of iKeylight. Additionally, it allows you to perform the despill under a colorspace sandwich, for the artists who prefer to loop through different colorspaces in order to find one that works. Thanks to Tony Lyons the best feedback!\n\nadrianpueyo.com, 2014-2021"
+onCreate "n = nuke.thisNode()\nn\['tolerance'].setRange(0,2)\nn\['prot1_tolerance'].setFlag(0x00000004)\nn\['prot1_effect'].setFlag(0x00000004)"
+knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nkn = k.name()\nif kn == \"color\":\n    kv = k.getValue()\n    custom_weight_labels = \[\"green - blue\", \"red - blue\", \"red - green\", \" \"]\n    n\[\"custom_weight\"].setLabel(custom_weight_labels\[int(kv)])\n    n\[\"pick\"].setVisible(k.getValue() == 3)\nelif kn == \"mode\":\n    n\[\"custom_weight\"].setVisible(n\[\"mode\"].getValue()==3)\nelif kn in \[\"out\",\"output_alpha\"]:\n    n\[\"respill_math\"].setEnabled(n\[\"out\"].getValue()==0 or n\[\"output_alpha\"].getValue()==1)\n    n\[\"respill_color\"].setEnabled(n\[\"out\"].getValue()==0)\n    n\[\"inverted_spill_matte\"].setEnabled(n\[\"output_alpha\"].value())\nelif kn == \"prot1_activate\":\n    protA = n\[\"prot1_activate\"].value()\n    n\[\"prot1_preview\"].setEnabled(protA)\n    for i in \[\"prot1\", \"prot1_tolerance\", \"prot1_falloff\",\"prot1_effect\"]:\n        n\[i].setVisible(protA)\nelif kn == \"inputChange\":\n    n.knobs()\[\"limit_channel\"].setVisible(n.input(3) is not None)\n    n.knobs()\[\"invert_limit_channel\"].setVisible(n.input(3) is not None)\n    color_enabled = nuke.toNode(\"apDespillKernel\")\[\"apDespillKernel_use_color_input\"].getValue()==0\n    n\[\"color\"].setEnabled(color_enabled)\n    n.knobs()\[\"pick\"].setEnabled(color_enabled)\n    n\[\"info_using_input_color\"].setVisible(not color_enabled)\nelif kn == \"colorspace_shift\":\n    kv = k.value()\n    for i in \[\"colorspace_out\", \"illuminant_out\", \"primary_out\"]:\n        n.knobs()\[i].setEnabled(kv)\n    for i in \[\"colorspace_in\", \"illuminant_in\", \"primary_in\"]:\n        n.knobs()\[i].setEnabled(kv and n\[\"input_colorspace\"].value())\n    n\[\"input_colorspace\"].setEnabled(kv)\nelif kn == \"input_colorspace\":\n    kv = k.value()\n    for i in \[\"colorspace_in\", \"illuminant_in\", \"primary_in\"]:\n        n.knobs()\[i].setVisible(kv)\n        n.knobs()\[i].setEnabled(kv)\nelif kn == \"imagebased\":\n    kv = k.value()\n    input_names = \[\"color\",\"limit\",\"respill\"]\n    if kv:\n        for i_name in input_names:\n            i_fullname = \"Input\"+i_name\n            if not nuke.exists(i_fullname):\n                i_node = nuke.nodes.Input()\n                i_node\[\"name\"].setValue(i_fullname)\n            else:\n                i_node = nuke.toNode(i_fullname)\n            dot = nuke.toNode(\"Dot\"+i_name)\n            i_node.setXYpos(dot.xpos(),dot.ypos()-40)\n            dot.setInput(0,i_node)\n    else:\n        # If something connected, do nothing\n        if not any(\[n.input(i) for i in \[2,3,4]]):\n            for i_name in input_names:\n                if nuke.exists(\"Input\"+i_name):\n                    nuke.delete(nuke.toNode(\"Input\"+i_name))\n        else:\n            k.setValue(True)"
+tile_color 0x8b8b8bff
+selected true
+xpos 42214
+ypos -3337
+addUserKnob {20 apDespill}
+addUserKnob {6 pick_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 imagebased l image-based t "Show or hide image-based inputs.\n\nThis doesn't change anything internally except hiding inputs, just to avoid intimidating arrows on the node graph.\n\nNote: While any image-based input is connected, this won't let you hide them." +STARTLINE}
+addUserKnob {6 absolute_mode l "absolute mode" t "Absolute mode performs a keying algorithm instead of a regular despill, so that you can do a \"spill to colour\" or even use this node as an image-based Keylight." -STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {4 color t "Select a primary as a starting point, or custom to show RGB controls to select any color.\n\nNote: If an image is plugged on the color input, this will get overwritten by the input." M {red green blue custom "" "" ""}}
+color custom
+addUserKnob {26 info_using_input_color l " " -STARTLINE +HIDDEN T "<i><font color=#AAA> (Using color from input)"}
+addUserKnob {18 pick t "Pick the color you'd like to use for the despill. \n\nPlease use ctrl/cmd+alt+click for picking.\n\nNOTE: If a despill color image input is plugged, this value will be ignored."}
+pick {0 1 0}
+addUserKnob {6 pick_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 pick_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 dfg_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {4 out l output t "Quick switch to output the despilled image or the substracted one." M {despill spill}}
+addUserKnob {6 output_alpha l "output spill matte in alpha" t "Output the spill luminance in the alpha channel." +STARTLINE}
+output_alpha true
+addUserKnob {6 inverted_spill_matte l inverted t "Invert the output spill matte (in the alpha channel), especially useful when the despill is set to Absolute mode, in which case this will output a keying-like alpha." -STARTLINE}
+inverted_spill_matte true
+addUserKnob {4 mode l "despill math" t "average = avg of other two channels\nmaximum = max of other two channels\nminimum = min of other two channels\ncustom = select custom weights" M {average maximum minimum custom ""}}
+addUserKnob {7 custom_weight l " " t "-1 = only capped by the first channel\n0 = capped by avg of both\n1 = only capped by the second channel" -STARTLINE +HIDDEN R -1 1}
+addUserKnob {26 ""}
+addUserKnob {6 colorspace_shift l "alt colorspace" t "This allows for the popular artistic approach to refining the despill where you browse through colorspace conversions (mainly white point and primaries) and choose one that matches your desired despill bias.\n\n<b>Tip:</b> Double click on a dropdown and use the Page Up and Page Down keys on your keyboard to browse quickly through the items.\n\n<b>Note:</b> There's no need at all for the values of these dropdowns to match your working colorspace, so you can leave it as-is or tweak it if you prefer, regardless of the colorspace you're comping at (e.g. ACEScg). It is literally an artistic conversion prior to the despill algorithm that then gets reverted." +STARTLINE}
+colorspace_shift true
+addUserKnob {6 input_colorspace l "input colorspace" t "Also tweak the input colorspace for the back and forth colorspace conversion. This is generally not needed however, as this colorspace conversion is generally only used for artistic purposes." -STARTLINE}
+addUserKnob {6 log_space l log t "Perform Lin2Log -> Despill -> Log2Lin." -STARTLINE}
+addUserKnob {41 colorspace_in l "in colorspace" +DISABLED +HIDDEN T Colorspace1.colorspace_in}
+addUserKnob {41 illuminant_in l "" -STARTLINE +DISABLED +HIDDEN T Colorspace1.illuminant_in}
+addUserKnob {41 primary_in l "" -STARTLINE +DISABLED +HIDDEN T Colorspace1.primary_in}
+addUserKnob {41 colorspace_out l "despill space" T Colorspace1.colorspace_out}
+addUserKnob {41 illuminant_out l "" -STARTLINE T Colorspace1.illuminant_out}
+addUserKnob {41 primary_out l "" -STARTLINE T Colorspace1.primary_out}
+addUserKnob {26 ""}
+addUserKnob {7 hue_offset l "hue offset" t "Rotate the despill vectors to despill an arbitrary tone other than the primaries or the picked color.\nNote: A rotation of +-120 degrees is the same as selecting a different color channel." R -30 30}
+addUserKnob {7 tolerance l limit t "Use this to multiply the hue tolerance (the limiter value). You can move it all the way down to 0 to completely remove a hue from your image.\n\n<b>NOTE:</b> If an image is plugged into the <i>limit</i> input, this will act as a multiplier." R 0 2}
+tolerance 1
+addUserKnob {41 limit_channel l "limit channel" +HIDDEN T CopyLimit.from0}
+addUserKnob {6 invert_limit_channel l invert t "The recommended workflow for the image-based limit is keeping this invert turned on, so that the higher the value of the limit channel, the lower the limit gets." -STARTLINE +HIDDEN}
+invert_limit_channel true
+addUserKnob {6 prot1_activate l "protect tones" t "Enable controls to select tones to protect from despilling." +STARTLINE}
+addUserKnob {6 prot1_preview l preview t "Output the protected tones." -STARTLINE +DISABLED}
+addUserKnob {18 prot1 l protect t "Pick the central hue to protect.\n(ctrl/cmd+alt+click)" +HIDDEN}
+prot1 {0 0 0}
+addUserKnob {6 prot1_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 prot1_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {7 prot1_tolerance l tolerance t "Amount of hues to include in the selection." +HIDDEN}
+prot1_tolerance 0.2
+addUserKnob {7 prot1_falloff l falloff t "Falloff for the hue selection. A higher falloff will make hues apart from the picked one lose weight more quickly." +HIDDEN R 0 4}
+prot1_falloff 2
+addUserKnob {7 prot1_effect l effect t "Multiplier for the hue protection, and for the spill limit value." +HIDDEN R 0 10}
+prot1_effect 1
+addUserKnob {26 respill_divider l "" +STARTLINE}
+addUserKnob {4 respill_math l "spill math" t "Settings for the math for desaturating the the spill before adding it back." M {"Rec 709" "Ccir 601" "Rec 2020" Average Maximum "" "" "" "" ""}}
+addUserKnob {18 respill_color l "respill color" t "RGB multiplier for the desaturated spill when adding it back.\n\nIf used on non-degrained plates (which should be avoided anyway), any value other than 1 here will most likely produce grain artifacts.\n\nNOTE: If a respill image input is plugged, this value will act as a multiplier." R 0 4}
+respill_color 1
+addUserKnob {6 respill_color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 respill_color_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {26 ""}
+addUserKnob {41 maskChannelMask l mask T Merge.maskChannelMask}
+addUserKnob {41 inject -STARTLINE T Merge.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge.fringe}
+addUserKnob {41 mix T Merge.mix}
+addUserKnob {26 version_author l "" t "apDespill v2.0\n13 April, 2021" +STARTLINE T "<span style=\"color:#666\"><br/><b>apDespill v2.0</b> - <a href=\"http://www.adrianpueyo.com\" style=\"color:#666;text-decoration: none;\">adrianpueyo.com</a>, 2014-2021</span>"}
+}
+Input {
+inputs 0
+name Inputmask
+xpos 273
+ypos -250
+number 1
+}
+Dot {
+name Dot1
+note_font_size 41
+xpos 307
+ypos -147
+}
+set N73654210 [stack 0]
+Dot {
+name Dot5
+note_font_size 41
+xpos 307
+ypos -117
+}
+Input {
+inputs 0
+name Inputimage
+xpos 449
+ypos -949
+}
+set N73671020 [stack 0]
+Dot {
+name Dot2
+note_font_size 41
+xpos 788
+ypos -877
+}
+Dot {
+name Dot6
+xpos 788
+ypos -814
+}
+set N7367c270 [stack 0]
+Expression {
+temp_name0 minval
+temp_expr0 min(r,g,b)
+temp_name1 lift
+temp_expr1 minval<0
+expr0 lift?r+abs(minval):r
+expr1 lift?g+abs(minval):g
+expr2 lift?b+abs(minval):b
+expr3 lift?abs(minval):0
+name Expression1
+xpos 617
+ypos -778
+}
+set N73681c50 [stack 0]
+Dot {
+name Dot7
+selected true
+xpos 651
+ypos -256
+}
+Dot {
+inputs 0
+name Dotrespill
+label Dotrespill
+note_font "Verdana Bold"
+xpos 1190
+ypos -525
+}
+AddChannels {
+channels rgba
+format_size true
+name AddRGBA_spill
+xpos 1156
+ypos -442
+}
+Dot {
+inputs 0
+name Dotcolor
+label Dotcolor
+note_font "Verdana Bold"
+xpos 1080
+ypos -593
+}
+AddChannels {
+channels rgba
+format_size true
+name AddRGBA_color
+xpos 1046
+ypos -499
+}
+Dot {
+inputs 0
+name Dotlimit
+label Dotlimit
+note_font "Verdana Bold"
+xpos 936
+ypos -732
+}
+Shuffle {
+red black
+green black
+blue black
+alpha black
+name Shuffle_limit
+label "\[value in]"
+xpos 902
+ypos -670
+}
+push $N73681c50
+push $N7367c270
+Shuffle2 {
+inputs 2
+fromInput1 {{1} B A}
+fromInput2 {{0} B A}
+in2 rgba
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.alpha 1 3 rgba.alpha 0 3"
+name Shuffle1
+label "\[value in1]"
+xpos 754
+ypos -774
+}
+Shuffle {
+alpha black
+name Shuffle
+xpos 754
+ypos -694
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name CopyLimit
+xpos 754
+ypos -670
+}
+Invert {
+channels alpha
+name InvertLimit
+xpos 754
+ypos -611
+disable {{!invert_limit_channel}}
+}
+Colorspace {
+name Colorspace1
+label "\[value colorspace_in] >> \[value colorspace_out]"
+xpos 754
+ypos -557
+disable {{!parent.colorspace_shift}}
+}
+Log2Lin {
+operation lin2log
+name Log2Lin1
+xpos 754
+ypos -508
+disable {{!log_space}}
+}
+BlinkScript {
+inputs 3
+recompileCount 94
+ProgramGroup 1
+KernelDescription "2 \"apDespillKernel\" iterate pixelWise 857ee5211c9dc340b8743026c9778403c1424a4ec1afa5c7990e55b71f93720c 4 \"src\" Read Point \"color_src\" Read Point \"spill_src\" Read Point \"dst\" Write Point 21 \"limit\" Float 1 AACAPw== \"shift\" Float 1 AAAAAA== \"weights\" Float 1 AAAAAA== \"outmode\" Int 1 AAAAAA== \"output_alpha\" Int 1 AAAAAA== \"output_alpha_inverted\" Int 1 AAAAAA== \"clr\" Int 1 AAAAAA== \"mode\" Int 1 AAAAAA== \"respill_math\" Int 1 AAAAAA== \"respill_color\" Float 4 AAAAAAAAAAAAAAAAAAAAAA== \"prot1_on\" Int 1 AAAAAA== \"prot1_preview\" Int 1 AAAAAA== \"prot1\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"prot1_tolerance\" Float 1 AAAAAA== \"prot1_mult\" Float 1 AAAAAA== \"prot1_falloff\" Float 1 AAAAAA== \"pickSpill\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"despill_method\" Int 1 AAAAAA== \"use_color_input\" Int 1 AAAAAA== \"use_spill_input\" Int 1 AAAAAA== \"use_limit_input\" Int 1 AAAAAA== 21 \"limit\" 1 1 \"shift\" 1 1 \"weights\" 1 1 \"outmode\" 1 1 \"output_alpha\" 1 1 \"output_alpha_inverted\" 1 1 \"clr\" 1 1 \"mode\" 1 1 \"respill_math\" 1 1 \"respill_color\" 4 1 \"prot1_on\" 1 1 \"prot1_preview\" 1 1 \"prot1\" 3 1 \"prot1_tolerance\" 1 1 \"prot1_mult\" 1 1 \"prot1_falloff\" 1 1 \"pickSpill\" 3 1 \"despill_method\" 1 1 \"use_color_input\" 1 1 \"use_spill_input\" 1 1 \"use_limit_input\" 1 1 7 \"_usePicked\" Int 1 1 AAAAAA== \"_clr\" Int 1 1 AAAAAA== \"_ret\" Int 1 1 AAAAAA== \"_hueShift\" Float 1 1 AAAAAA== \"_autoShift\" Float 1 1 AAAAAA== \"despillColor\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"vNorm\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA=="
+kernelSource "//---------------------------------------------------------\n// apDespillKernel - apDespill v1.0 by Adrian Pueyo\n//\n// Despill an image, with options to despill any hue (and\n// not only the primaries), select different algorithms for\n// des/respilling, and protect tones from the despill.\n//\n// v2.0: Ability to plug image inputs for the controls,\n// and to perform a full key and respill.\n//\n// adrianpueyo.com, 2014-2017\n// ---------------------------------------------------------\n\ninline float y_convert_ccir601(const float4 in)\{\n  return in.x * 0.299f + in.y * 0.587f + in.z * 0.114f;\n\}\n\ninline float y_convert_rec709(const float4 in)\{\n  return in.x * 0.2125f + in.y * 0.7154f + in.z * 0.0721f;\n\}\n\ninline float y_convert_rec2020(const float4 in)\{\n  return in.x * 0.2627f + in.y * 0.678f + in.z * 0.0593f;\n\}\n\ninline float4 hueRotate(const float4 in, const float H)\{\n  if(H==0.0f)\{\n    return in;\n  \}else\{\n    float cosH = cos(H*PI/180);\n    float sinH = sin(H*PI/180);\n    float3 ret;\n    ret.x = (in.x+in.y+in.z)*(1-cosH)/3 + in.x*cosH + (-in.y/sqrt(3.0f)+in.z/sqrt(3.0f))*sinH;\n    ret.y = (in.x+in.y+in.z)*(1-cosH)/3 + in.y*cosH + (in.x/sqrt(3.0f)-in.z/sqrt(3.0f))*sinH;\n    ret.z = (in.x+in.y+in.z)*(1-cosH)/3 + in.z*cosH + (-in.x/sqrt(3.0f)+in.y/sqrt(3.0f))*sinH;\n    return float4(ret.x,ret.y,ret.z,in\[3]);\n  \}\n\}\n\nfloat3 vecToPlane(float3 v1, float3 v2 = float3(1.0f,1.0f,1.0f))\{\n  float3 v1onv2;\n  v1onv2 = v2 * float((float(dot(v2,v1))/float(dot(v2,v2)))); //Projection of vector on another (plane's normal)\n  return v1-v1onv2; //Projection of vector on plane\n\}\n\ninline float3 myCross(float3 a, float3 b)\{\n  return float3(float(a.y*b.z-a.z*b.y),float(a.z*b.x-a.x*b.z),float(a.x*b.y-a.y*b.x));\n\}\n\ninline float colorAngle(const float3 v1, const float3 v2)\{\n  const float3 vN=float3(1.0f,1.0f,1.0f);\n  float ang = acos(float(dot(v1,v2))/float(sqrt(dot(v1,v1)*dot(v2,v2))));\n  float3 crs = myCross(v1,v2);\n  if (dot(vN, crs) > 0) \{\n    ang = -ang;\n  \}\n  return ang;\n\}\n\n//Main function to calculate the despill for a float4 colour. If prot1_preview is True, returns the prot1 result instead.\ninline float4 apDespillMain(float4 src_color, float hueShift, int clr, int mode, float limit, float weights, int prot1_preview, int prot1_on, float3 prot1, float prot1_tolerance, float prot1_mult, float prot1_falloff)\{\n    //1. HueRotate IN\n    float4 despilled = hueRotate(src_color, hueShift);\n\n    //2. Calculate the limit\n    float resultLimit = 0.0f;\n    int2 others;\n    if(clr==0)\{//If red (and if _usePicked, also set red)\n      others = int2(1,2);\n    \}else if(clr==1)\{\n      others=int2(0,2);\n    \}else if(clr==2)\{\n      others=int2(0,1);\n    \}\n\n    if(mode==0)\{//average\n      resultLimit = (despilled\[others\[0]]+despilled\[others\[1]])/2;\n    \}else if(mode==1)\{//max\n      resultLimit = max(despilled\[others\[0]],despilled\[others\[1]]);\n    \}else if(mode==2)\{//min\n      resultLimit = min(despilled\[others\[0]],despilled\[others\[1]]);\n    \}else\{//custom\n      resultLimit = despilled\[others\[0]]*weights+despilled\[others\[1]]*(1-weights);\n    \}\n\n    //3. Protect tones\n    float prot1_result;\n    if(prot1_on==1&&(prot1\[0]!=prot1\[1]||prot1\[0]!=prot1\[2]||prot1\[1]!=prot1\[2]))\{\n      float cos_prot1_angle;\n      cos_prot1_angle = (src_color\[0]*prot1\[0]+src_color\[1]*prot1\[1]+src_color\[2]*prot1\[2]) / (sqrt(prot1\[0]*prot1\[0]+prot1\[1]*prot1\[1]+prot1\[2]*prot1\[2]) * sqrt(src_color\[0]*src_color\[0]+src_color\[1]*src_color\[1]+src_color\[2]*src_color\[2]));\n      prot1_result = pow(clamp(cos_prot1_angle,0.0f,1.0f),1/pow(prot1_tolerance,prot1_falloff));\n      resultLimit = resultLimit*(1+prot1_result*prot1_mult);\n    \}\n\n    //4. Calculate the despill and HueRotate OUT\n    for (int component = 0; component < 3; component++)\{\n      despilled\[component] = component==clr?min(despilled\[component],resultLimit*limit):despilled\[component];\n    \}\n    despilled = hueRotate(despilled,-hueShift);\n    despilled\[3] = prot1_result;\n    return despilled;\n\}\n\ninline float getLuma(float4 src_color, int luma_math)\{\n  float luma;\n  if(luma_math==0)\{\n    luma = y_convert_rec709(src_color);\n  \}else if(luma_math==1)\{\n    luma = y_convert_ccir601(src_color);\n  \}else if(luma_math==2)\{\n    luma = y_convert_rec2020(src_color);    \n  \}else if(luma_math==3)\{\n    luma = (src_color\[0]+src_color\[1]+src_color\[2])/3;\n  \}else\{\n    luma = max(max(src_color\[0],src_color\[1]),src_color\[2]);\n  \}\n  return luma;\n\}\n\nkernel apDespillKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessPoint, eEdgeClamped> src;\n  Image<eRead, eAccessPoint, eEdgeClamped> color_src;\n  Image<eRead, eAccessPoint, eEdgeClamped> spill_src; //Acts as a multiplier for the respill color\n  Image<eWrite> dst;\n\n  param:\n    float limit;\n    float shift;\n    float weights;\n    int outmode;//0=despill,1=spill\n    int output_alpha;\n    int output_alpha_inverted;\n    int clr; //0=red,1=green,2=blue\n    int mode; //0=average,1=maximum,2=minimum,3=custom\n    int respill_math; //0=Rec709,1=Ccir601,2=Avg,3=Max\n    float4 respill_color;\n    int prot1_on;\n    int prot1_preview;\n    float3 prot1;\n    float prot1_tolerance;\n    float prot1_mult;\n    float prot1_falloff;\n    float3 pickSpill;\n    int despill_method; //0=despill,1=key/\"absolute\"\n\n    int use_color_input;\n    int use_spill_input;\n    int use_limit_input; //Should be shuffled in the src's alpha\n\n  local:\n    int _usePicked;\n    int _clr;\n    int _ret;\n    float _hueShift;\n    float _autoShift;\n    float3 despillColor;\n    float3 vNorm;\n\n  void define() \{\n    defineParam(limit, \"limit\", 1.0f);\n    defineParam(shift, \"shift\", 0.0f);\n  \}\n\n  void init() \{\n    //1. Calculate which color to affect\n    _ret = 0;\n    if(use_color_input==1)\{\n      _clr = 0;\n      _usePicked = 1;\n    \}else if(clr!=3)\{//red green or blue\n      _usePicked = 0;\n      _clr = clr;\n    \}else if(pickSpill.x==pickSpill.y && pickSpill.x==pickSpill.z)\{\n      _ret = 1;//if \"custom\" selected but has a gray value, avoid any calculations\n    \}else\{\n      _usePicked = 1;\n      _clr = 0;\n    \}\n    vNorm = float3(1.0f,1.0f,1.0f);\n    if(use_color_input==0)\{\n      //2. Calculate the necessary hue shift\n      _autoShift = 0.0f;\n      if(_usePicked==1)\{\n        _autoShift = colorAngle(vecToPlane(pickSpill,vNorm),vecToPlane(float3(1.0f,0.0f,0.0f),vNorm));\n        _autoShift = _autoShift*180/PI;//to deg\n      \}\n      _hueShift = shift-_autoShift;\n    \}\n  \}\n\n  void process()\{\n    if(_ret == 1)\{ dst()=src(); return; \} //Avoid any calculations if no despill selected\n\n    //0. If color from input, calculate the necessary hue shift\n    float hueShift = 0.0f, autoShift = 0.0f;\n    float3 despillColor;\n    if(use_color_input==1)\{\n      despillColor = float3(color_src(0),color_src(1),color_src(2));\n      autoShift = colorAngle(vecToPlane(despillColor,vNorm),vecToPlane(float3(1.0f,0.0f,0.0f),vNorm));\n      autoShift = autoShift*180/PI;//to deg\n      hueShift = shift-autoShift;\n    \}else\{\n      if(_usePicked == 1)\{\n        despillColor = pickSpill;\n      \}else\{\n        despillColor = float3(_clr==0?1.0f:0.0f,_clr==1?1.0f:0.0f,_clr==2?1.0f:0.0f);\n      \}\n      \n      hueShift = _hueShift;\n    \}\n\n    float limit_result = use_limit_input==1?limit*src(3):limit;\n\n    //1. Despill the source image\n    float4 despilled = apDespillMain(src(), hueShift, _clr, mode, limit_result, weights, prot1_preview, prot1_on, prot1, prot1_tolerance, prot1_mult, prot1_falloff);\n    if(prot1_preview==1 && prot1_on==1)\{\n      dst() = src()*clamp(despilled\[3]*prot1_mult,0.0f,1.0f);\n      return;\n    \}\n    float4 spill = src()-despilled;\n    float spill_luma = getLuma(spill, respill_math);\n\n    //2. Process the key if key method selected\n    float4 result;\n    float4 despilled_full, spill_full; //Will account for the key if method selected is key\n    float spill_luma_full;\n    if(despill_method==0)\{\n      //Despill Method = Despill\n      despilled_full = despilled;\n      spill_full = spill;\n      spill_luma_full = spill_luma;\n    \}else\{\n      //Despill Method = Key\n      float4 despillColor4 = float4(despillColor.x,despillColor.y,despillColor.z,1.0f); //For simplicity\n\n      //2.1. Despill the picked despill colour itself, for normalizing the spill\n      float4 pickSpill_despilled = apDespillMain(despillColor4, hueShift, _clr, mode, limit_result, weights, prot1_preview, prot1_on, prot1, prot1_tolerance, prot1_mult, prot1_falloff);\n      float4 pickSpill_spill = despillColor4-pickSpill_despilled;\n      float pickSpill_spill_luma = getLuma(pickSpill_spill, respill_math);\n\n      spill_luma_full = pickSpill_spill_luma == 0? 0:spill_luma/pickSpill_spill_luma;\n      spill_full = despillColor4*spill_luma_full;\n      despilled_full = src()-spill_full;\n    \}\n\n\n    float4 respill_color_result = use_spill_input==1?spill_src()*respill_color:respill_color;\n    //3. Output\n    if(outmode==0)\{ //Despill\n      result = despilled_full+spill_luma_full*respill_color_result;\n    \}else\{ //Spill\n      result = spill_full;\n    \}\n\n    if(output_alpha==0)\{\n      result\[3]=src(3);\n    \}else\{\n      if(output_alpha_inverted == 0)\{\n        result\[3]=spill_luma_full;\n      \}else\{\n        result\[3]=1-spill_luma_full;\n      \}\n    \}\n\n    dst() = result;\n\n  \}\n\};"
+useGPUIfAvailable false
+vectorize false
+rebuild ""
+apDespillKernel_limit {{parent.tolerance}}
+apDespillKernel_shift {{parent.hue_offset}}
+apDespillKernel_weights {{(parent.custom_weight+1)/2}}
+apDespillKernel_outmode {{parent.out}}
+apDespillKernel_output_alpha {{parent.output_alpha}}
+apDespillKernel_output_alpha_inverted {{parent.inverted_spill_matte}}
+apDespillKernel_clr {{parent.color}}
+apDespillKernel_mode {{parent.mode}}
+apDespillKernel_respill_math {{parent.respill_math}}
+apDespillKernel_respill_color {{parent.respill_color.r} {parent.respill_color.g} {parent.respill_color.b} 1}
+apDespillKernel_prot1_on {{parent.prot1_activate}}
+apDespillKernel_prot1_preview {{parent.prot1_preview}}
+apDespillKernel_prot1 {{parent.prot1} {parent.prot1} {parent.prot1}}
+apDespillKernel_prot1_tolerance {{parent.prot1_tolerance}}
+apDespillKernel_prot1_mult {{parent.prot1_effect}}
+apDespillKernel_prot1_falloff {{parent.prot1_falloff}}
+apDespillKernel_pickSpill {{parent.pick} {parent.pick} {parent.pick}}
+apDespillKernel_despill_method {{parent.absolute_mode}}
+apDespillKernel_use_color_input {{"\[\nif \{ \[lsearch -exact \[channels \[input this 1].input] rgba.red] >= 0\} \{\n    return 1\n\} else \{\n    return 0\n\}\n]"}}
+apDespillKernel_use_spill_input {{"\[\nif \{ \[lsearch -exact \[channels \[input this 2].input] rgba.red] >= 0\} \{\n    return 1\n\} else \{\n    return 0\n\}\n]"}}
+apDespillKernel_use_limit_input {{"\[exists parent.input3]"}}
+rebuild_finalise ""
+name apDespillKernel
+xpos 754
+ypos -448
+}
+Log2Lin {
+name Log2Lin2
+xpos 754
+ypos -378
+disable {{!log_space}}
+}
+Colorspace {
+channels {{{parent.Colorspace5.channels}}}
+colorspace_in {{parent.Colorspace1.colorspace_out}}
+illuminant_in {{parent.Colorspace1.illuminant_out}}
+primary_in {{parent.Colorspace1.primary_out}}
+colorspace_out {{parent.Colorspace1.colorspace_in}}
+illuminant_out {{parent.Colorspace1.illuminant_in}}
+primary_out {{parent.Colorspace1.primary_in}}
+name Colorspace2
+label "\[value colorspace_in] >> \[value colorspace_out]"
+xpos 754
+ypos -354
+disable {{!parent.colorspace_shift}}
+}
+MergeExpression {
+inputs 2
+expr0 Br-Aa
+expr1 Bg-Aa
+expr2 Bb-Aa
+name MergeExpression1
+selected true
+xpos 754
+ypos -238
+}
+Dot {
+name Dot3
+note_font_size 41
+xpos 788
+ypos -147
+}
+set N7358e100 [stack 0]
+Dot {
+name Dot4
+note_font_size 41
+xpos 788
+ypos -117
+}
+push $N73654210
+push $N7358e100
+push $N73671020
+Merge2 {
+inputs 2+1
+operation copy
+bbox B
+Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+output {rgba.red rgba.green rgba.blue -rgba.alpha}
+name Merge
+xpos 449
+ypos -150
+}
+Copy {
+inputs 2+1
+from0 rgba.alpha
+to0 rgba.alpha
+bbox B
+maskChannelMask {{{parent.Merge.maskChannelMask}}}
+maskChannelInput {{{parent.Merge.maskChannelInput}}}
+inject {{parent.Merge.inject}}
+invert_mask {{parent.Merge.invert_mask}}
+fringe {{parent.Merge.fringe}}
+name CopyAlpha
+xpos 449
+ypos -126
+disable {{!parent.output_alpha}}
+}
+Output {
+name Output
+xpos 449
+ypos -46
+}
+end_group
+push $cut_paste_input
+Group {
+name apDirLight
+help "Simulate a simple directional/infinite light through a normal pass, by picking a normal color and then tweaking the radius, falloff and hardness of the light.\n\napDirLight v0.2 by Adrian Pueyo\nadrianpueyo.com, 2016"
+knobChanged "\nif int(nuke.thisNode()\['theOutput'].getValue())==1:\n    nuke.thisNode()\['color'].setEnabled(True)\n    nuke.thisNode()\['intensity'].setEnabled(True)\nelse:\n    nuke.thisNode()\['color'].setEnabled(False)\n    nuke.thisNode()\['intensity'].setEnabled(False)\n"
+selected true
+xpos 42214
+ypos -2787
+addUserKnob {20 apDirLight}
+addUserKnob {41 in l "input normals" T ShuffleNormals.in}
+addUserKnob {6 pick_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {41 pick T CalcLight.pick}
+addUserKnob {7 radius t "Radius of the DirLight around the picked color." R 0 2}
+radius 0.5
+addUserKnob {7 falloff t "Inverse gamma of the DirLight." R 0 5}
+falloff 1
+addUserKnob {7 hardness t "Brings black point and white point closer together, to create a hard center."}
+addUserKnob {4 theOutput l output t "Output the light in the alpha channel or in the rgb by choosing its color/gain." M {alpha rgb}}
+addUserKnob {18 color t "Set a rgb color to the DirLight." +DISABLED}
+color 1
+addUserKnob {6 color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {7 intensity t "Multiplier for the color." +DISABLED R 0 3}
+intensity 1
+addUserKnob {26 copyright l "" +STARTLINE T "\napDirLight v0.2 - adrianpueyo.com, 2016."}
+}
+Input {
+inputs 0
+name Inputmask
+xpos -164
+ypos 44
+number 1
+}
+Input {
+inputs 0
+name InputN
+xpos -54
+ypos -131
+}
+Shuffle {
+in rgb
+name ShuffleNormals
+xpos -54
+ypos -107
+}
+Expression {
+temp_name0 cosA
+temp_expr0 (r*pick.r+g*pick.g+b*pick.b)/(sqrt(r*r+g*g+b*b)*sqrt(pick.r*pick.r+pick.g*pick.g+pick.b*pick.b))
+expr3 1-pow(clamp(cosA),1/pow(radius,5))
+name CalcLight
+xpos -54
+ypos -83
+addUserKnob {20 Picker}
+addUserKnob {18 pick}
+pick {1 1 1}
+addUserKnob {6 pick_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+}
+Gamma {
+channels alpha
+value {{parent.falloff}}
+name Gamma
+xpos -54
+ypos -59
+}
+Grade {
+channels alpha
+blackpoint {{parent.hardness>1?0.5:parent.hardness<0?0:parent.hardness/2}}
+whitepoint {{parent.hardness>1?0.5:parent.hardness<0?1:1-parent.hardness/2}}
+name GradeHardness
+xpos -54
+ypos -27
+}
+Invert {
+channels alpha
+name Invert
+xpos -54
+ypos 5
+}
+ChannelMerge {
+inputs 2
+operation multiply
+name ChannelMergeMask
+xpos -54
+ypos 35
+disable {{"!\[exists parent.input1]"}}
+}
+set N5acc63f0 [stack 0]
+Shuffle {
+red alpha
+green alpha
+blue alpha
+alpha black
+name ShuffleRGB
+xpos 43
+ypos 44
+}
+Grade {
+white {{parent.color} {parent.color} {parent.color} {parent.color}}
+multiply {{parent.intensity}}
+name GradeRGB
+xpos 43
+ypos 77
+}
+push $N5acc63f0
+Switch {
+inputs 2
+which {{parent.theOutput}}
+name SwitchRGB
+xpos -54
+ypos 77
+}
+Output {
+name Output
+xpos -54
+ypos 101
+}
+end_group
+push $cut_paste_input
+Group {
+name PointCloudKeyer
+onCreate "try: \n    n = nuke.thisNode()\n    n\['translate'].setFlag(0x0000002000000000)\nexcept:\n    print('failed to set flag')"
+tile_color 0xff00ff
+selected true
+xpos 42216
+ypos -2857
+addUserKnob {20 PointCloudKeyer}
+addUserKnob {4 view l View t "Point Cloud - plots the x,y values from the selected color space\nComposite - premulted Fg over Bg\nFinal Result - unpremulted Fg with alpha from the key\n" M {"Point Cloud" Composite "Final Result" "" "" "" "" "" "" "" "" ""}}
+view Composite
+addUserKnob {6 overlayPointCloud l "overlay point cloud" +STARTLINE}
+addUserKnob {26 _2 l "<b>Point Cloud</b>"}
+addUserKnob {4 colorspace l "color space" t "Chroma Red/Blue - YCbCr colorspace. Plots chroma difference blue vs chroma different red. Generally gives the most predictable results.\n\nChroma x/y - CIE-Yxy colorspace. Plots choma red vs chroma blue. Similar to the Chroma Red/Blue but different math. \n\nChroma/Hue - CIE-LCH colorspace. Plots choma vs hue.\n\nRed/Blue Average - Plots the g channel vs  (r+b)/2\n\nCustom - use the channels input" M {"Chroma Red/Blue" "Chroma x/y" Chroma/Hue "Red/Blue Average" Custom "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+addUserKnob {12 translate}
+addUserKnob {14 scale t "Increasing this value by a large amount will mirror the point cloud" R 0 100}
+scale 1
+addUserKnob {6 densePointCloud l "dense point cloud" t "Merges additional points under the generated point cloud. " +STARTLINE}
+addUserKnob {6 mirror l "swap axis" -STARTLINE}
+addUserKnob {41 disable_1 l "invert alpha" T Invert1.disable}
+addUserKnob {20 about}
+addUserKnob {26 _4 l "" +STARTLINE T "instructions and demo at "}
+addUserKnob {26 _3 l "" -STARTLINE T "<a href=\"http://www.isaacspiegel.com/blog\">isaacspiegel.com/blog</a>"}
+addUserKnob {26 ""}
+addUserKnob {26 _1 l "" +STARTLINE T "by isaac spiegel\nisaacspiegel.com\n\nfeedback on this tool? email me!\nisaacspiegel.freelance@gmail.com"}
+}
+Input {
+inputs 0
+name custom
+xpos -150
+ypos 62
+number 3
+}
+Dot {
+name Dot12
+note_font_size 25
+xpos -119
+ypos 183
+}
+Input {
+inputs 0
+name Src
+xpos -590
+ypos -106
+}
+Dot {
+name Dot7
+label "input footage"
+note_font_size 25
+xpos -559
+ypos -57
+}
+Dot {
+name Dot2
+note_font_size 25
+xpos -559
+ypos 63
+}
+set N5ab2b2d0 [stack 0]
+Expression {
+expr0 g
+expr1 (r+b)/2
+name Expression1
+label "red/blue average"
+xpos -260
+ypos 104
+}
+push $N5ab2b2d0
+Colorspace {
+colorspace_out CIE-LCH
+name Colorspace2
+label CIE-LCH
+xpos -370
+ypos 104
+}
+push $N5ab2b2d0
+Colorspace {
+colorspace_out CIE-Yxy
+name Colorspace1
+label CIE_Yxy
+xpos -480
+ypos 104
+}
+push $N5ab2b2d0
+Colorspace {
+colorspace_out YCbCr
+name Colorspace3
+label yCbCr
+xpos -590
+ypos 104
+}
+Switch {
+inputs 5
+which {{parent.colorspace}}
+name colorspace
+xpos -590
+ypos 182
+}
+Dot {
+name Dot8
+note_font_size 25
+xpos -559
+ypos 279
+}
+set N5ab98610 [stack 0]
+Shuffle {
+red blue
+blue alpha
+name Shuffle_horiz
+xpos -480
+ypos 326
+}
+push $N5ab98610
+Shuffle {
+red green
+green blue
+blue alpha
+name Shuffle_vert
+xpos -590
+ypos 326
+}
+set N5abaebf0 [stack 0]
+Switch {
+inputs 2
+which {{parent.mirror}}
+name layout
+xpos -590
+ypos 398
+}
+Grade {
+blackpoint {{(parent.scale.0-1)/scaleDiv} {(parent.scale.1-1)/scaleDiv} 0 0}
+whitepoint {{1-((parent.scale.0-1))/scaleDiv} {1-((parent.scale.1-1))/scaleDiv} 1 1}
+add {{parent.translate.0/width} {parent.translate.1/height} 0 0}
+black_clamp false
+name Grade_translate
+label "offset: L/R/Up/Dn"
+xpos -590
+ypos 440
+addUserKnob {20 User}
+addUserKnob {3 scaleDiv}
+scaleDiv 200
+}
+set N5abc92e0 [stack 0]
+Input {
+inputs 0
+name Shape
+xpos -40
+ypos -106
+number 1
+}
+Dot {
+name Dot4
+label "input roto"
+note_font_size 25
+xpos -9
+ypos -57
+}
+STMap {
+inputs 2
+uv rgb
+name STMap1
+xpos -40
+ypos 440
+}
+Invert {
+name Invert1
+xpos -40
+ypos 488
+}
+push $N5ab2b2d0
+Dot {
+name Dot3
+note_font_size 25
+xpos -669
+ypos 63
+}
+Dot {
+name Dot1
+note_font_size 25
+xpos -669
+ypos 543
+}
+set N5aa06790 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos -40
+ypos 536
+}
+set N5aa0c100 [stack 0]
+Dot {
+name Dot6
+label "output alpha + rgba"
+note_font_size 25
+xpos -9
+ypos 711
+}
+set N5aa1bdd0 [stack 0]
+Dot {
+name Dot17
+note_font_size 25
+xpos 101
+ypos 879
+}
+push $N5abc92e0
+push $N5aa06790
+BlinkScript {
+inputs 2
+recompileCount 2
+ProgramGroup 1
+KernelDescription "2 \"InverseSTKernel\" iterate pixelWise 79737837f0b8f5ef5ba9dd8c86c9e76f184ef0da76c94577b5431d3e3e08b063 3 \"src\" Read Point \"stmap\" Read Point \"dst\" Write Random 1 \"resolution\" Float 2 AAAAAAAAAAA= 1 \"resolution\" 2 1 0"
+kernelSource "// Original Kernel by Mads Hagbarth, modified to use STMaps by Erwan Leroy\n\nkernel InverseSTKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessPoint, eEdgeClamped> src;\n  Image<eRead, eAccessPoint, eEdgeClamped> stmap;\n  Image<eWrite, eAccessRandom> dst;\n\n  param:\n    float2 resolution;\n\n  void process() \{\n    float2 uv;\n    uv.x = stmap().x * resolution.x - 0.5f;\n    uv.y = stmap().y * resolution.y - 0.5f;\n    //always make sure that you don't write outside bounds\n    //as it will usually crash nuke.\n    if (dst.bounds.inside(uv.x,uv.y)) \{ \n      dst(uv.x,uv.y) = src(); \n    \}\n  \}\n\};"
+useGPUIfAvailable false
+rebuild ""
+InverseSTKernel_resolution {{width} {height}}
+rebuild_finalise ""
+name BlinkScript1
+xpos -590
+ypos 608
+}
+Dot {
+name Dot14
+note_font_size 25
+xpos -559
+ypos 663
+}
+set N5aa33590 [stack 0]
+Blur {
+channels rgba
+size 1.5
+name Blur3
+xpos -810
+ypos 662
+}
+set N5aa3f300 [stack 0]
+Expression {
+expr0 r/a
+expr1 g/a
+expr2 b/a
+expr3 "a > 0 ? 1 : a"
+name Expression2
+xpos -810
+ypos 708
+}
+Premult {
+name Premult3
+xpos -810
+ypos 734
+}
+push $N5aa33590
+Merge2 {
+inputs 2
+operation under
+bbox B
+name Merge4
+xpos -590
+ypos 734
+disable {{!parent.densePointCloud}}
+}
+Dot {
+name Dot15
+note_font_size 25
+xpos -559
+ypos 783
+}
+set N5aa78450 [stack 0]
+Dot {
+name Dot16
+note_font_size 25
+xpos -119
+ypos 783
+}
+set N5aa7dcf0 [stack 0]
+push $N5aa1bdd0
+Merge2 {
+inputs 2
+bbox B
+name Merge3
+xpos -40
+ypos 830
+disable {{!parent.overlayPointCloud}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy2
+xpos -40
+ypos 872
+}
+push $N5aa0c100
+Premult {
+name Premult1
+xpos 180
+ypos 542
+}
+set N5aaa4d90 [stack 0]
+Input {
+inputs 0
+name Bg
+xpos 400
+ypos 302
+number 2
+}
+Dot {
+name Dot10
+label "BG input"
+note_font_size 25
+xpos 431
+ypos 375
+}
+Merge2 {
+inputs 2
+bbox B
+name Merge1
+xpos 400
+ypos 542
+}
+push $N5aaa4d90
+Switch {
+inputs 2
+which {{"\[exists parent.input2]"}}
+name Switch_BgInput
+xpos 400
+ypos 602
+}
+Dot {
+name Dot18
+note_font_size 25
+xpos 431
+ypos 711
+}
+set N5aad37d0 [stack 0]
+Dot {
+name Dot19
+note_font_size 25
+xpos 541
+ypos 879
+}
+push $N5aa7dcf0
+push $N5aad37d0
+Merge2 {
+inputs 2
+bbox B
+name Merge2
+xpos 400
+ypos 782
+disable {{!parent.overlayPointCloud}}
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy3
+xpos 400
+ypos 872
+}
+Dot {
+name Dot11
+label composite
+note_font_size 25
+xpos 431
+ypos 927
+}
+set N5a900010 [stack 0]
+push $N5aa78450
+Dot {
+name Dot5
+label "output view help"
+note_font_size 25
+xpos -559
+ypos 879
+}
+Dot {
+name Dot9
+note_font_size 25
+xpos -559
+ypos 927
+}
+Switch {
+inputs 3
+which {{parent.view}}
+name output_toggle
+xpos -40
+ypos 926
+}
+Output {
+name Output1
+xpos -40
+ypos 998
+}
+push $N5a900010
+push $N5aa3f300
+push $N5abaebf0
+Viewer {
+inputs 3
+frame_range 1-37
+colour_sample_bbox {-0.2989583313 -0.08749999851 -0.2979166806 -0.08645833284}
+name Viewer1
+xpos 220
+ypos 1214
+hide_input true
+addUserKnob {20 Lock}
+addUserKnob {6 lock_all_buffers l "lock all buffers" -STARTLINE}
+addUserKnob {6 lock_buffer_1 l "lock buffer 1" +STARTLINE}
+addUserKnob {6 lock_buffer_2 l "lock buffer 2" +STARTLINE}
+addUserKnob {6 lock_buffer_3 l "lock buffer 3" +STARTLINE}
+addUserKnob {6 lock_buffer_4 l "lock buffer 4" +STARTLINE}
+addUserKnob {6 lock_buffer_5 l "lock buffer 5" +STARTLINE}
+addUserKnob {6 lock_buffer_6 l "lock buffer 6" +STARTLINE}
+addUserKnob {6 lock_buffer_7 l "lock buffer 7" +STARTLINE}
+addUserKnob {6 lock_buffer_8 l "lock buffer 8" +STARTLINE}
+addUserKnob {6 lock_buffer_9 l "lock buffer 9" +STARTLINE}
+addUserKnob {6 lock_buffer_0 l "lock buffer 0" +STARTLINE}
+addUserKnob {6 toAddBtn -STARTLINE}
+toAddBtn true
+}
+end_group
+push $cut_paste_input
+Group {
+name LumaKeyer
+onCreate "n = nuke.thisNode()\nn.knob('blackpoint').setRange(0, 1)\nn.knob('whitepoint').setRange(0, 1)"
+tile_color 0x421010ff
+note_font "Bitstream Vera Sans Bold"
+selected true
+xpos 42216
+ypos -2934
+addUserKnob {20 User l lumaKeyer}
+addUserKnob {4 output M {Alpha RGBA}}
+addUserKnob {41 blackpoint T picker.blackpoint}
+addUserKnob {41 whitepoint T picker.whitepoint}
+addUserKnob {6 invert +STARTLINE}
+addUserKnob {4 smoothing l Smoothing: M {None Smooth Smooth0 Smooth1 ""}}
+addUserKnob {26 ""}
+addUserKnob {26 "" l mask T ""}
+addUserKnob {41 maskChannelInput l "" -STARTLINE T Merge1.maskChannelInput}
+addUserKnob {41 inject -STARTLINE T Merge1.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge1.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge1.fringe}
+addUserKnob {41 mix T Merge1.mix}
+addUserKnob {20 info}
+addUserKnob {22 btn l DerekVFX.ca T "import os\nimport sys\n\ntry:\n    import subprocess\n    def _run(cmd, shell, wait):\n        opener = subprocess.Popen(cmd, shell=shell)\n        if wait:\n            opener.wait()\n        return opener.pid\nexcept ImportError:\n    import popen2\n    def _run(cmd, shell, wait):\n        opener = popen2.Popen3(cmd)\n        if wait:\n            opener.wait()\n        return opener.pid\n\ndef _open(url, wait=0):\n    if sys.platform == \"darwin\":\n        cmd = \[\"open\", url]\n    elif hasattr(os, \"startfile\"):\n        return os.startfile(url)\n    elif os.environ.has_key(\"KDE_FULL_SESSION\") or os.environ.has_key(\"KDE_MULTIHEAD\") or \\\n        os.environ.has_key(\"GNOME_DESKTOP_SESSION_ID\") or os.environ.has_key(\"GNOME_KEYRING_SOCKET\"):\n        cmd = \[\"xdg-open\", url]\n    else:\n        raise OSError, \"Desktop not supported.\"\n\n    return _run(cmd, 0, wait)\n\n_open('http://www.derekvfx.ca/')" +STARTLINE}
+addUserKnob {26 versionUpdate l "" -STARTLINE T "<font color = gray> adjusted by Tony Lyons </font color = gray>"}
+}
+Input {
+inputs 0
+name Input1
+xpos 57
+ypos -347
+}
+set N5a9bcd90 [stack 0]
+Colorspace {
+colorspace_out HSL
+name Colorspace1
+xpos -181
+ypos -181
+}
+set N5a9cf2e0 [stack 0]
+Shuffle {
+red blue
+green blue
+alpha blue
+name Shuffle1
+tile_color 0x3d3f8e00
+xpos -336
+ypos -181
+}
+Grade {
+name picker
+xpos -336
+ypos -139
+}
+Input {
+inputs 0
+name Inputmask
+xpos 231
+ypos 446
+number 1
+}
+push $N5a9bcd90
+Dot {
+name Dot5
+note_font_size 41
+xpos 91
+ypos 284
+}
+set N5a813210 [stack 0]
+push $N5a9cf2e0
+Expression {
+expr3 smoothstep(parent.picker.blackpoint,parent.picker.whitepoint,b)
+name Expression1
+xpos -181
+ypos -138
+}
+Dot {
+name Dot1
+note_font_size 41
+xpos -147
+ypos -58
+}
+set N5a8286f0 [stack 0]
+ColorLookup {
+channels {{{parent.ColorLookup_smooth.channels}}}
+lut {master {curve L 0 C k 1 s0}
+  red {}
+  green {}
+  blue {}
+  alpha {}}
+name ColorLookup_smooth1
+xpos -69
+ypos 33
+}
+push $N5a8286f0
+ColorLookup {
+channels {{{parent.ColorLookup_smooth.channels}}}
+lut {master {curve L 0 s0 1}
+  red {}
+  green {}
+  blue {}
+  alpha {}}
+name ColorLookup_smooth0
+xpos -181
+ypos 32
+}
+push $N5a8286f0
+ColorLookup {
+lut {master {curve L 0 s0 C k 1 s0}
+  red {}
+  green {}
+  blue {}
+  alpha {}}
+name ColorLookup_smooth
+xpos -293
+ypos 32
+}
+push $N5a8286f0
+Dot {
+name Dot2
+note_font_size 41
+xpos -345
+ypos -52
+}
+Dot {
+name Dot3
+note_font_size 41
+xpos -345
+ypos 131
+}
+Switch {
+inputs 4
+which {{parent.smoothing}}
+name Switch1
+label "\[value which]"
+xpos -181
+ypos 121
+}
+Expression {
+expr3 1-a
+name Expression2
+xpos -181
+ypos 191
+disable {{"parent.invert == 0"}}
+}
+Merge2 {
+inputs 2
+operation copy
+Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+output {rgba.red rgba.green rgba.blue -rgba.alpha}
+name Merge2
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos -181
+ypos 280
+}
+Shuffle {
+red alpha
+green alpha
+blue alpha
+name Shuffle2
+tile_color 0xffffffff
+xpos -181
+ypos 328
+disable {{!parent.output}}
+}
+Dot {
+name Dot4
+note_font_size 41
+xpos -147
+ypos 450
+}
+push $N5a813210
+Shuffle {
+alpha black
+name Shuffle3
+label "\[value in]"
+xpos 57
+ypos 331
+}
+Shuffle {
+red black
+green black
+blue black
+alpha black
+name Shuffle4
+label "\[value in]"
+selected true
+xpos 57
+ypos 369
+disable {{!parent.output}}
+}
+Merge2 {
+inputs 2+1
+operation copy
+also_merge rgba
+name Merge1
+label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+xpos 57
+ypos 446
+}
+Output {
+name Output1
+xpos 57
+ypos 602
+}
+end_group
