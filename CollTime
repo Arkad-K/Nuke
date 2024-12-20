@@ -1,0 +1,956 @@
+set cut_paste_input [stack 0]
+version 15.0 v4
+BackdropNode {
+inputs 0
+name BackdropNode48
+label "Time\n---------------------------------------\napLoop\n\nFrameHold_Special\n\nLooper\n\nFrameMedian\n\nTimeMachine\n\nFrameFiller"
+note_font_size 31
+selected true
+xpos 40429
+ypos -3430
+bdwidth 463
+bdheight 541
+}
+push $cut_paste_input
+Group {
+name apLoop
+help "apLoop BETA v0.1 by Adrian Pueyo\n\nQuick tool to simulate a loop effect while affecting the gain, blur and transformations on each \"iteration\".\n\nFeel free to play with it and see its applications. Some of them: create an exponential (or normal) glow in seconds, an expo blur, a grid or mosaic (adding this gizmo twice), godrays, directional blurs, etc.\n\nadrianpueyo.com, 2017"
+knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nt = n\[\"times\"]\nif k == t and t.value()<0:\n    dr.setValue(0)"
+autolabel "nuke.thisNode().name()+\" (x\"+str(int(nuke.thisNode()\[\"times\"].getValue()))+\")\""
+tile_color 0x4d585eff
+gl_color 0xff
+selected true
+xpos 40789
+ypos -3337
+addUserKnob {20 apLoop}
+addUserKnob {26 looper l <b>Looper}
+addUserKnob {41 channels T Merge.also_merge}
+addUserKnob {3 times}
+times 1
+addUserKnob {6 include_original l "include original" -STARTLINE}
+include_original true
+addUserKnob {6 normalize -STARTLINE}
+normalize true
+addUserKnob {26 ""}
+addUserKnob {26 gaind l <b>Gain T ""}
+addUserKnob {41 g_start l start T cnt.g_start}
+addUserKnob {41 g_end l end T cnt.g_end}
+addUserKnob {41 g_each l each T cnt.g_each}
+addUserKnob {26 ""}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 blur_1 l <b>Blur T ""}
+addUserKnob {41 b_start l start T cnt.b_start}
+addUserKnob {41 b_end l end T cnt.b_end}
+addUserKnob {41 b_each l each T cnt.b_each}
+addUserKnob {41 b_pow l power T cnt.b_pow}
+addUserKnob {41 filter T Blur.filter}
+addUserKnob {41 quality l "" -STARTLINE T Blur.quality}
+addUserKnob {41 crop l "crop to format" -STARTLINE T Blur.crop}
+addUserKnob {26 ""}
+addUserKnob {41 maskChannelMask l "mask " T Merge.maskChannelMask}
+addUserKnob {41 inject -STARTLINE T Merge.inject}
+addUserKnob {41 invert_mask l invert -STARTLINE T Merge.invert_mask}
+addUserKnob {41 fringe -STARTLINE T Merge.fringe}
+addUserKnob {41 mix T Merge.mix}
+addUserKnob {26 version_author l "" t "apLoop BETA v0.1\n" +STARTLINE T "<span style=\"color:#666\"><br/><b>apLoop BETA v0.1</b> - <a href=\"http://www.adrianpueyo.com\" style=\"color:#666;text-decoration: none;\">adrianpueyo.com</a>, 2017</span>"}
+addUserKnob {20 transformA l "Transform A"}
+addUserKnob {41 translate T TransformRef.translate}
+addUserKnob {41 rotate T TransformRef.rotate}
+addUserKnob {41 scale T TransformRef.scale}
+addUserKnob {41 skewX l "skew X" T TransformRef.skewX}
+addUserKnob {41 skewY l "skew Y" T TransformRef.skewY}
+addUserKnob {41 skew_order_1 l "skew order" T TransformB.skew_order}
+addUserKnob {41 center T TransformRef.center}
+addUserKnob {22 center_on_bbox l "center on bbox" -STARTLINE T "try:\n    n = nuke.thisNode().input(0)\n    nuke.toNode(\"TransformRef\")\[\"center\"].setValue(n.bbox().x()+n.bbox().w()/2,0)\n    nuke.toNode(\"TransformRef\")\[\"center\"].setValue(n.bbox().y()+n.bbox().h()/2,1)\nexcept:\n    pass"}
+addUserKnob {22 center_on_frame l "center on frame" -STARTLINE T "nuke.toNode(\"TransformRef\")\[\"center\"].setValue(nuke.thisNode().width()/2,0)\nnuke.toNode(\"TransformRef\")\[\"center\"].setValue(nuke.thisNode().height()/2,1)"}
+addUserKnob {41 invert_matrix l invert T TransformRef.invert_matrix}
+addUserKnob {41 filter_1 l filter T TransformB.filter}
+addUserKnob {41 clamp -STARTLINE T TransformB.clamp}
+addUserKnob {41 black_outside l "black outside" -STARTLINE T TransformB.black_outside}
+addUserKnob {41 motionblur T TransformB.motionblur}
+addUserKnob {41 shutter T TransformB.shutter}
+addUserKnob {41 shutteroffset l "shutter offset" T TransformB.shutteroffset}
+addUserKnob {41 shuttercustomoffset l "" -STARTLINE T TransformB.shuttercustomoffset}
+addUserKnob {20 transformB l "Transform B"}
+addUserKnob {41 translate_1 l translate T TransformRefAfter.translate}
+addUserKnob {41 rotate_1 l rotate T TransformRefAfter.rotate}
+addUserKnob {41 scale_1 l scale T TransformRefAfter.scale}
+addUserKnob {41 skewX_1 l "skew X" T TransformRefAfter.skewX}
+addUserKnob {41 skewY_1 l "skew Y" T TransformRefAfter.skewY}
+addUserKnob {41 skew_order l "skew order" T TransformRefAfter.skew_order}
+addUserKnob {41 center_1 l center T TransformRefAfter.center}
+addUserKnob {22 copyCenterFromA l "copy from transform A" -STARTLINE T "nuke.toNode(\"TransformRefAfter\")\[\"center\"].setValue(nuke.toNode(\"TransformRef\")\[\"center\"].getValue())"}
+addUserKnob {41 invert_matrix_1 l invert T TransformRefAfter.invert_matrix}
+addUserKnob {41 filter_2 l filter T TransformAfter.filter}
+addUserKnob {41 clamp_1 l clamp -STARTLINE T TransformAfter.clamp}
+addUserKnob {41 black_outside_1 l "black outside" -STARTLINE T TransformAfter.black_outside}
+addUserKnob {41 motionblur_1 l motionblur T TransformAfter.motionblur}
+addUserKnob {41 shutter_1 l shutter T TransformAfter.shutter}
+addUserKnob {41 shutteroffset_1 l "shutter offset" T TransformAfter.shutteroffset}
+addUserKnob {41 shuttercustomoffset_1 l "" -STARTLINE T TransformAfter.shuttercustomoffset}
+}
+Transform {
+inputs 0
+name TransformRefAfter
+xpos 510
+ypos -501
+disable true
+}
+Transform {
+inputs 0
+name TransformRef
+xpos 510
+ypos -526
+disable true
+}
+Input {
+inputs 0
+name Inputmask
+xpos 106
+ypos -328
+number 1
+}
+Input {
+inputs 0
+name Inputimg
+xpos 249
+ypos -552
+}
+set N93f2dd80 [stack 0]
+NoTimeBlur {
+rounding floor
+name NoTB
+xpos 405
+ypos -552
+}
+Transform {
+translate {{TB.divisions*TransformRef.translate*TB.fr x1048 85} {TB.divisions*TransformRef.translate*TB.fr x1048 -150}}
+rotate {{TB.divisions*TransformRef.rotate*TB.fr x1048 0}}
+scale {{pow(TransformRef.scale,TB.ci) x1048 0}}
+skewX {{TB.divisions*TransformRef.skewX*TB.fr x1048 0}}
+skewY {{TB.divisions*TransformRef.skewY*TB.fr x1048 0}}
+center {{parent.TransformRef.center x1048 1064} {parent.TransformRef.center x1048 1064}}
+invert_matrix {{parent.TransformRef.invert_matrix}}
+name TransformB
+xpos 405
+ypos -526
+}
+Transform {
+translate {{TB.divisions*TransformRefAfter.translate*TB.fr x1048 85} {TB.divisions*TransformRefAfter.translate*TB.fr x1048 -150}}
+rotate {{TB.divisions*TransformRefAfter.rotate*TB.fr x1048 0}}
+scale {{pow(TransformRefAfter.scale,TB.ci) x1048 0}}
+skewX {{TB.divisions*TransformRefAfter.skewX*TB.fr x1048 0}}
+skewY {{TB.divisions*TransformRefAfter.skewY*TB.fr x1048 0}}
+center {{parent.TransformRefAfter.center x1048 0} {parent.TransformRefAfter.center x1048 0}}
+invert_matrix {{parent.TransformRefAfter.invert_matrix}}
+name TransformAfter
+xpos 405
+ypos -500
+}
+Multiply {
+value {{(cnt.g_end*TB.ffr+cnt.g_start*(1-TB.ffr))*pow(cnt.g_each,TB.ci)} {(cnt.g_end*TB.ffr+cnt.g_start*(1-TB.ffr))*pow(cnt.g_each,TB.ci)} {(cnt.g_end*TB.ffr+cnt.g_start*(1-TB.ffr))*pow(cnt.g_each,TB.ci)} {(cnt.g_end*TB.ffr+cnt.g_start*(1-TB.ffr))*pow(cnt.g_each,TB.ci)}}
+name Multiply
+note_font "Bitstream Vera Sans"
+xpos 405
+ypos -474
+}
+Blur {
+size {{"TB.ci==0?(cnt.b_end*TB.ffr+cnt.b_start*(1-TB.ffr)):(cnt.b_end*TB.ffr+cnt.b_start*(1-TB.ffr)) + cnt.b_each * pow(cnt.b_pow,TB.ci-1)"}}
+name Blur
+xpos 405
+ypos -436
+}
+Multiply {
+value 0
+name MultiplyOut
+xpos 405
+ypos -398
+disable {{parent.include_original||TB.fr!=0}}
+}
+TimeBlur {
+divisions {{parent.times i}}
+shutter 1
+shutteroffset start
+shuttercustomoffset 0
+name TB
+xpos 405
+ypos -360
+addUserKnob {20 User}
+addUserKnob {7 fr}
+fr {{frame%1 i}}
+addUserKnob {7 ffr}
+ffr {{frame%1==0?(frame%1):(frame%1)/(1-1/divisions)}}
+addUserKnob {7 ci t "current iteration"}
+ci {{fr*divisions i}}
+}
+Multiply {
+value {{parent.TB.divisions}}
+name MultiplyBack
+xpos 405
+ypos -334
+disable {{!parent.normalize}}
+}
+push $N93f2dd80
+Merge2 {
+inputs 2+1
+operation copy
+Achannels none
+Bchannels {{{Achannels}}}
+output {{{Achannels}}}
+also_merge all
+name Merge
+xpos 249
+ypos -334
+}
+Output {
+name Output1
+xpos 249
+ypos -296
+}
+NoOp {
+inputs 0
+name cnt
+xpos 510
+ypos -468
+hide_input true
+addUserKnob {20 Controller}
+addUserKnob {19 g_start R 0 4}
+g_start 1
+addUserKnob {6 g_start_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 g_start_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {19 g_end R 0 4}
+g_end 1
+addUserKnob {6 g_end_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 g_end_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {19 g_each R 0 4}
+g_each 1
+addUserKnob {6 g_each_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 g_each_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {14 b_start R 0 100}
+addUserKnob {14 b_end R 0 100}
+addUserKnob {14 b_each R 0 100}
+addUserKnob {7 b_pow R 0 4}
+b_pow 1
+}
+end_group
+push $cut_paste_input
+Group {
+name Looper
+knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\n\nclipendtrue = str(n\['avoidclipend'].value()) == 'Before First Frame '\nloopframes = str(int(n\['toframe'].value()-n\['fromframe'].value()+1))\nloopfirst = str(int(n\['fromframe'].value()-(n\['toframe'].value()-n\['fromframe'].value())+(clipendtrue*(n\['toframe'].value()-n\['fromframe'].value()))))\nlooplast = str(int(n\['toframe'].value()+(clipendtrue*(n\['toframe'].value()-n\['fromframe'].value()))))\n\n\ntotal = '<span style=\"color:#797979;\">Loop length: ' + '<span style=\"color:#A3A05E;\">' + loopframes\nn\['totalframes'].setValue(str(total))\n\nloopfr = '<span style=\"color:#797979;\">Frame range in use: ' + '<span style=\"color:#579097;\">' + loopfirst + ' - ' + looplast\nn\['loopframerange'].setValue(str(loopfr))\n\n\nif k.name() == \"looptype\":\n    channelsOn = k.value() != 'Dissolve  (Fast - Simple)';\n    n.knobs()\['retimedChannels'].setVisible(channelsOn)\n\n    channelsOn = k.value() != 'Morph  (Slower - Complex) ';\n    n.knobs()\['channels'].setVisible(channelsOn)\n    \nif n.input(1) ==None :\n    n\['vectoroutput'].setEnabled(False)\nelse:\n    n\['vectoroutput'].setEnabled(True)"
+tile_color 0x80702ff
+note_font Verdana
+note_font_size 12
+note_font_color 0xb79d63ff
+selected true
+xpos 40786
+ypos -3205
+addUserKnob {20 Looper}
+addUserKnob {41 channels l Channels T Dissolve1.channels}
+addUserKnob {41 retimedChannels l Channels +HIDDEN T Kronos3.retimedChannels}
+addUserKnob {26 _____________________ l "" +STARTLINE}
+addUserKnob {68 looptype l "Loop Method" t "\nDissolve: Uses a simple Dissolve node to dissolve the input clip between an offset version of the same clip. The offset amount is determined by the number of frames looped. Works great when looping clips with constant/similar movement like rain or snow stock footage.\n\nMorph: Similar to the Dissolve method but instead uses a Kronos node to generate a morphed loop.\n\nFgMatte input: An optional matte of the foreground can be used which may improve Kronos's motion estimation.\n" M {"Dissolve  (Fast - Simple)" "Morph  (Slower - Complex) " "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+addUserKnob {4 avoidclipend l "    Avoid Clip End " t "Negatively offsets the input clip to avoid looping unexisting frames before loop's first frame.\n\nTurning this off will avoid frames after loop's last frame." -STARTLINE M {Off "Before First Frame " "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+avoidclipend "Before First Frame "
+addUserKnob {20 vectorgroup l "Vector Generator Settings" n 1}
+vectorgroup 0
+addUserKnob {41 useGPUIfAvailable l "Use GPU if available" T Kronos3.useGPUIfAvailable}
+addUserKnob {41 vectorDetailReg l "Vector Detail" T Kronos3.vectorDetailReg}
+addUserKnob {41 strengthReg l Strength T Kronos3.strengthReg}
+addUserKnob {41 resampleType l Resampling T Kronos3.resampleType}
+addUserKnob {4 vectoroutput l Output +DISABLED M {Result Matte Foreground "Background "}}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 ___________________ l "" +STARTLINE T " "}
+addUserKnob {3 fromframe l "Loop from"}
+fromframe 1001
+addUserKnob {3 toframe l " to " -STARTLINE}
+toframe 1040
+addUserKnob {26 totalframes l "   " -STARTLINE T "<span style=\"color:#797979;\">Loop length: <span style=\"color:#A3A05E;\">40"}
+addUserKnob {26 loopframerange l "   " t "Input's frame range used in the loop" -STARTLINE T "<span style=\"color:#797979;\">Frame range in use: <span style=\"color:#579097;\">1001 - 1079"}
+addUserKnob {7 blendlength l "Blend Length" t "How long the blend / transition time will be inbetween the specified loop range.\n\nExample:\n\nLoop from 0 to 40\nBlend Length 1 = Blends from frame 0 to 40\nBlend Length 0.5 = Blends from frame 10 to 30" R 0.1 1}
+blendlength 1
+addUserKnob {26 _______ l " " T " "}
+addUserKnob {26 credits_ l " " T "<font size=\"5\"><span style=\"color:#575757;\">Looper<font size=\"2\"><span style=\"color:#5a5a5a;\"> v1.2 &nbsp; │ &nbsp; <font size=\"1\">B Y &nbsp; D A M I A N &nbsp; B I N D E R"}
+}
+Input {
+inputs 0
+name FgMatte
+xpos 1043
+number 1
+}
+TimeOffset {
+time_offset {{"parent.fromframe - parent.toframe"}}
+time ""
+name TimeOffset2
+xpos 1043
+ypos 89
+disable {{clamp(!parent.avoidclipend)}}
+}
+set N93fd6740 [stack 0]
+Input {
+inputs 0
+name Source
+xpos 764
+ypos -234
+}
+TimeOffset {
+time_offset {{"parent.fromframe - parent.toframe"}}
+time ""
+name TimeOffset1
+xpos 764
+ypos -157
+disable {{clamp(!parent.avoidclipend)}}
+}
+Dot {
+name Dot5
+xpos 798
+ypos -73
+}
+set N93ff08f0 [stack 0]
+Dot {
+name Dot4
+xpos 1256
+ypos -73
+}
+add_layer {fake_alpha fake_alpha.alpha}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 fake_alpha.alpha
+name Copy1
+xpos 1222
+ypos 83
+disable {{"!\[exists parent.input1]"}}
+}
+Retime {
+input.first {{parent.fromframe}}
+input.first_lock true
+input.last {{parent.toframe}}
+input.last_lock true
+output.first {{parent.fromframe}}
+output.first_lock true
+output.last {{(parent.toframe*2-parent.fromframe)+1}}
+output.last_lock true
+speed 0.5
+filter nearest
+time ""
+name Retime3
+xpos 1222
+ypos 248
+}
+push $N93fd6740
+TimeOffset {
+time_offset {{"-(parent.fromframe - parent.toframe)+1"}}
+time ""
+name TimeOffset5
+xpos 876
+ypos 89
+}
+push $N93ff08f0
+TimeOffset {
+time_offset {{"-(parent.fromframe - parent.toframe)+1"}}
+time ""
+name TimeOffset4
+xpos 764
+ypos 89
+}
+Dot {
+name Dot2
+xpos 798
+ypos 253
+}
+set N93e30410 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 fake_alpha.alpha
+name Copy3
+xpos 876
+ypos 243
+disable {{"!\[exists parent.input1]"}}
+}
+Retime {
+input.first {{parent.fromframe}}
+input.first_lock true
+input.last {{parent.toframe}}
+input.last_lock true
+output.first {{parent.fromframe}}
+output.first_lock true
+output.last {{(parent.toframe*2-parent.fromframe)+1}}
+output.last_lock true
+speed 0.5
+filter nearest
+time ""
+name Retime4
+xpos 1030
+ypos 249
+}
+Switch {
+inputs 2
+which {{"(frame - (1 + parent.fromframe))%2"}}
+name Switch4
+xpos 1125
+ypos 360
+}
+set N93e556d0 [stack 0]
+Dot {
+name Dot6
+xpos 1288
+ypos 364
+}
+Shuffle {
+in fake_alpha
+out alpha
+name Shuffle1
+label "\[value in]"
+xpos 1254
+ypos 457
+}
+push $N93e556d0
+Kronos {
+inputs 2
+timing2 Frame
+timingFrame2 {{"((frame-parent.fromframe)*2+parent.fromframe) + clamp((-((parent.fromframe-((parent.toframe+1-parent.fromframe)/2)*(parent.blendlength-1)) - frame)) / (-((parent.fromframe-((parent.toframe+1-parent.fromframe)/2)*(parent.blendlength-1)) - (parent.toframe+1+(((parent.toframe+1-parent.fromframe)/2)*(parent.blendlength-1))))))"}}
+motionEstimation Regularized
+vectorDetailReg 0.4
+strengthReg 1.4
+output {{parent.vectoroutput}}
+matteChannel {{useMatte==1?5:0}}
+vectorSpacing 40
+name Kronos3
+xpos 1125
+ypos 457
+addUserKnob {20 User}
+addUserKnob {6 useMatte l "use matte" +STARTLINE}
+useMatte {{"\[exists parent.input1]"}}
+}
+Remove {
+channels fake_alpha
+name Remove1
+xpos 1125
+ypos 552
+}
+push $N93e30410
+push $N93ff08f0
+Dot {
+name Dot1
+xpos 352
+ypos -73
+}
+Dissolve {
+inputs 2
+channels rgba
+which {{"clamp((-((parent.fromframe-((parent.toframe+1-parent.fromframe)/2)*(parent.blendlength-1)) - frame)) / (-((parent.fromframe-((parent.toframe+1-parent.fromframe)/2)*(parent.blendlength-1)) - (parent.toframe+1+(((parent.toframe+1-parent.fromframe)/2)*(parent.blendlength-1))))))"}}
+name Dissolve1
+xpos 318
+ypos 249
+}
+Dot {
+name Dot3
+xpos 352
+ypos 544
+}
+Switch {
+inputs 2
+which {{parent.looptype}}
+name Switch2
+xpos 763
+ypos 660
+}
+TimeClip {
+time ""
+first {{parent.fromframe}}
+before loop
+last {{parent.toframe}}
+after loop
+origfirst 0
+origlast 0
+origset true
+name TimeClip1
+xpos 763
+ypos 753
+}
+Output {
+name Output1
+xpos 763
+ypos 842
+}
+end_group
+push $cut_paste_input
+Group {
+name FrameMedian
+tile_color 0x2f66ff
+selected true
+xpos 40783
+ypos -3134
+addUserKnob {20 FrameMedian}
+addUserKnob {26 ""}
+addUserKnob {4 Method l "Calculation Method" M {"Frame Range" "Specified Frames" "" ""}}
+addUserKnob {26 FrameRange_line l "<b><font color=#70EE70>Frame Range</font><b>"}
+addUserKnob {7 MaxFrames l "Sample Frames" R 1 20}
+MaxFrames 15
+addUserKnob {3 FramesFrom l "Frame Range From"}
+FramesFrom 1
+addUserKnob {3 Frames l To -STARTLINE}
+Frames 100
+addUserKnob {26 devider_specframe l "<b><font color=#70EE70>Specified Frames</font><b>"}
+addUserKnob {1 frame_list l frames}
+frame_list "\[43, 53, 63, 73, 83]"
+addUserKnob {22 ToggleFrame l "Toggle Frame" T "tempval = nuke.thisNode().knob(\"frame_list\").value()\ntempval = eval(tempval)\nfound = False\nfor index, item in enumerate(tempval):\n    if item==nuke.frame():\n        tempval.pop(index)\n        found = True\n        break\nif not found:\n        tempval.append(nuke.frame()) \ntempval.sort()\nnuke.thisNode().knob(\"frame_list\").setValue(str(tempval))" +STARTLINE}
+addUserKnob {22 clear l Clear -STARTLINE T "nuke.thisNode().knob(\"frame_list\").setValue(\"\[]\")"}
+addUserKnob {20 HelpTab l Help}
+addUserKnob {26 Help}
+addUserKnob {26 Info l "" -STARTLINE T "The input plate must be stabelized before running this node.\n\n\[Frame Range]\nA: Set the frame range to the desidred input frame range\nB: Set the number of frames you want to sample from.\n\n\[Specified Frames]\nA: Go to a frame that you want to include and hit \"Toggle Frame\".\n(If you want to remove a frame, just go to that frame and hit \n\"Toggle Frame\" again.)"}
+}
+Input {
+inputs 0
+name Input1
+selected true
+xpos -643
+ypos -375
+}
+AddChannels {
+channels rgba
+name AddChannels1
+xpos -643
+ypos -326
+}
+Dot {
+name Dot1
+note_font_size 41
+xpos -609
+ypos -272
+}
+set N8cf58a40 [stack 0]
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_19
+xpos 237
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_18
+xpos 119
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_17
+xpos 17
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_16
+xpos -93
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_15
+xpos -203
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_14
+xpos -313
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_13
+xpos -423
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_12
+xpos -533
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_11
+xpos -643
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_10
+xpos -753
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_9
+xpos -863
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_8
+xpos -973
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_7
+xpos -1083
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_6
+xpos -1193
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_5
+xpos -1303
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[int(nuke.thisNode().name().split(\"_\")\[1])]\}]"}}
+name TO_4
+xpos -1413
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[int(nuke.thisNode().name().split(\"_\")\[1])]\}]"}}
+name TO_3
+xpos -1523
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[int(nuke.thisNode().name().split(\"_\")\[1])]\}]"}}
+name TO_2
+xpos -1633
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[int(nuke.thisNode().name().split(\"_\")\[1])]\}]"}}
+name TO_1
+xpos -1743
+ypos -112
+}
+push $N8cf58a40
+FrameHold {
+firstFrame {{"parent.Method==0?floor(parent.FramesFrom+(((parent.Frames-parent.FramesFrom)/parent.MaxFrames)*\[lindex \[split \[value name] _] 1])):\[python \{eval(nuke.thisParent().knob(\"frame_list\").value())\[min(len(eval(nuke.thisParent().knob(\"frame_list\").value()))-1,int(nuke.thisNode().name().split(\"_\")\[1]))]\}]"}}
+name TO_0
+xpos -1868
+ypos -112
+}
+BlinkScript {
+inputs 20
+ProgramGroup 1
+KernelDescription "1 \"CleanPlater\" iterate componentWise e23f2c1acd3c540d820e06225fe9058ef919b69ea31e669235276c5ae236c0a7 21 \"src1\" Read Point \"src2\" Read Point \"src3\" Read Point \"src4\" Read Point \"src5\" Read Point \"src6\" Read Point \"src7\" Read Point \"src8\" Read Point \"src9\" Read Point \"src10\" Read Point \"src11\" Read Point \"src12\" Read Point \"src13\" Read Point \"src14\" Read Point \"src15\" Read Point \"src16\" Read Point \"src17\" Read Point \"src18\" Read Point \"src19\" Read Point \"src20\" Read Point \"dst\" Write Point 1 \"Frames\" Int 1 AQAAAA=="
+kernelSource "kernel CleanPlater : ImageComputationKernel<eComponentWise>\n\{\n  Image<eRead, eAccessPoint, eEdgeClamped> src1; \n  Image<eRead, eAccessPoint, eEdgeClamped> src2;\n  Image<eRead, eAccessPoint, eEdgeClamped> src3;  \n  Image<eRead, eAccessPoint, eEdgeClamped> src4;\n  Image<eRead, eAccessPoint, eEdgeClamped> src5;\n  Image<eRead, eAccessPoint, eEdgeClamped> src6;\n  Image<eRead, eAccessPoint, eEdgeClamped> src7; \n  Image<eRead, eAccessPoint, eEdgeClamped> src8;\n  Image<eRead, eAccessPoint, eEdgeClamped> src9; \n  Image<eRead, eAccessPoint, eEdgeClamped> src10;\n  Image<eRead, eAccessPoint, eEdgeClamped> src11; \n  Image<eRead, eAccessPoint, eEdgeClamped> src12;\n  Image<eRead, eAccessPoint, eEdgeClamped> src13;  \n  Image<eRead, eAccessPoint, eEdgeClamped> src14;\n  Image<eRead, eAccessPoint, eEdgeClamped> src15;\n  Image<eRead, eAccessPoint, eEdgeClamped> src16;\n  Image<eRead, eAccessPoint, eEdgeClamped> src17; \n  Image<eRead, eAccessPoint, eEdgeClamped> src18;\n  Image<eRead, eAccessPoint, eEdgeClamped> src19; \n  Image<eRead, eAccessPoint, eEdgeClamped> src20;\n  Image<eWrite> dst;\n  param:\n    int frames;\n  void define() \{\n    defineParam(frames, \"Frames\", 1);\n  \}\n  void process() \{\n    float values\[] = \{src1(),src2(),src3(),src4(),src5(),src6(),src7(),src8(),src9(),src10(),src11(),src12(),src13(),src14(),src15(),src16(),src17(),src18(),src19(),src20(),\};\n    float outputS = median(values,  frames);\n    dst() = outputS;\n   \}\n\};"
+useGPUIfAvailable false
+vectorize false
+rebuild ""
+CleanPlater_Frames {{"parent.Method==0?parent.MaxFrames:\[python \{len(eval(nuke.thisParent().knob(\"frame_list\").value()))\}]"}}
+rebuild_finalise ""
+name BlinkScript3
+xpos -643
+ypos 80
+}
+Output {
+name Output1
+xpos -643
+ypos 144
+}
+end_group
+push $cut_paste_input
+Group {
+name TimeMachine
+help "Does a per-pixel time offset on the image, based on a secondary mask input.\n\nPixels with a mask value of 1 will be offset by the number of frames set in \"frames\".\nMask values of 0 will return the image at the current frame. Values between 0-1 will return an interpolated offset."
+knobChanged "\n\ng = nuke.thisNode()\nk = nuke.thisKnob()\n\nif k.name() in \[\"frames\",\"method\"]:\n    \n    i = nuke.toNode(\"img\")\n    i2 = nuke.toNode(\"mask\")\n    o = nuke.toNode(\"Output1\")\n    c = nuke.toNode(\"Copy1\")\n\n    if k.name() == \"frames\":\n    \n        defaultNodes = \[i,i2,o,c]\n        for n in nuke.allNodes():\n           if n not in defaultNodes:\n               nuke.delete(n)\n        \n        fvalue = g\['frames'].value()\n        step = 1\n        if fvalue < 0:\n           step = -1\n          \n        for f in range(0,int(fvalue)+step,step):\n           t = nuke.nodes.TimeOffset()\n           t\['time_offset'].setValue(-f)\n           t.setInput(0,i)\n        \n           if f == 0 :\n               lastnode = t\n        \n           else :\n               slice = nuke.nodes.Grade()\n               slice\['channels'].setValue(\"alpha\")\n               slice\['blackpoint'].setValue(abs((1/(fvalue+1))*abs(f)))\n               slice\['whitepoint'].setValue(abs((1/(fvalue+1))*(abs(f)+1)))\n               slice.setInput(0,c)\n               exp = nuke.nodes.Expression()\n               if g\['method'].value() == \"average\":\n                   exp\['expr3'].setValue('a>1?1:a')\n               else:\n                   exp\['expr3'].setValue('a>0?1:0')\n               exp.setInput(0,slice)\n               km = nuke.nodes.Keymix()\n               km.setInput(1,t)\n               km.setInput(0,lastnode)\n               km.setInput(2,exp)\n               lastnode = km\n        \n        sw = nuke.nodes.Switch()\n        sw.setInput(0,i)\n        sw.setInput(1,lastnode)\n        sw\['which'].setExpression('parent.maskChannel!=0')\n        o.setInput(0,sw)\n            \n        for n in nuke.allNodes():\n           nuke.autoplace(n)\n\n    elif k.name() == \"method\":\n\n        for e in nuke.allNodes('Expression'):\n               if g\['method'].value() == \"average\":\n                   e\['expr3'].setValue('a>1?1:a')\n               else:\n                   e\['expr3'].setValue('a>0?1:0')\n\n"
+selected true
+xpos 40778
+ypos -3065
+addUserKnob {20 TimeMachine}
+addUserKnob {41 maskChannel T Copy1.from0}
+addUserKnob {26 ""}
+addUserKnob {4 method M {nearest average}}
+addUserKnob {3 frames}
+}
+Input {
+inputs 0
+name mask
+xpos 400
+ypos -57
+number 1
+}
+set N8ce47370 [stack 0]
+push $N8ce47370
+Copy {
+inputs 2
+from0 rgba.alpha
+name Copy1
+xpos 400
+ypos -33
+}
+Input {
+inputs 0
+name img
+xpos 217
+ypos -111
+}
+set N8ce668f0 [stack 0]
+TimeOffset {
+time ""
+name TimeOffset1
+}
+push $N8ce668f0
+Switch {
+inputs 2
+which {{parent.maskChannel!=0}}
+name Switch1
+}
+Output {
+name Output1
+xpos 1390
+ypos 87
+}
+end_group
+push $cut_paste_input
+Group {
+name FrameFiller
+onCreate "\nthisGRP = nuke.thisGroup()\nlogKnobs = \['vectorDetailLocal','smoothnessLocal','vectorDetailReg','strengthReg']\nfor knob in logKnobs :\n    thisGRP\[knob].setFlag(0x00000004)\n"
+tile_color 0x7f6a3fff
+selected true
+xpos 40778
+ypos -3001
+addUserKnob {20 tab_general l General}
+addUserKnob {6 use_gpu l "Use GPU if available" t "Select this to render on the <b>Local GPU</b>, if available.\n\nYou can select this even if no GPU is currently available on your machine. The GPU will then be used whenever the script is opened on a machine which does have a GPU available. You should also select this if you wish to render from the command line with the <b>--gpu</b> option.\n\nIf this node requires full frames from its inputs, and is therefore unable to reduce its memory overhead, it will fall back to the CPU if an attempt to render a frame on the GPU fails due to lack of memory. When this occurs, a warning message will be printed to the console." +STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {41 channels l Channels t "The effect is applied only to these channels" T menu02.retimedChannels}
+addUserKnob {1 fixframes l "frame(s) to fix" t "Fill in the frame(s) need to be generate. Support single frame, multiply frames, and multiply frames in a row.\n\nWritten format :\nseparate multiply frames with ',' or join multiply frames with '-'\n<i>e.g. 1010,1012,1013,1014,1020\ne.g. 1010,1012-1014,1020</i>\neither format work."}
+addUserKnob {22 detect_from_read l "Detect from Read" t "Detect missing frame from the file path provided from Read node and auto fill in 'frame(s) to fix' knob.\n\nThis function will check the file system, and only works when Read node connect directly. Any nodes in between this node and Read node will not work." -STARTLINE T "thisGRP = nuke.thisGroup()\ngoStore = nuke.toNode('store')\ngoStore\['fn'].execute()\n\nif thisGRP.dependencies()\[0].Class() == 'Read' :\n\tfilepath = nuke.os.path.split( thisGRP.dependencies()\[0]\['file'].value() )\n\ttry :\n\t\tfileformat = \[ filepath\[1].split('%0')\[0] , filepath\[1].split('%0')\[1]\[2:] ]\n\n\t\tavailframes = \[]\n\t\tfor file in nuke.os.listdir( filepath\[0] ) :\n\t\t\tif file\[:len(fileformat\[0])] == fileformat\[0] and file\[-len(fileformat\[1]):] == fileformat\[1] :\n\t\t\t\tavailframes.append( int(file\[len(fileformat\[0]) : -len(fileformat\[1]):]) )\n\t\tavailframes.sort()\n\n\t\tmissingframes = \[]\n\n\t\tfor frame in range( availframes\[0], availframes\[-1:]\[0] + 1 , 1 ) :\n\t\t\tif frame not in availframes :\n\t\t\t\tmissingframes.append( str(frame) )\n\n\t\tstage01 = dataReconcile( missingframes )\n\t\tstage02 = seqConvert( stage01\[1] )\n\t\tmissingData = \[str(i) for i in stage01\[0]]\n\n\t\tfor key,value in stage02.items() :\n\t\t\tmissingData.append( '\{0\}-\{1\}'.format(str(key),str(key+value-1)) )\n\t\tmissingData.sort()\n\t\t\n\t\tthisGRP\['fixframes'].setValue( ','.join( missingData ) )\n\texcept IndexError :\n\t\tnuke.message('File path is not a sequence.<br><br>Process denied...')\nelse :\n\tnuke.message('This function only works with Read node connect to FrameFiller directly.')"}
+addUserKnob {22 generate l Generate t "Generate the frame interpolation setup inside this tool. 'frame(s) to fix' define which frame(s) need to be generate.\n\nAfter that, 'frame(s) to fix' will be locked. Hit 'Reset' to clean up internal generated setup and unlock 'frame(s) to fix' knob." T "thisGRP = nuke.thisGroup()\ngoStore = nuke.toNode('store')\ngoStore\['fn'].execute()\n\n##########\n\nfframes = thisGRP\['fixframes'].value().replace(' ','').split(',')\n\nif len(fframes\[0]) :\n\tstage01 = dataReconcile( fframes )\n\tlastNode = nuke.toNode('dot_start')\n\n\tif len(stage01\[0]) :\n\t\tsingleFrame = stage01\[0]\n\t\tlastNode = gen(singleFrame , 1 , lastNode)\n\n\tif len(stage01\[1]) :\n\t\tmultData = seqConvert( stage01\[1] )\n\t\tfor key,value in multData.items() :\n\t\t\tlastNode = gen( \[key] , value , lastNode)\n\n\tnuke.toNode('dot_end').setInput(0, lastNode)\n\n\tthisGRP\['fixframes'].setEnabled(False)\n\tthisGRP\['detect_from_read'].setEnabled(False)\nelse :\n\tnuke.message(\"No frame provided.<br><br>Access denied...\")" +STARTLINE}
+addUserKnob {22 reset l Reset t "Remove all internal setup and unlock 'frame(s) to fix' knob." -STARTLINE T "base = \['menu02', 'menu01', 'Output1', 'dot_end', 'dot_start', 'input', 'BackdropNode2', 'BackdropNode1','store']\nfor node in nuke.allNodes() :\n\tif node.name() not in base :\n\t\tnuke.delete( node )\nnuke.thisGroup()\['fixframes'].setEnabled(True)\nnuke.thisGroup()\['detect_from_read'].setEnabled(True)"}
+addUserKnob {26 ""}
+addUserKnob {7 subframeBias l "subframe(s) bias" t "Balance pre-frame and post frame ratio.\n\n0.5 is the averge of 2 existing frames\n0.0 bias to pre-frame\n1.0 bias to post-frame\n\nThis value clamp to 0-1"}
+subframeBias 0.5
+addUserKnob {41 motionEstimation l Motion t "Choose the motion estimation method.\n\n\nRegularized - calculates motion in a semi-global way, providing more consistent regions in the vector fields.\nLocal - calculates motion by performing local block matching. This can sometimes lead to fragmentation in the vector fields. This is the legacy method used by previous versions of Kronos." T menu01.motionEstimation}
+addUserKnob {7 vectorDetailLocal l "Vector Detail" t "Use this to adjust the density of the calculated motion vector field. Higher detail picks up finer movement but will take longer to calculate." +HIDDEN R 0.01 1}
+vectorDetailLocal 0.2
+addUserKnob {7 smoothnessLocal l Smoothness t "A high smoothness will miss local detail, but is less likely to create spurious vectors." +HIDDEN R 0.01 1}
+smoothnessLocal 0.5
+addUserKnob {7 vectorDetailReg l "Vector Detail" t "Use this to adjust the density of the calculated motion vector field. Higher detail picks up finer movement but will take longer to calculate." R 0.01 1}
+vectorDetailReg 0.3
+addUserKnob {7 strengthReg l Strength t "Match strength." R 0 5}
+strengthReg 1.5
+addUserKnob {4 resampleType l Filter t "Choose the image resampling type." M {Bilinear Lanczos4 Lanczos6 ""}}
+addUserKnob {20 grp_shutter l Shutter n 1}
+grp_shutter 0
+addUserKnob {3 shutterSamples l "Shutter Samples" t "How many in-between images to average together for the motion blur."}
+shutterSamples 1
+addUserKnob {7 shutterTime l "Shutter Time" t "Sets the equivalent shutter time of the retimed sequence." R 0 10}
+addUserKnob {20 endGroup n -1}
+addUserKnob {20 t_VERSION l Version}
+addUserKnob {26 l_VERSION l Version T 1.2}
+addUserKnob {26 l_DATE l "Date Modified" T 2021-03-18}
+addUserKnob {22 btn_CHANGELOG l Changelog T "log = \"1.2<br>-&nbsp;compatiable&nbsp;with&nbsp;python3<br>&nbsp;&nbsp;(remove&nbsp;range&nbsp;command)<br>-&nbsp;added&nbsp;error&nbsp;message&nbsp;if&nbsp;input&nbsp;read&nbsp;is&nbsp;not&nbsp;a&nbsp;sequence<br><br>1.1<br>-&nbsp;fix&nbsp;the&nbsp;bug&nbsp;of&nbsp;the&nbsp;code&nbsp;that<br>&nbsp;&nbsp;when&nbsp;input&nbsp;frame&nbsp;seq&nbsp;withtout&nbsp;single&nbsp;frame&nbsp;to&nbsp;fix.<br><br>1.0<br>-&nbsp;framefiller&nbsp;to&nbsp;fill&nbsp;up&nbsp;missing&nbsp;frame&nbsp;with&nbsp;frame&nbsp;interpolation&nbsp;method<br>-&nbsp;support&nbsp;multiply&nbsp;frames<br>-&nbsp;support&nbsp;more&nbsp;than&nbsp;one&nbsp;broken&nbsp;frames&nbsp;in&nbsp;a&nbsp;row\"\nnuke.message( log )" +STARTLINE}
+addUserKnob {26 l_DEV l "Developed by" T "<a href='https://youtube.com/c/MJTLab'><font color='orange'>Mark Joey Tang</font></a>"}
+}
+BackdropNode {
+inputs 0
+name BackdropNode1
+tile_color 0xff
+label "dont touch"
+note_font_size 42
+xpos -648
+ypos 15
+bdwidth 234
+bdheight 160
+}
+BackdropNode {
+inputs 0
+name BackdropNode2
+tile_color 0x4c4c4cff
+label bin
+note_font_size 42
+xpos -370
+ypos 18
+bdwidth 181
+bdheight 242
+}
+Input {
+inputs 0
+name input
+xpos 14
+ypos 2
+}
+Dot {
+name dot_start
+tile_color 0xff00ff
+xpos 48
+ypos 93
+}
+Dot {
+name dot_end
+tile_color 0xff0000ff
+xpos 48
+ypos 434
+}
+Output {
+name Output1
+xpos 14
+ypos 522
+}
+NoOp {
+inputs 0
+name menu01
+knobChanged "\nthisGRP = nuke.thisGroup()\nknobs = \['vectorDetailLocal','smoothnessLocal','vectorDetailReg','strengthReg']\nmotionBool = False\nif thisGRP\['motionEstimation'].value() == 'Local' :\n   motionBool = True \nfor i in range(len(knobs)) :\n    if i<2 :\n        thisGRP\[knobs\[i]].setVisible( motionBool )\n    else :\n        thisGRP\[knobs\[i]].setVisible( not motionBool )\n"
+xpos -568
+ypos 99
+addUserKnob {20 User}
+addUserKnob {4 motionEstimation l Motion t "Choose the motion estimation method.\n\n\nRegularized - calculates motion in a semi-global way, providing more consistent regions in the vector fields.\nLocal - calculates motion by performing local block matching. This can sometimes lead to fragmentation in the vector fields. This is the legacy method used by previous versions of Kronos. " M {Regularized Local}}
+}
+OFlow2 {
+inputs 0
+useGPUIfAvailable false
+name menu02
+xpos -314
+ypos 103
+}
+NoOp {
+inputs 0
+name store
+xpos -313
+ypos 177
+addUserKnob {20 User}
+addUserKnob {22 fn T "def dataReconcile( _listOfSTR ) :\n\tsingleFrame = \[]\n\tmultFrames = \[]\n\tinputErrorDetect = False\n\n\tfor i in _listOfSTR :\n\t\tif i.find('-') > 0 :\n\t\t\tif int(i.split('-')\[1]) < int(i.split('-')\[0]) :\n\t\t\t\tinputErrorDetect = True\n\t\t\telse :\n\t\t\t\tfor j in range( int(i.split('-')\[0]) , int(i.split('-')\[1])+1 , 1 ) :\n\t\t\t\t\tmultFrames.append( j )\n\t\telse :\n\t\t\ttry :\n\t\t\t\ti = int(i)\n\t\t\t\tcheck = 0\n\t\t\t\tcount = 1\n\t\t\t\tmultDetect = False\n\t\t\t\twhile check < 1 :\n\t\t\t\t\tif str(i+count) in _listOfSTR :\n\t\t\t\t\t\tmultDetect = True\n\t\t\t\t\t\tif (i+count-1) not in multFrames :\n\t\t\t\t\t\t\tmultFrames.append( i+count-1 )\n\t\t\t\t\telse :\n\t\t\t\t\t\tif multDetect == True :\n\t\t\t\t\t\t\tif (i+count-1) not in multFrames :\n\t\t\t\t\t\t\t\tmultFrames.append( i+count-1 )\n\t\t\t\t\t\telse :\n\t\t\t\t\t\t\tif  i not in multFrames :\n\t\t\t\t\t\t\t\tsingleFrame.append( i )\n\t\t\t\t\t\tcheck = 10\n\t\t\t\t\tcount += 1\n\t\t\texcept :\n\t\t\t\tpass\n\n\tsingleFrame.sort()\n\tmultFrames.sort()\n\n\treturn ( singleFrame , multFrames )\n\n##########\n\ndef seqConvert( _multFList ) :\n\tdump = \[]\n\tmultData = \{\}\n\tif len(_multFList) :\n\t\tfor i in _multFList :\n\t\t\tcheck = 0\n\t\t\tcount = 0\n\t\t\ttemp = \[]\n\t\t\twhile check < 1 :\n\t\t\t\tif i+count in _multFList :\n\t\t\t\t\tif i+count not in dump :\n\t\t\t\t\t\ttemp.append( i+count )\n\t\t\t\t\t\tdump .append( i+count )\n\t\t\t\telse :\n\t\t\t\t\tcheck = 10\n\t\t\t\tcount += 1\n\t\t\tif len(temp) :\n\t\t\t\tmultData\[temp\[0]] = len(temp)\n\n\treturn multData\n\n##########\n\ndef gen( _list , _steps , _stNode ) :\n\tstart = _stNode\n\n\tfor i in range(len(_list)) :\n\t\tsuffix = str(_list\[i])\n\n\t\tdot = nuke.nodes.Dot( name='dot_\{0\}'.format(suffix) , inputs=\[start] )\n\n\t\ttw = nuke.nodes.TimeWarp( name='tw_\{0\}'.format(suffix) , inputs=\[dot] )\n\t\ttw\['lookup'].clearAnimated()\n\t\ttw\['lookup'].setExpression( 'frame>=\{0\} ? frame+\{1\} : frame'.format(suffix,_steps) )\n\n\t\tkro = nuke.nodes.Kronos( name='kro_\{0\}'.format(suffix) , \n\t\t\t\t\t\t\t\t interpolation='Motion' ,\n\t\t\t\t\t\t\t\t timing2='Frame' ,\n\t\t\t\t\t\t\t\t inputs=\[tw] )\n\t\tkro\['useGPUIfAvailable'].setExpression( 'parent.use_gpu' )\n\t\tkro\['retimedChannels'].setExpression( 'menu02.retimedChannels' )\n\t\tkro\['timingFrame2'].setExpression( '\{0\}-1+1/(\{1\}+1)*(frame-(\{0\}-1))*(parent.subframeBias/0.5)'.format(suffix,_steps) )\n\t\tkro\['motionEstimation'].setExpression( 'parent.motionEstimation' )\n\t\tkro\['vectorDetailLocal'].setExpression( 'parent.vectorDetailLocal' )\n\t\tkro\['smoothnessLocal'].setExpression( 'parent.smoothnessLocal' )\n\t\tkro\['vectorDetailReg'].setExpression( 'parent.vectorDetailReg' )\n\t\tkro\['strengthReg'].setExpression( 'parent.strengthReg' )\n\t\tkro\['resampleType'].setExpression( 'parent.resampleType' )\n\t\tkro\['shutterSamples'].setExpression( 'parent.shutterSamples' )\n\t\tkro\['shutterTime'].setExpression( 'parent.shutterTime' )\n\n\t\tsw = nuke.nodes.Switch( name='sw_\{0\}'.format(suffix) , inputs=\[dot, kro] )\n\t\tif _steps == 1 :\n\t\t\tsw\['which'].setExpression( 'frame==\{0\} ? 1 : 0'.format(suffix) )\n\t\telse :\n\t\t\tsw\['which'].setExpression( 'frame>=\{0\}&&frame<\{0\}+\{1\} ? 1 : 0'.format(suffix,_steps) )\n\n\t\tstart = sw\n\n\treturn sw\n\n##########" +STARTLINE}
+}
+end_group
+push $cut_paste_input
+Group {
+name FrameHold_special
+knobChanged "\nnk = nuke.thisNode()\nk = nuke.thisKnob()\ntype=nk\['type']\npause=nk\['pause']\nif (k.name() in \['pause', 'first', 'last','type'] ):\n    if(type.getValue() == 0):\n        nk.knob('pause').setVisible(False)\n    else:\n        nk.knob('pause').setVisible(True)\n    if(pause.getValue() == 0 or type == 1):\n        nk.knob('message').setVisible(False)\n    else:\n        nk.begin()\n        offset = int(nuke.toNode('TimeOffset1')\['time_offset'].getValue())\n        first_frame = int(nuke.toNode('FrameRange_input')\['first_frame'].getValue())\n        last_frame = int(nuke.toNode('FrameRange_input')\['last_frame'].getValue()) + offset\n        nk.end()\n\n        nk.knob('message').setValue('Now your new Frame Range is: ' + str(first_frame) + ' - ' + str(last_frame))\n        nk.knob('message').setVisible(True)\n"
+tile_color 0xb0a254ff
+label "(frame \[value knob.frame_hold])"
+selected true
+xpos 40791
+ypos -3286
+lifetimeStart 1
+lifetimeEnd 100
+addUserKnob {20 FrameHold}
+addUserKnob {3 frame_hold l "Frame Hold"}
+frame_hold 1001
+addUserKnob {22 current_frame l "<i><font color=\"yellow\">Current frame" -STARTLINE T nuke.thisNode().knob('frame_hold').setValue(nuke.frame())}
+addUserKnob {26 ""}
+addUserKnob {4 type l "Hold this frame:" t "- Always: it's the classic FrameHold\n- Range: specify the FrameRange in the textfields. You can pause the original plate and play it again after the FrameHold." M {Always Range "" ""}}
+type Range
+addUserKnob {3 first l Range}
+first 1005
+addUserKnob {3 last l "" -STARTLINE}
+last 1010
+addUserKnob {6 pause l "continue plate after Framehold" t "If checked, the plate will restart from the frame after the Framehold. " +STARTLINE}
+addUserKnob {26 message l "" +STARTLINE +HIDDEN T "Now your new Frame Range is: 1 - 106"}
+addUserKnob {26 ""}
+addUserKnob {26 email l "" -STARTLINE T "<b><font color=\"yellow\">FrameHold Special v2.3</font></b><br>\n<font size=“1”><i>by Andrea Geremia</i><br>\n<br>\nandrea.geremia89@gmail.com<br>\nwww.andreageremia.it</font>"}
+addUserKnob {22 explanation l ? T "nuke.message(\"This FrameHold node is has something more compared to the classic one:\\n - You can set the frame range when the Framehold works, without using other nodes or animate keyframes\\n - Plus, you can continue the plate after the Frame Hold\\n\\n - EXAMPLE: FrameHold: 1005\\n - Range: 1005 - 1010\\n - if you NOT continue: at frame 1011 will switch back to the plate, so at the frame 1011\\n - if you continue: at the frame 1011 will restart from 1005, frame 1011 will be 1006 and so on.\")" +STARTLINE}
+addUserKnob {22 info l Tutorial -STARTLINE T "nuke.tcl('start', 'http://www.nukepedia.com/gizmos/time/framehold-special') "}
+}
+Input {
+inputs 0
+name Input1
+xpos -1030
+ypos -226
+}
+set N8cee28f0 [stack 0]
+Dot {
+name Dot1
+xpos -996
+ypos -150
+}
+set N8cefa9d0 [stack 0]
+Dot {
+name Dot3
+xpos -886
+ypos -150
+}
+TimeOffset {
+time_offset {{abs(last-first)+1}}
+time ""
+name TimeOffset1
+xpos -917
+ypos -81
+}
+Dot {
+name Dot4
+xpos -886
+ypos -6
+}
+push $N8cefa9d0
+Dot {
+name Dot2
+xpos -1109
+ypos -150
+}
+FrameHold {
+firstFrame {{parent.frame_hold}}
+name FrameHold1
+xpos -1140
+ypos -88
+}
+push $N8cefa9d0
+Switch {
+inputs 2
+which {{parent.type?x>=min(parent.first,parent.last)&&x<=max(parent.first,parent.last):1}}
+name Switch2
+xpos -1030
+ypos -82
+}
+Switch {
+inputs 2
+which {{pause&&parent.type?x>max(parent.first,parent.last):0}}
+name Switch1
+selected true
+xpos -1030
+ypos -7
+}
+FrameRange {
+first_frame {{parent.FrameRange_input.knob.first_frame}}
+last_frame {{parent.pause?parent.FrameRange_input.knob.last_frame+parent.TimeOffset1.time_offset:parent.FrameRange_input.knob.last_frame}}
+time ""
+name FrameRange_input1
+xpos -1030
+ypos 116
+}
+Output {
+name Output1
+xpos -1030
+ypos 219
+}
+push $N8cee28f0
+FrameRange {
+first_frame {{input.first_frame}}
+last_frame {{input.last_frame}}
+time ""
+name FrameRange_input
+xpos -843
+ypos -226
+}
+end_group
